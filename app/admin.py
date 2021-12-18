@@ -29,6 +29,7 @@ class UserRoleView(CommonView, AuthenticatedView):
         'note': 'Ghi chú',
         'users': 'Người dùng'
     }
+    column_list = ['role_name', 'users', 'note']
     column_searchable_list = ['role_name']
     column_filters = ['role_name']
     form_columns = ['role_name', 'users', 'note']
@@ -48,6 +49,7 @@ class UserView(CommonView, AuthenticatedView):
 
         'user_role': 'Quyền'
     }
+    column_list = ['username', 'password', 'avatar', 'email', 'active', 'joined_date', 'user_role', 'user_role_id']
     column_searchable_list = ['username', 'email']
     column_filters = ['username', 'email', 'active', 'joined_date', 'user_role_id']
     form_columns = ['username', 'password', 'avatar', 'email', 'active', 'joined_date', 'user_role']
@@ -86,6 +88,7 @@ class BookRoomView(CommonView, AuthenticatedView):
 
         'customer': 'Khách hàng'
     }
+    column_list = ['check_in_date', 'check_out_date', 'customer', 'customer_id', 'rooms', 'note']
     column_filters = ['check_in_date', 'check_out_date', 'customer_id']
     form_columns = ['check_in_date', 'check_out_date', 'customer', 'rooms', 'note']
 
@@ -102,6 +105,7 @@ class RentView(CommonView, AuthenticatedView):
 
         'customer': 'Khách hàng',
     }
+    column_list = ['check_in_date', 'check_out_date', 'customer', 'customer_id', 'rooms', 'note']
     column_filters = ['check_in_date', 'check_out_date', 'customer_id']
     form_columns = ['check_in_date', 'check_out_date', 'customer', 'rooms', 'note']
 
@@ -115,6 +119,7 @@ class BillView(CommonView, AuthenticatedView):
 
         'rent': 'Phiếu thuê phòng',
     }
+    column_list = ['total', 'rent', 'rent_id', 'note']
     column_searchable_list = ['total']
     column_filters = ['total', 'rent_id']
     form_columns = ['rent_id', 'total', 'rent', 'note']
@@ -131,6 +136,7 @@ class KindOfRoomView(CommonView, AuthenticatedView):
         'note': 'Ghi chú',
         'rooms': 'Phòng'
     }
+    column_list = ['kind_of_room_name', 'price', 'standard_number', 'maximum_number', 'image', 'rooms', 'note']
     column_searchable_list = ['kind_of_room_name', 'price']
     column_filters = ['kind_of_room_name', 'price', 'standard_number', 'maximum_number']
     form_columns = ['kind_of_room_name', 'price', 'standard_number', 'maximum_number', 'image', 'rooms', 'note']
@@ -143,6 +149,7 @@ class RoomStatusView(CommonView, AuthenticatedView):
         'note': 'Ghi chú',
         'rooms': 'Phòng'
     }
+    column_list = ['room_status_name', 'rooms', 'note']
     column_searchable_list = ['room_status_name']
     column_filters = ['room_status_name']
     form_columns = ['room_status_name', 'rooms', 'note']
@@ -158,6 +165,7 @@ class ImageView(CommonView, AuthenticatedView):
 
         'room': 'Phòng'
     }
+    column_list = ['link', 'rank', 'room', 'room_id', 'note']
     column_filters = ['room_id']
     form_columns = ['link', 'rank', 'room', 'note']
 
@@ -180,6 +188,8 @@ class RoomView(CommonView, AuthenticatedView):
         'book_rooms': 'Đặt phòng',
         'rents': 'Thuê phòng'
     }
+    column_list = ['room_number', 'description', 'kind_of_room', 'kind_of_room_id', 'rooms_status', 'room_status_id',
+                   'note']
     column_searchable_list = ['room_number']
     column_filters = ['room_number', 'kind_of_room_id', 'room_status_id']
     form_columns = ['room_number', 'description', 'rooms_status', 'kind_of_room', 'images', 'note']
@@ -261,5 +271,3 @@ admin.add_view(CommonCoefficientView(CommonCoefficient,
 # Comment
 admin.add_view(CommentView(Comment,
                            db.session, menu_icon_type='fa', menu_icon_value='fa-comments', name='Bình luận'))
-
-
