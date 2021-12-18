@@ -1,55 +1,64 @@
 {% extends "admin/base.html" %}
 
 {% block head_css %}
-{{ super() }}
+    {{ super() }}
 {% endblock %}
 
 {% block page_body %}
-<div class="container{% if config.get('FLASK_ADMIN_FLUID_LAYOUT', False) %}-fluid{% endif %} p-0">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-2 sticky-top py-1 px-3" role="navigation">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#admin-navbar-collapse"
-                aria-controls="admin-navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <!-- navbar content -->
-        <div class="collapse navbar-collapse" id="admin-navbar-collapse">
-            {% block brand %}
-            <a class="navbar-brand" href="{{ admin_view.admin.url }}">{{ admin_view.admin.name }}</a>
-            {% endblock %}
-            {% block main_menu %}
-            <ul class="navbar-nav mr-auto">
-                {{ layout.menu() }}
-            </ul>
-            {% endblock %}
 
-            {% block menu_links %}
-            <ul class="nav navbar-nav navbar-right">
-                {{ layout.menu_links() }}
-            </ul>
-            {% endblock %}
-            {% block access_control %}
-            <div class="dropdown">
+    <div class="container{% if config.get('FLASK_ADMIN_FLUID_LAYOUT', False) %}-fluid{% endif %} p-0">
+        <nav id="my-nav" class="navbar navbar-expand-lg navbar-dark bg-dark mb-2 sticky-top py-1 px-3"
+             role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#admin-navbar-collapse"
+                    aria-controls="admin-navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- navbar content -->
+            <div class="collapse navbar-collapse" id="admin-navbar-collapse">
+                {% block brand %}
+                    <a class="navbar-brand" href="{{ admin_view.admin.url }}">{{ admin_view.admin.name }}</a>
+                {% endblock %}
+                {% block main_menu %}
+                    <ul class="navbar-nav mr-auto">
+                        {{ layout.menu() }}
+                    </ul>
+                {% endblock %}
+
+                {% block menu_links %}
+                    <ul class="nav navbar-nav navbar-right">
+                        {{ layout.menu_links() }}
+                    </ul>
+                {% endblock %}
+                {% block access_control %}
+                    <div class="dropdown">
                 <span class="dropdown-toggle text-white font-weight-bold" data-toggle="dropdown">
+                    <img src="https://res.cloudinary.com/dtnpj540t/image/upload/v1638256011/Avatars/lc82ncjqtlcklbd04rgs.jpg"
+                         class="rounded-circle img-fluid" alt="avt" width="25px" height="25px">
                    Trần Văn A
                 </span>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item text-danger font-weight-bold" href="#">Đăng xuất</a>
-                </div>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item text-danger font-weight-bold" href="#">Đăng xuất</a>
+                        </div>
+                    </div>
+                {% endblock %}
             </div>
-            {% endblock %}
-        </div>
-    </nav>
-    <div class="mx-lg-5 p-2 shadow bg-white rounded overflow-auto" style="height: 600px;">
-        <div>
-            {% block messages %}
-            {{ layout.messages() }}
-            {% endblock %}
+        </nav>
+        <div id="my-content" class="mx-lg-5 p-2 shadow bg-white rounded overflow-auto">
+            <div>
+                {% block messages %}
+                    {{ layout.messages() }}
+                {% endblock %}
 
-            {# store the jinja2 context for form_rules rendering logic #}
-            {% set render_ctx = h.resolve_ctx() %}
-            {% block body %}{% endblock %}
+                {# store the jinja2 context for form_rules rendering logic #}
+                {% set render_ctx = h.resolve_ctx() %}
+                {% block body %}{% endblock %}
+            </div>
         </div>
     </div>
-</div>
+{% endblock %}
+
+{% block tail_js %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/admin/master.js') }}" async></script>
 {% endblock %}
