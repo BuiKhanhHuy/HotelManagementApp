@@ -239,7 +239,7 @@ admin.add_sub_category(name='user_management', parent_name='Quản lý người 
 
 # manage_votes
 admin.add_view(BookRoomView(BookRoom,
-                            db.session, menu_icon_type='fa', menu_icon_value='fa-address-book', name='Đặt phòng',
+                            db.session, menu_icon_type='fa', menu_icon_value='fa-table', name='Đặt phòng',
                             category='Quản lý phiếu'))
 admin.add_view(RentView(Rent,
                         db.session, menu_icon_type='fa', menu_icon_value='fa-check-circle', name='Thuê phòng',
