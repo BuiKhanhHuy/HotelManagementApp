@@ -1,7 +1,8 @@
-window.onresize = function () {
+window.onload = function (){
     changeContentHeight()
 }
-window.onload = function (){
+
+window.onresize = function () {
     changeContentHeight()
 }
 
