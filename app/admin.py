@@ -84,14 +84,31 @@ class BookRoomView(CommonView, AuthenticatedView):
         'check_in_date': 'Ngày nhận phòng',
         'check_out_date': 'Ngày trả phòng',
         'customer_id': 'Mã khách hàng',
+        'active': 'Hoạt động',
+        'in_due_date': 'Trong hạn',
         'note': 'Ghi chú',
-        'rooms': 'Phòng',
+        'book_room_details': 'Mã phòng đã đặt',
 
         'customer': 'Khách hàng'
     }
-    column_list = ['booking_date', 'check_in_date', 'check_out_date', 'customer', 'customer_id', 'rooms', 'note']
-    column_filters = ['booking_date', 'check_in_date', 'check_out_date', 'customer_id']
-    form_columns = ['check_in_date', 'check_out_date', 'customer', 'rooms', 'note']
+    column_list = ['booking_date', 'check_in_date', 'check_out_date', 'customer', 'customer_id', 'book_room_details','active',
+                  'in_due_date', 'note']
+    column_filters = ['booking_date', 'check_in_date', 'check_out_date', 'customer_id', 'active', 'in_due_date']
+    form_columns = ['check_in_date', 'check_out_date', 'customer', 'note']
+
+
+class BookRoomDetailView(CommonView, AuthenticatedView):
+    column_labels = {
+        'id': 'Mã chi tiết đặt phòng',
+        'customer_quantity': 'Số lượng khách',
+        'room_id': 'Mã phòng',
+        'book_room_id': 'Mã phiếu đặt phòng',
+        'room': 'Phòng',
+        'book_room': 'Phiếu đặt phòng'
+    }
+    column_list = ['book_room', 'book_room_id', 'room', 'room_id', 'customer_quantity']
+    column_filters = ['book_room_id', 'room_id', 'customer_quantity']
+    form_columns = ['book_room', 'room', 'customer_quantity']
 
 
 class RentView(CommonView, AuthenticatedView):
@@ -100,15 +117,30 @@ class RentView(CommonView, AuthenticatedView):
         'check_in_date': 'Ngày nhận phòng',
         'check_out_date': 'Ngày trả phòng',
         'customer_id': 'Mã khách hàng',
+        'active': 'Hoạt động',
         'note': 'Ghi chú',
         'bills': 'Hóa đơn thanh toán',
-        'rooms': 'Phòng',
+        'rent_details': 'Mã phòng đã thuê',
 
         'customer': 'Khách hàng',
     }
-    column_list = ['check_in_date', 'check_out_date', 'customer', 'customer_id', 'rooms', 'note']
+    column_list = ['check_in_date', 'check_out_date', 'customer', 'customer_id', 'rent_details','active' ,'note']
     column_filters = ['check_in_date', 'check_out_date', 'customer_id']
-    form_columns = ['check_in_date', 'check_out_date', 'customer', 'rooms', 'note']
+    form_columns = ['check_in_date', 'check_out_date', 'customer', 'active', 'note']
+
+
+class RentDetailView(CommonView, AuthenticatedView):
+    column_labels = {
+        'id': 'Mã chi tiết thuê phòng',
+        'customer_quantity': 'Số lượng khách',
+        'room_id': 'Mã phòng',
+        'rent_id': 'Mã phiếu thuê phòng',
+        'room': 'Phòng',
+        'rent': 'Phiếu thuê phòng'
+    }
+    column_list = ['rent', 'rent_id', 'room', 'room_id', 'customer_quantity']
+    column_filters = ['rent_id', 'room_id', 'customer_quantity']
+    form_columns = ['rent', 'room', 'customer_quantity']
 
 
 class BillView(CommonView, AuthenticatedView):
@@ -240,10 +272,16 @@ admin.add_sub_category(name='user_management', parent_name='Quản lý người 
 
 # manage_votes
 admin.add_view(BookRoomView(BookRoom,
-                            db.session, menu_icon_type='fa', menu_icon_value='fa-table', name='Đặt phòng',
+                            db.session, menu_icon_type='fa', menu_icon_value='fa-check-circle', name='Đặt phòng',
+                            category='Quản lý phiếu'))
+admin.add_view(BookRoomDetailView(BookRoomDetail,
+                            db.session, menu_icon_type='fa', menu_icon_value='fa-table', name='Chi tiết đặt phòng',
                             category='Quản lý phiếu'))
 admin.add_view(RentView(Rent,
                         db.session, menu_icon_type='fa', menu_icon_value='fa-check-circle', name='Thuê phòng',
+                        category='Quản lý phiếu'))
+admin.add_view(RentDetailView(RentDetail,
+                        db.session, menu_icon_type='fa', menu_icon_value='fa-table', name='Chi tiết thuê phòng',
                         category='Quản lý phiếu'))
 admin.add_view(BillView(Bill,
                         db.session, menu_icon_type='fa', menu_icon_value='fa-sticky-note', name='Hóa đơn thanh toán',
