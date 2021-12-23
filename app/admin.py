@@ -80,6 +80,7 @@ class CustomerView(CommonView, AuthenticatedView):
 class BookRoomView(CommonView, AuthenticatedView):
     column_labels = {
         'id': 'Mã đặt phòng',
+        'booking_date': 'Ngày đặt phòng',
         'check_in_date': 'Ngày nhận phòng',
         'check_out_date': 'Ngày trả phòng',
         'customer_id': 'Mã khách hàng',
@@ -88,8 +89,8 @@ class BookRoomView(CommonView, AuthenticatedView):
 
         'customer': 'Khách hàng'
     }
-    column_list = ['check_in_date', 'check_out_date', 'customer', 'customer_id', 'rooms', 'note']
-    column_filters = ['check_in_date', 'check_out_date', 'customer_id']
+    column_list = ['booking_date', 'check_in_date', 'check_out_date', 'customer', 'customer_id', 'rooms', 'note']
+    column_filters = ['booking_date', 'check_in_date', 'check_out_date', 'customer_id']
     form_columns = ['check_in_date', 'check_out_date', 'customer', 'rooms', 'note']
 
 
