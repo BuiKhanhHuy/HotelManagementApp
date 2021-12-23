@@ -1,5 +1,6 @@
 from app import db
-from sqlalchemy import Column, Integer, String, DateTime, Float, Boolean, ForeignKey, Date
+from sqlalchemy import Column, Integer, String, DateTime, Float, \
+    Boolean, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from datetime import datetime
 from flask_login import UserMixin
@@ -105,6 +106,7 @@ class Image(BaseModel):
 
 class BookRoom(BaseModel):
     __tablename__ = 'book_room'
+    booking_date = Column(DateTime, default=datetime.now())
     check_in_date = Column(DateTime, nullable=False)
     check_out_date = Column(DateTime, nullable=False)
     customer_id = Column(Integer, ForeignKey('customer.id'), nullable=False)
@@ -154,9 +156,9 @@ class Comment(db.Model):
 
 class CommonCoefficient(BaseModel):
     __tablename__ = 'common_coefficient'
-    check_in_deadline = Column(Integer, default=0)
-    surcharge = Column(Float, default=1)
-    number_foreign_visitor = Column(Float, default=1)
+    check_in_deadline = Column(Integer, default=28)
+    surcharge = Column(Float, default=0.25)
+    number_foreign_visitor = Column(Float, default=1.5)
 
 
 book_room_detail = db.Table('book_room_detail',

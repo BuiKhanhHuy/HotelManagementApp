@@ -1,0 +1,69 @@
+{% extends "home/login.html" %}
+
+{% block head_meta %}
+    {{ super() }}
+{% endblock %}
+
+{% block title %}
+    <title>Đăng ký</title>
+{% endblock %}
+
+{% block head_css %}
+    {{ super() }}
+{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block head_tail %}
+{% endblock %}
+
+{% block page_body %}
+    <div class="limiter">
+        <div class="container-login100"
+             style="background-image: url({{ url_for('static', filename='images/bg.jpg') }});">
+            <div class="wrap-login100 p-t-30 p-b-50">
+				<span class="login100-form-title p-b-41">
+					ĐĂNG KÝ
+				</span>
+                <form class="login100-form validate-form p-b-33 p-t-5">
+
+                    <div class="wrap-input100 validate-input" data-validate="Enter username">
+                        <input class="input100" type="text" name="username" placeholder="Tên người dùng">
+                        <span class="focus-input100" data-placeholder="&#xe82a;"></span>
+                    </div>
+                     <div class="wrap-input100 validate-input" data-validate="Enter email">
+                        <input class="input100" type="email" name="email" placeholder="Email">
+                        <span class="focus-input100" data-placeholder="&#xe82f;"></span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input" data-validate="Enter password">
+                        <input class="input100" type="password" name="password" placeholder="Mật khẩu">
+                        <span class="focus-input100" data-placeholder="&#xe80f;"></span>
+                    </div>
+
+                     <div class="wrap-input100 validate-input" data-validate="Enter confirm password">
+                        <input class="input100" type="password" name="confirm" placeholder="Xác nhận mật khẩu">
+                        <span class="focus-input100" data-placeholder="&#xe80f;"></span>
+                    </div>
+
+                    <div class="container-login100-form-btn m-t-32">
+                        <button class="login100-form-btn">
+                            Đăng ký
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="dropDownSelect1"></div>
+{% endblock %}
+
+
+{% block tail_js %}
+    {{ super() }}
+{% endblock %}
+
+{% block tail %}
+{% endblock %}
+

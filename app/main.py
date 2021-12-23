@@ -6,7 +6,17 @@ from app.models import *
 
 @app.route("/")
 def index():
-    return render_template('customer/index.html')
+    return render_template('home/index.html')
+
+
+@app.route("/login")
+def login():
+    return render_template('home/login.html')
+
+
+@app.route("/register")
+def register():
+    return render_template('home/register.html')
 
 
 if __name__ == "__main__":
