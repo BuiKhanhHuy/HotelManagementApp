@@ -78,6 +78,8 @@ class Room(BaseModel):
     note = Column(String(255))
     comments = relationship('Comment', backref='room', lazy=True)
     images = relationship('Image', backref='room', lazy=True)
+    rent_details = relationship('RentDetail', backref='room', lazy=True)
+    book_room_details = relationship('BookRoomDetail', backref='room', lazy=True)
 
     def __str__(self):
         return str(self.room_number)
@@ -110,12 +112,23 @@ class BookRoom(BaseModel):
     check_in_date = Column(DateTime, nullable=False)
     check_out_date = Column(DateTime, nullable=False)
     customer_id = Column(Integer, ForeignKey('customer.id'), nullable=False)
+    active = Column(Boolean, default=True)
+    in_due_date = Column(Boolean, default=True)
     note = Column(String(255))
-    rooms = relationship('Room', secondary='book_room_detail',
-                         lazy='subquery', backref=backref('book_rooms', lazy=True))
+    book_room_details = relationship('BookRoomDetail', backref='book_room', lazy=True)
 
     def __str__(self):
         return "Phiếu đặt phòng: {0} - {1}".format(self.check_in_date, self.check_out_date)
+
+
+class BookRoomDetail(db.Model):
+    __tablename__ = 'book_room_detail'
+    book_room_id = Column(Integer, ForeignKey('book_room.id'), primary_key=True)
+    room_id = Column(Integer, ForeignKey('room.id'), primary_key=True)
+    customer_quantity = Column(Integer, default=1)
+
+    def __str__(self):
+        return str(self.room_id)
 
 
 class Rent(BaseModel):
@@ -123,13 +136,23 @@ class Rent(BaseModel):
     check_in_date = Column(DateTime, nullable=False)
     check_out_date = Column(DateTime, nullable=False)
     customer_id = Column(Integer, ForeignKey('customer.id'), nullable=False)
+    active = Column(Boolean, default=True)
     note = Column(String(255))
     bills = relationship('Bill', backref='rent', lazy=True)
-    rooms = relationship('Room', secondary='rent_detail',
-                         lazy='subquery', backref=backref('rents', lazy=True))
+    rent_details = relationship('RentDetail', backref='rent', lazy=True)
 
     def __str__(self):
         return "Phiếu thuê phòng: {0} - {1}".format(self.check_in_date, self.check_out_date)
+
+
+class RentDetail(db.Model):
+    __tablename__ = 'rent_detail'
+    rent_id = Column(Integer, ForeignKey('rent.id'), primary_key=True)
+    room_id = Column(Integer, ForeignKey('room.id'), primary_key=True)
+    customer_quantity = Column(Integer, default=1)
+
+    def __str__(self):
+        return str(self.room_id)
 
 
 class Bill(BaseModel):
@@ -161,19 +184,5 @@ class CommonCoefficient(BaseModel):
     number_foreign_visitor = Column(Float, default=1.5)
 
 
-book_room_detail = db.Table('book_room_detail',
-                            Column('book_room_id', Integer,
-                                   ForeignKey('book_room.id'), primary_key=True),
-                            Column('room_id', Integer,
-                                   ForeignKey('room.id'), primary_key=True))
-
-
-rent_detail = db.Table('rent_detail',
-                       Column('rent_id', Integer,
-                              ForeignKey('rent.id'), primary_key=True, nullable=False),
-                       Column('room_id', Integer,
-                              ForeignKey('room.id'), primary_key=True, nullable=False))
-
-
 if __name__ == "__main__":
-    pass
+    db.create_all()
