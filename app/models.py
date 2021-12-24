@@ -46,10 +46,9 @@ class Customer(BaseModel):
     nationality = Column(String(100), nullable=False)
     address = Column(String(255), nullable=False)
     phone_number = Column(Integer, nullable=False)
+    represent = Column(Boolean, default=False)
     note = Column(String(255))
     comments = relationship('Comment', backref='customer', lazy=True)
-    rents = relationship('Rent', backref='customer', lazy=True)
-    book_rooms = relationship('BookRoom', backref='customer', lazy=True)
 
     def __str__(self):
         return "{0} {1}".format(self.last_name, self.first_name)
@@ -78,8 +77,6 @@ class Room(BaseModel):
     note = Column(String(255))
     comments = relationship('Comment', backref='room', lazy=True)
     images = relationship('Image', backref='room', lazy=True)
-    rent_details = relationship('RentDetail', backref='room', lazy=True)
-    book_room_details = relationship('BookRoomDetail', backref='room', lazy=True)
 
     def __str__(self):
         return str(self.room_number)
@@ -111,48 +108,32 @@ class BookRoom(BaseModel):
     booking_date = Column(DateTime, default=datetime.now())
     check_in_date = Column(DateTime, nullable=False)
     check_out_date = Column(DateTime, nullable=False)
-    customer_id = Column(Integer, ForeignKey('customer.id'), nullable=False)
     active = Column(Boolean, default=True)
     in_due_date = Column(Boolean, default=True)
     note = Column(String(255))
-    book_room_details = relationship('BookRoomDetail', backref='book_room', lazy=True)
+    rooms = relationship('Room', secondary='book_room_detail',
+                         lazy='subquery', backref=backref('book_rooms', lazy=True))
+    customers = relationship('Customer', secondary='customer_book_room',
+                             lazy='subquery', backref=backref('book_rooms', lazy=True))
 
     def __str__(self):
         return "Phiếu đặt phòng: {0} - {1}".format(self.check_in_date, self.check_out_date)
-
-
-class BookRoomDetail(db.Model):
-    __tablename__ = 'book_room_detail'
-    book_room_id = Column(Integer, ForeignKey('book_room.id'), primary_key=True)
-    room_id = Column(Integer, ForeignKey('room.id'), primary_key=True)
-    customer_quantity = Column(Integer, default=1)
-
-    def __str__(self):
-        return str(self.room_id)
 
 
 class Rent(BaseModel):
     __tablename__ = 'rent'
     check_in_date = Column(DateTime, nullable=False)
     check_out_date = Column(DateTime, nullable=False)
-    customer_id = Column(Integer, ForeignKey('customer.id'), nullable=False)
     active = Column(Boolean, default=True)
     note = Column(String(255))
     bills = relationship('Bill', backref='rent', lazy=True)
-    rent_details = relationship('RentDetail', backref='rent', lazy=True)
+    rooms = relationship('Room', secondary='rent_detail',
+                         lazy='subquery', backref=backref('rents', lazy=True))
+    customers = relationship('Customer', secondary='customer_rent',
+                             lazy='subquery', backref=backref('rents', lazy=True))
 
     def __str__(self):
         return "Phiếu thuê phòng: {0} - {1}".format(self.check_in_date, self.check_out_date)
-
-
-class RentDetail(db.Model):
-    __tablename__ = 'rent_detail'
-    rent_id = Column(Integer, ForeignKey('rent.id'), primary_key=True)
-    room_id = Column(Integer, ForeignKey('room.id'), primary_key=True)
-    customer_quantity = Column(Integer, default=1)
-
-    def __str__(self):
-        return str(self.room_id)
 
 
 class Bill(BaseModel):
@@ -182,6 +163,34 @@ class CommonCoefficient(BaseModel):
     check_in_deadline = Column(Integer, default=28)
     surcharge = Column(Float, default=0.25)
     number_foreign_visitor = Column(Float, default=1.5)
+
+
+customer_book_room = db.Table('customer_book_room',
+                              Column('customer_id', Integer,
+                                     ForeignKey('customer.id'), primary_key=True),
+                              Column('book_room_id', Integer,
+                                     ForeignKey('book_room.id'), primary_key=True))
+
+
+customer_rent = db.Table('customer_rent',
+                         Column('customer_id', Integer,
+                                ForeignKey('customer.id'), primary_key=True),
+                         Column('rent_id', Integer,
+                                ForeignKey('rent.id'), primary_key=True))
+
+
+book_room_detail = db.Table('book_room_detail',
+                            Column('book_room_id', Integer,
+                                   ForeignKey('book_room.id'), primary_key=True),
+                            Column('room_id', Integer,
+                                   ForeignKey('room.id'), primary_key=True))
+
+
+rent_detail = db.Table('rent_detail',
+                       Column('rent_id', Integer,
+                              ForeignKey('rent.id'), primary_key=True, nullable=False),
+                       Column('room_id', Integer,
+                              ForeignKey('room.id'), primary_key=True, nullable=False))
 
 
 if __name__ == "__main__":

@@ -1,0 +1,219 @@
+{% extends 'employee/layout/base.html' %}
+
+{% block title %}
+    <title>Nhận phòng</title>
+{% endblock %}
+
+{% block content %}
+    <div class="page-wrapper">
+        <!-- ============================================================== -->
+        <!-- Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <div class="page-breadcrumb bg-white">
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid p-0">
+                <div class="white-box shadow-lg rounded-lg d-md-flex mb-3">
+                    <div class="col-sm-2 col-sm-1 col-xs-3 p-2 mt-auto">
+                        <select class="form-select shadow-none row border-top text-info">
+                            <option>Hiển thị 1000 mục</option>
+                            <option>Hiển thị 20 mục</option>
+                            <option>Hiển thị 30 mục</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 col-sm-1 col-xs-3 p-2">
+                        <select class="form-select shadow-none row border-top">
+                            <option>Tất cả loại phòng</option>
+                            <option>Phòng đơn</option>
+                            <option>Phòng đôi</option>
+                            <option>Phòng gia đình</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 col-sm-1 col-xs-3 p-2">
+                        <select class="form-select shadow-none row border-top">
+                            <option>Tất cả giá</option>
+                            <option>Dưới 10,000,000 VND</option>
+                            <option>Dưới 3,000,000 VND</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2 col-sm-1 col-xs-3 p-2">
+                        <select class="form-select shadow-none row border-top">
+                            <option>Tối đa 1 khách</option>
+                            <option>Tối đa 2 khách</option>
+                            <option>Tối đa 3 khách</option>
+                            <option>Tối đa 4 khách</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 col-sm-1 col-xs-3 p-2">
+                        <form class="form-inline" action="/action_page.php">
+                            <div class="row d-flex">
+                                <div class="w-75 p-0">
+                                    <input class="form-control mr-sm-2 w-100" type="text" placeholder="Tìm kiếm">
+                                </div>
+                                <div class="w-25 p-0">
+                                    <button class="btn btn-dark w-100" type="submit"><i
+                                            class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="white-box shadow-lg rounded-lg mb-2 p-2 overflow-auto" style="height: 500px;">
+                    <table class="table table-hover c_table">
+                        <thead class="btn-dark">
+                        <tr>
+                            <th class="text-white col-md-1 text-center align-middle">Hình ảnh</th>
+                            <th class="text-white col-md-1 text-center align-middle">Số phòng</th>
+                            <th class="text-white col-md-2 align-middle">Loại phòng</th>
+                            <th class="text-white col-md-2 align-middle">Giá</th>
+                            <th class="text-white col-md-3 align-middle">Mô tả</th>
+                            <th class="text-white col-md-2 align-middle">Trạng thái</th>
+                            <th class="text-white col-md-2 text-center align-middle">Lựa chọn</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr>
+                            <td class="text-dark col-md-1 text-middle align-middle">
+                                <img src="{{ url_for('static',filename='images/hero_1.jpg') }}" class="img-fluid">
+                            </td>
+                            <td class="text-dark col-md-1 text-center align-middle">101</td>
+                            <td class="text-dark col-md-2 align-middle">Phòng gia đình</td>
+                            <td class="text-dark col-md-2 font-weight-bold align-middle">1,000,000 VND</td>
+                            <td class="text-dark col-md-3 align-middle">Mô tả mô tả mô tả mô tả mô tả mô tả mô tả mô tả
+                                mô tả
+                            </td>
+                            <td class="text-dark col-md-2 align-middle">
+                                <span class="badge badge-warning">Phòng đã được đặt vào ngày khác</span>
+                            </td>
+                            <td class="text-dark col-md-2 text-right align-middle">
+                                <button class="btn btn-info text-white">Chọn</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-dark col-md-1 text-middle align-middle">
+                                <img src="{{ url_for('static',filename='images/hero_2.jpg') }}" class="img-fluid">
+                            </td>
+                            <td class="text-dark col-md-1 text-center align-middle">101</td>
+                            <td class="text-dark col-md-2 align-middle">Phòng gia đình</td>
+                            <td class="text-dark col-md-2 font-weight-bold align-middle">1,000,000 VND</td>
+                            <td class="text-dark col-md-3 align-middle">Mô tả mô tả mô tả mô tả mô tả mô tả mô tả mô tả
+                                mô tả
+                            </td>
+                            <td class="text-dark col-md-2 align-middle"><span
+                                    class="badge badge-success">Phòng trống</span>
+                            </td>
+                            <td class="text-dark col-md-2 text-right align-middle">
+                                <button class="btn btn-info text-white">Chọn</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="text-dark col-md-1 text-middle align-middle">
+                                <img src="{{ url_for('static',filename='images/hero_4.jpg') }}" class="img-fluid">
+                            </td>
+                            <td class="text-dark col-md-1 text-center align-middle">101</td>
+                            <td class="text-dark col-md-2 align-middle">Phòng gia đình</td>
+                            <td class="text-dark col-md-2 font-weight-bold align-middle">1,000,000 VND</td>
+                            <td class="text-dark col-md-3 align-middle">Mô tả mô tả mô tả mô tả mô tả mô tả mô tả mô tả
+                                mô tả
+                            </td>
+                            <td class="text-dark col-md-2 align-middle"><span
+                                    class="badge badge-success">Phòng trống</span>
+                            </td>
+                            <td class="text-dark col-md-2 text-right align-middle">
+                                <button class="btn btn-info text-white">Chọn</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-dark col-md-1 text-middle align-middle">
+                                <img src="{{ url_for('static',filename='images/hero_1.jpg') }}" class="img-fluid">
+                            </td>
+                            <td class="text-dark col-md-1 text-center align-middle">101</td>
+                            <td class="text-dark col-md-2 align-middle">Phòng gia đình</td>
+                            <td class="text-dark col-md-2 font-weight-bold align-middle">1,000,000 VND</td>
+                            <td class="text-dark col-md-3 align-middle">Mô tả mô tả mô tả mô tả mô tả mô tả mô tả mô tả
+                                mô tả
+                            </td>
+                            <td class="text-dark col-md-2 align-middle"><span class="badge badge-warning">Phòng đã được đặt vào ngày khác</span>
+                            </td>
+                            <td class="text-dark col-md-2 text-right align-middle">
+                                <button class="btn btn-info text-white">Chọn</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-dark col-md-1 text-middle align-middle">
+                                <img src="{{ url_for('static',filename='images/hero_2.jpg') }}" class="img-fluid">
+                            </td>
+                            <td class="text-dark col-md-1 text-center align-middle">101</td>
+                            <td class="text-dark col-md-2 align-middle">Phòng gia đình</td>
+                            <td class="text-dark col-md-2 font-weight-bold align-middle">1,000,000 VND</td>
+                            <td class="text-dark col-md-3 align-middle">Mô tả mô tả mô tả mô tả mô tả mô tả mô tả mô tả
+                                mô tả
+                            </td>
+                            <td class="text-dark col-md-2 align-middle"><span class="badge badge-success">Opened</span>
+                            </td>
+                            <td class="text-dark col-md-2 text-right align-middle">
+                                <button class="btn btn-info text-white">Chọn</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="text-dark col-md-1 text-middle align-middle">
+                                <img src="{{ url_for('static',filename='images/hero_4.jpg') }}" class="img-fluid">
+                            </td>
+                            <td class="text-dark col-md-1 text-center align-middle">101</td>
+                            <td class="text-dark col-md-2 align-middle">Phòng gia đình</td>
+                            <td class="text-dark col-md-2 font-weight-bold align-middle">1,000,000 VND</td>
+                            <td class="text-dark col-md-3 align-middle">Mô tả mô tả mô tả mô tả mô tả mô tả mô tả mô tả
+                                mô tả
+                            </td>
+                            <td class="text-dark col-md-2 align-middle"><span class="badge badge-warning">Phòng đã được đặt vào ngày khác</span>
+                            </td>
+                            <td class="text-dark col-md-2 text-right align-middle">
+                                <button class="btn btn-info text-white">Chọn</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <div class="body">
+                    <button type="button" class="btn btn-default waves-effect m-r-20" data-toggle="modal"
+                            data-target="#defaultModal">MODAL - DEFAULT SIZE
+                    </button>
+                </div>
+                <!-- Default Size -->
+                <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="title font-weight-bold" id="defaultModalLabel">Modal title</h4>
+                            </div>
+                            <div class="modal-body">
+                                Phòng này đã được đặt từ ngày <strong>24/12/2021</strong> đến ngày <strong>28/12/2021</strong>.
+                                Bạn vui lòng chọn phòng khác
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success text-white btn-round rounded-lg waves-effect">SAVE CHANGES
+                                </button>
+                                <button type="button" class="btn btn-danger text-white rounded-lg waves-effect" data-dismiss="modal">CLOSE
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- End Container fluid  -->
+        </div>
+        <!-- End Page wrapper  -->
+    </div>
+{% endblock %}
