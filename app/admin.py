@@ -22,19 +22,6 @@ class MyAdminIndexView(AdminIndexView):
         return self.render('admin/index.html')
 
 
-class UserRoleView(CommonView, AuthenticatedView):
-    column_labels = {
-        'id': 'Mã quyền',
-        'role_name': 'Tên quyền',
-        'note': 'Ghi chú',
-        'users': 'Người dùng'
-    }
-    column_list = ['role_name', 'users', 'note']
-    column_searchable_list = ['role_name']
-    column_filters = ['role_name']
-    form_columns = ['role_name', 'users', 'note']
-
-
 class UserView(CommonView, AuthenticatedView):
     column_labels = {
         'id': 'Mã người dùng',
@@ -44,15 +31,25 @@ class UserView(CommonView, AuthenticatedView):
         'email': 'Email',
         'active': 'Hoạt động',
         'joined_date': 'Ngày tham gia',
-        'user_role_id': 'Mã quyền',
         'comments': 'Bình luận',
-
         'user_role': 'Quyền'
     }
-    column_list = ['username', 'password', 'avatar', 'email', 'active', 'joined_date', 'user_role', 'user_role_id']
-    column_searchable_list = ['username', 'email']
-    column_filters = ['username', 'email', 'active', 'joined_date', 'user_role_id']
+    column_list = ['username', 'password', 'avatar', 'email', 'active', 'joined_date', 'user_role']
+    column_searchable_list = ['username', 'email', 'user_role']
+    column_filters = ['username', 'email', 'active', 'joined_date', 'user_role']
     form_columns = ['username', 'password', 'avatar', 'email', 'active', 'joined_date', 'user_role']
+
+
+class CustomerTypeView(CommonView, AuthenticatedView):
+    column_labels = {
+        'id': 'Mã loại khách hàng',
+        'customer_type_name': 'Tên loại khách hàng',
+        'note': 'Ghi chú',
+        'customer': 'Khách hàng'
+    }
+    column_searchable_list = ['id', 'customer_type_name']
+    column_filters = ['id', 'customer_type_name']
+    form_columns = ['customer_type_name', 'note', 'customers']
 
 
 class CustomerView(CommonView, AuthenticatedView):
@@ -63,17 +60,17 @@ class CustomerView(CommonView, AuthenticatedView):
         'birthday': 'Ngày sinh',
         'gender': 'Giới tính',
         'identification_card': 'Số CMND',
-        'nationality': 'Quốc tịch',
+        'customer_type_id': 'Mã loại khách hàng',
+        'customer_type': 'Loại khách hàng',
         'address': 'Địa chỉ',
         'phone_number': 'Số điện thoại',
-        'represent': 'Đại diện',
         'note': 'Ghi chú',
         'comments': 'Bình luận',
     }
-    column_searchable_list = ['identification_card', 'phone_number', 'first_name', 'represent']
+    column_searchable_list = ['identification_card', 'phone_number', 'first_name']
     column_filters = ['first_name', 'last_name', 'birthday', 'gender', 'identification_card',
-                      'nationality', 'address', 'phone_number', 'represent']
-    form_excluded_columns = ['comments', 'book_rooms', 'rents']
+                      'address', 'phone_number', 'customer_type_id']
+    form_excluded_columns = ['comments', 'rents', 'book_rooms']
 
 
 class BookRoomView(CommonView, AuthenticatedView):
@@ -83,16 +80,17 @@ class BookRoomView(CommonView, AuthenticatedView):
         'check_in_date': 'Ngày nhận phòng',
         'check_out_date': 'Ngày trả phòng',
         'active': 'Hoạt động',
-        'in_due_date': 'Trong hạn',
+        'done': 'Đã nhận phòng',
         'note': 'Ghi chú',
-        'rooms': 'Phòng đặt',
+        'user': 'Tài khoản người dùng',
 
-        'customers': 'Khách hàng'
+        'rooms': 'Phòng đặt',
+        'customer': 'Khách hàng'
     }
-    column_list = ['booking_date', 'check_in_date', 'check_out_date', 'customers' , 'rooms','active',
-                  'in_due_date', 'note']
-    column_filters = ['booking_date', 'check_in_date', 'check_out_date', 'active', 'in_due_date']
-    form_columns = ['check_in_date', 'check_out_date', 'customers', 'rooms', 'note']
+    column_list = ['booking_date', 'check_in_date', 'check_out_date', 'rooms', 'customer', 'user', 'active',
+                   'done', 'note']
+    column_filters = ['booking_date', 'check_in_date', 'check_out_date', 'active', 'done']
+    form_columns = ['check_in_date', 'check_out_date', 'rooms', 'customer', 'user', 'note']
 
 
 class RentView(CommonView, AuthenticatedView):
@@ -102,29 +100,48 @@ class RentView(CommonView, AuthenticatedView):
         'check_out_date': 'Ngày trả phòng',
         'active': 'Hoạt động',
         'note': 'Ghi chú',
-        'bills': 'Hóa đơn thanh toán',
-        'rooms': 'Phòng thuê',
+        'room_id': 'Mã phòng',
+        'room': 'Phòng thuê',
 
         'customers': 'Khách hàng',
+        'bill_details': 'Hóa đơn chi tiết'
     }
-    column_list = ['check_in_date', 'check_out_date', 'customers', 'rooms','active' ,'note']
-    column_filters = ['check_in_date', 'check_out_date']
-    form_columns = ['check_in_date', 'check_out_date', 'customers', 'rooms', 'active', 'note']
+    column_list = ['check_in_date', 'check_out_date', 'customers', 'room', 'room_id', 'active', 'note']
+    column_filters = ['check_in_date', 'check_out_date', 'room_id', 'active']
+    form_columns = ['check_in_date', 'check_out_date', 'customers', 'room', 'active', 'note']
+    pass
 
 
 class BillView(CommonView, AuthenticatedView):
     column_labels = {
         'id': 'Mã hóa đơn thanh toán',
-        'rent_id': 'Mã phiếu thuê phòng',
         'total': 'Tổng tiền',
         'note': 'Ghi chú',
 
         'rent': 'Phiếu thuê phòng',
+        'bill_details': 'Hóa đơn chi tiết'
     }
-    column_list = ['total', 'rent', 'rent_id', 'note']
-    column_searchable_list = ['total']
-    column_filters = ['total', 'rent_id']
-    form_columns = ['rent_id', 'total', 'rent', 'note']
+    column_list = ['id', 'total', 'note']
+    column_searchable_list = ['id', 'total']
+    column_filters = ['id', 'total']
+    form_columns = ['total', 'note']
+
+
+class BillDetailView(CommonView, AuthenticatedView):
+    column_labels = {
+        'id': 'Mã hóa đơn chi tiết',
+        'number_of_day': 'Số ngày',
+        'price': 'Giá',
+        'into_money': 'Thành tiền',
+        'bill_id': 'Mã phiếu thanh toán',
+        'rent_id': 'Mã phiếu thuê phòng',
+
+        'rent': 'Phiếu thuê phòng',
+        'bill': 'Phiếu thanh toán'
+    }
+    column_list = ['id', 'number_of_day', 'price', 'into_money', 'bill_id', 'rent_id']
+    column_searchable_list = ['id']
+    column_filters = ['id', 'number_of_day', 'price', 'into_money', 'bill_id', 'rent_id']
 
 
 class KindOfRoomView(CommonView, AuthenticatedView):
@@ -142,19 +159,6 @@ class KindOfRoomView(CommonView, AuthenticatedView):
     column_searchable_list = ['kind_of_room_name', 'price']
     column_filters = ['kind_of_room_name', 'price', 'standard_number', 'maximum_number']
     form_columns = ['kind_of_room_name', 'price', 'standard_number', 'maximum_number', 'image', 'rooms', 'note']
-
-
-class RoomStatusView(CommonView, AuthenticatedView):
-    column_labels = {
-        'id': 'Mã tình trạng phòng',
-        'room_status_name': 'Trạng thái phòng',
-        'note': 'Ghi chú',
-        'rooms': 'Phòng'
-    }
-    column_list = ['room_status_name', 'rooms', 'note']
-    column_searchable_list = ['room_status_name']
-    column_filters = ['room_status_name']
-    form_columns = ['room_status_name', 'rooms', 'note']
 
 
 class ImageView(CommonView, AuthenticatedView):
@@ -177,24 +181,23 @@ class RoomView(CommonView, AuthenticatedView):
         'id': 'Mã phòng',
         'room_number': 'Số phòng',
         'description': 'Mô tả',
-        'room_status_id': 'Mã trạng thái',
         'kind_of_room_id': 'Mã loại phòng',
         'note': 'Ghi chú',
         'comments': 'Bình luận',
         'images': 'Hình ảnh',
 
         'kind_of_room': 'Loại phòng',
-        'rooms_status': 'Trạng thái phòng',
+        'active': 'Hoạt động',
         'book_rooms': 'Phiếu đặt phòng',
         'rents': 'Phiếu thuê phòng',
         'book_rooms': 'Đặt phòng',
         'rents': 'Thuê phòng'
     }
-    column_list = ['room_number', 'description', 'kind_of_room', 'kind_of_room_id', 'rooms_status', 'room_status_id',
+    column_list = ['room_number', 'description', 'kind_of_room', 'kind_of_room_id', 'active',
                    'note']
     column_searchable_list = ['room_number']
-    column_filters = ['room_number', 'kind_of_room_id', 'room_status_id']
-    form_columns = ['room_number', 'description', 'rooms_status', 'kind_of_room', 'images', 'note']
+    column_filters = ['room_number', 'kind_of_room_id', 'active']
+    form_columns = ['room_number', 'description', 'active', 'kind_of_room', 'images', 'note']
 
 
 class CommonCoefficientView(CommonView, AuthenticatedView):
@@ -224,37 +227,37 @@ class CommentView(CommonView, AuthenticatedView):
     column_filters = ['created_date', 'user_id', 'customer_id', 'room_id']
 
 
-admin = Admin(app=app, name='Administrator', template_mode='bootstrap4',
-              index_view=MyAdminIndexView(menu_icon_type='fa', menu_icon_value='fa-home'))
+admin = Admin(app=app, name='TRANG QUẢN TRỊ', template_mode='bootstrap4',
+              index_view=MyAdminIndexView(menu_icon_type='fa', menu_icon_value='fa-tachometer', name='Thống kê'))
 
 # user_management
-admin.add_view(UserRoleView(UserRole,
-                            db.session, menu_icon_type='fa', menu_icon_value='fa-key', name='Quyền người dùng',
-                            category='Quản lý người dùng'))
 admin.add_view(UserView(User,
                         db.session, menu_icon_type='fa', menu_icon_value='fa-user', name='Người dùng',
                         category='Quản lý người dùng'))
 admin.add_view(CustomerView(Customer,
                             db.session, menu_icon_type='fa', menu_icon_value='fa-users', name='Khách hàng',
                             category='Quản lý người dùng'))
+admin.add_view(CustomerTypeView(CustomerType,
+                                db.session, menu_icon_type='fa', menu_icon_value='fa-id-badge', name='Loại khách hàng',
+                                category='Quản lý người dùng'))
 admin.add_sub_category(name='user_management', parent_name='Quản lý người dùng')
 
 # manage_votes
 admin.add_view(BookRoomView(BookRoom,
-                            db.session, menu_icon_type='fa', menu_icon_value='fa-table', name='Đặt phòng',
+                            db.session, menu_icon_type='fa', menu_icon_value='fa-check-square', name='Phiếu đặt phòng',
                             category='Quản lý phiếu'))
 admin.add_view(RentView(Rent,
-                        db.session, menu_icon_type='fa', menu_icon_value='fa-check-circle', name='Thuê phòng',
+                        db.session, menu_icon_type='fa', menu_icon_value='fa-shopping-basket', name='Phiếu thuê phòng',
                         category='Quản lý phiếu'))
 admin.add_view(BillView(Bill,
-                        db.session, menu_icon_type='fa', menu_icon_value='fa-sticky-note', name='Hóa đơn thanh toán',
+                        db.session, menu_icon_type='fa', menu_icon_value='fa-credit-card', name='Hóa đơn thanh toán',
                         category='Quản lý phiếu'))
+admin.add_view(BillDetailView(BillDetail,
+                              db.session, menu_icon_type='fa', menu_icon_value='fa-th', name='Chi tiết hóa đơn',
+                              category='Quản lý phiếu'))
 admin.add_sub_category(name='manage_votes ', parent_name='Quản lý phiếu')
 
 # room_manager
-admin.add_view(RoomStatusView(RoomStatus,
-                              db.session, menu_icon_type='fa', menu_icon_value='fa-toggle-on', name='Trạng thái phòng',
-                              category='Quản lý phòng'))
 admin.add_view(ImageView(Image,
                          db.session, menu_icon_type='fa', menu_icon_value='fa-image', name='Hình ảnh phòng',
                          category='Quản lý phòng'))

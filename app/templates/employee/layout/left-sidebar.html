@@ -7,21 +7,21 @@
             <ul id="sidebarnav">
                 <!-- User Profile-->
                 <li class="sidebar-item pt-2">
-                    <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#"
+                    <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ url_for('book_room') }}"
                        aria-expanded="false">
-                        <i class="fas fa-edit"></i>
+                        <i class="fas fa-table"></i>
                         <span class="hide-menu">Đặt phòng</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#"
+                    <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ url_for('rent') }}"
                        aria-expanded="false">
                         <i class="fas fa-external-link-alt"></i>
                         <span class="hide-menu">Thuê phòng</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#"
+                    <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ url_for('payment') }}"
                        aria-expanded="false">
                         <i class="far fa-credit-card"></i>
                         <span class="hide-menu">Thanh toán</span>
