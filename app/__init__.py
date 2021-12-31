@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_babelex import Babel
+import cloudinary
 
 
 app = Flask(__name__)
@@ -12,6 +13,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 app.config['FLASK_ADMIN_SWATCH'] = 'Simplex'
 app.config['FLASK_ADMIN_FLUID_LAYOUT'] = True
+
+cloudinary.config(
+    cloud_name='dtnpj540t',
+    api_key='371357798369383',
+    api_secret='9zy7ehlUetIxxl7ibee4y3tmdL4'
+)
 
 
 db = SQLAlchemy(app=app)

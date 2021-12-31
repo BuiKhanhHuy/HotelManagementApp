@@ -6,16 +6,46 @@ from app.models import *
 
 @app.route("/")
 def index():
-    return render_template('home/index.html')
+    return render_template("500.html")
+
+
+@app.route("/employee/book-room")
+def book_room():
+    return render_template('employee/book-room.html')
+
+
+@app.route("/employee/book-room/book-room-detail")
+def book_room_detail():
+    return render_template('employee/book-room-detail.html')
+
+
+@app.route("/employee/rent")
+def rent():
+    return render_template('employee/rent.html')
+
+
+@app.route("/employee/rent-directly")
+def rent_directly():
+    return render_template('employee/rent-directly.html')
+
+
+@app.route("/employee/rent-advance")
+def rent_advance():
+    return render_template('employee/rent-advance.html')
+
+
+@app.route("/employee/payment")
+def payment():
+    return render_template('employee/payment.html')
 
 
 @app.route("/login")
-def login():
+def login_employee():
     return render_template('home/login.html')
 
 
 @app.route("/register")
-def register():
+def register_employee():
     return render_template('home/register.html')
 
 

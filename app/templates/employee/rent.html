@@ -1,0 +1,35 @@
+{% extends 'employee/layout/base.html' %}
+
+{% block title %}
+    <title>Thuê phòng</title>
+{% endblock %}
+
+{% block content %}
+    <div class="page-wrapper">
+        <div class="page-breadcrumb bg-white">
+            <div class="row">
+                <div class="col-xl-3 col-md-6">
+                     <a href="{{ url_for('rent_advance') }}">
+                        <div class="card bg-success text-white mb-4 rounded-lg shadow-sm">
+                            <div class="align-items-center justify-content-between p-2 text-center">
+                                <i class="fas fa-calendar-check" style="font-size: 70px"></i>
+                            </div>
+                            <div class="card-body text-center text-white font-18 font-bold">Nhận phòng đã đặt</div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <a href="{{ url_for('rent_directly') }}">
+                        <div class="card bg-danger text-white mb-4 rounded-lg  shadow-sm">
+                            <div class="align-items-center justify-content-between  p-2 text-center">
+                                <i class="far fa-id-card" style="font-size: 70px"></i>
+                            </div>
+                            <div class="card-body text-center text-white  font-18 font-bold">Thuê phòng trực tiếp</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

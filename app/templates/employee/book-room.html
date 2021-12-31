@@ -1,0 +1,105 @@
+{% extends 'employee/layout/base.html' %}
+
+{% block title %}
+    <title>Đặt phòng</title>
+{% endblock %}
+
+{% block content %}
+    <div class="page-wrapper">
+        <div class="page-breadcrumb bg-white">
+            <div class="container-fluid p-0">
+                <div class="white-box shadow-lg rounded-lg mb-3 p-3">
+                    <div class="d-md-flex pb-2">
+                        <div class="col-md-3 pl-0 pr-4">
+                            <span class="font-bold"> Ngày nhận phòng</span>
+                            <input class="p-2 w-100 rounded-lg border" type="date">
+                        </div>
+                        <div class="col-md-3 pl-0 pr-2">
+                            <span class="font-bold">Ngày trả phòng</span><input class="p-2 w-100 rounded-lg border"
+                                                                                type="date">
+                        </div>
+                    </div>
+                    <div class="d-md-flex">
+                        <div class="col-sm-2 col-sm-1 col-xs-3 p-2 mt-auto">
+                            <select class="form-select shadow-none row border-top text-black rounded-lg">
+                                <option>Hiển thị 1000</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 col-sm-1 col-xs-3 p-2 mr-4">
+                            <form class="form-inline" action="/action_page.php">
+                                <div class="row d-flex">
+                                    <div class="w-75 p-0">
+                                        <input class="form-control mr-sm-2 w-100 rounded-left" type="text"
+                                               placeholder="Tìm kiếm">
+                                    </div>
+                                    <div class="w-25 p-0">
+                                        <button class="btn btn-dark w-100 rounded-right" type="submit"><i
+                                                class="fa fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-3 col-sm-1 col-xs-3 p-2">
+                            <select class="form-select shadow-none row border-top  rounded-lg">
+                                <option>Tất cả loại phòng</option>
+                                <option>Phòng đơn</option>
+                                <option>Phòng đôi</option>
+                                <option>Phòng gia đình</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-sm-1 col-xs-3 p-2">
+                            <select class="form-select shadow-none row border-top rounded-lg">
+                                <option>Tất cả giá</option>
+                                <option>Dưới 10,000,000 VND</option>
+                                <option>Dưới 3,000,000 VND</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2 col-sm-1 col-xs-3 p-2">
+                            <select class="form-select shadow-none row border-top rounded-lg">
+                                <option>Tối đa 1 khách</option>
+                                <option>Tối đa 2 khách</option>
+                                <option>Tối đa 3 khách</option>
+                                <option>Tối đa 4 khách</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="white-box shadow-lg rounded-lg mb-2 p-2 overflow-auto" style="height: 450px;">
+                    <table class="table table-hover c_table">
+                        <thead class="btn-dark">
+                        <tr>
+                            <th class="text-white col-md-1 text-center align-middle">Hình ảnh</th>
+                            <th class="text-white col-md-1 text-center align-middle">Số phòng</th>
+                            <th class="text-white col-md-2 align-middle">Loại phòng</th>
+                            <th class="text-white col-md-2 align-middle">Giá</th>
+                            <th class="text-white col-md-4 align-middle">Mô tả</th>
+                            <th class="text-white col-md-2 text-center align-middle">Lựa chọn</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr>
+                            <td class="text-dark col-md-1 text-middle align-middle">
+                                <img src="{{ url_for('static',filename='images/hero_1.jpg') }}" class="img-fluid">
+                            </td>
+                            <td class="text-dark col-md-1 text-center align-middle">101</td>
+                            <td class="text-dark col-md-2 align-middle">Phòng gia đình</td>
+                            <td class="text-dark col-md-2 font-weight-bold align-middle">1,000,000 VND</td>
+                            <td class="text-dark col-md-4 align-middle">Mô tả mô tả mô tả mô tả mô tả mô tả mô tả mô tả
+                                mô tả
+                            </td>
+                            <td class="text-dark col-md-2 text-right align-middle">
+                                <button class="btn btn-info text-white">Chọn phòng</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <!-- End Container fluid  -->
+        </div>
+        <!-- End Page wrapper  -->
+    </div>
+{% endblock %}
