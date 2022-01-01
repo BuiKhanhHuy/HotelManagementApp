@@ -7,8 +7,25 @@
 {% block content %}
     <div class="page-wrapper">
         <div class="page-breadcrumb bg-white">
+            <div class="row align-items-center">
+                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                    <h4 class="page-title">Blank Page</h4>
+                </div>
+                <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+                    <div class="d-md-flex">
+                        <ol class="breadcrumb ms-auto">
+                            <li><a href="#" class="fw-normal">Dashboard</a></li>
+                        </ol>
+                        <a href="https://www.wrappixel.com/templates/ampleadmin/" target="_blank"
+                           class="btn btn-danger d-none d-md-block pull-right ms-3
+                                hidden-xs hidden-sm waves-effect waves-light text-white">Upgrade to Pro</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="page-breadcrumb bg-white">
             <div class="container-fluid p-0">
-                <div class="white-box shadow-lg rounded-lg mb-3 p-3">
+                <div class="white-box shadow-lg mb-3 p-3">
                     <div class="d-md-flex pb-2">
                         <div class="col-md-3 pl-0 pr-4">
                             <span class="font-bold"> Ngày nhận phòng</span>
@@ -20,12 +37,7 @@
                         </div>
                     </div>
                     <div class="d-md-flex">
-                        <div class="col-sm-2 col-sm-1 col-xs-3 p-2 mt-auto">
-                            <select class="form-select shadow-none row border-top text-black rounded-lg">
-                                <option>Hiển thị 1000</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2 col-sm-1 col-xs-3 p-2 mr-4">
+                        <div class="col-md-4 col-sm-1 col-xs-3 p-2">
                             <form class="form-inline" action="/action_page.php">
                                 <div class="row d-flex">
                                     <div class="w-75 p-0">
@@ -64,35 +76,45 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="white-box shadow-lg rounded-lg mb-2 p-2 overflow-auto" style="height: 450px;">
+                <div class="white-box shadow-lg mb-2 p-2">
+                    <div class="d-md-flex p-2">
+                        <h4 class="font-weight-bold">DANH SÁCH PHÒNG</h4>
+                        <div class="ml-auto">
+                            Kết quả tìm kiếm: <span class="text-danger">100</span>
+                        </div>
+                    </div>
                     <table class="table table-hover c_table">
                         <thead class="btn-dark">
                         <tr>
                             <th class="text-white col-md-1 text-center align-middle">Hình ảnh</th>
                             <th class="text-white col-md-1 text-center align-middle">Số phòng</th>
+                            <th class="text-white col-md-1 text-center align-middle">Tối đa</th>
                             <th class="text-white col-md-2 align-middle">Loại phòng</th>
                             <th class="text-white col-md-2 align-middle">Giá</th>
-                            <th class="text-white col-md-4 align-middle">Mô tả</th>
+                            <th class="text-white col-md-3 align-middle">Mô tả</th>
                             <th class="text-white col-md-2 text-center align-middle">Lựa chọn</th>
                         </tr>
                         </thead>
                         <tbody>
-
-                        <tr>
-                            <td class="text-dark col-md-1 text-middle align-middle">
-                                <img src="{{ url_for('static',filename='images/hero_1.jpg') }}" class="img-fluid">
-                            </td>
-                            <td class="text-dark col-md-1 text-center align-middle">101</td>
-                            <td class="text-dark col-md-2 align-middle">Phòng gia đình</td>
-                            <td class="text-dark col-md-2 font-weight-bold align-middle">1,000,000 VND</td>
-                            <td class="text-dark col-md-4 align-middle">Mô tả mô tả mô tả mô tả mô tả mô tả mô tả mô tả
-                                mô tả
-                            </td>
-                            <td class="text-dark col-md-2 text-right align-middle">
-                                <button class="btn btn-info text-white">Chọn phòng</button>
-                            </td>
-                        </tr>
+                        {% for room in rooms %}
+                            <tr>
+                                <td class="text-dark col-md-1 text-middle align-middle">
+                                    <img src="{{ room.image }}" class="img-fluid">
+                                </td>
+                                <td class="text-dark col-md-1 text-center align-middle">{{ room.room_number }}</td>
+                                <td class="text-dark col-md-1 text-center align-middle">{{ room.maximum_number }}
+                                    khách
+                                </td>
+                                <td class="text-dark col-md-2 align-middle">{{ room.kind_of_room.kind_of_room_name }}</td>
+                                <td class="text-danger col-md-2 font-weight-bold align-middle">{{ "{0:,.0f}".format(room.price) }}
+                                    VND
+                                </td>
+                                <td class="text-dark col-md-3 align-middle">{{ room.description }}</td>
+                                <td class="text-dark col-md-2 text-right align-middle">
+                                    <button class="btn btn-info text-white">Chọn phòng</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
                 </div>
