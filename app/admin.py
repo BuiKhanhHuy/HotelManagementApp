@@ -148,17 +148,15 @@ class KindOfRoomView(CommonView, AuthenticatedView):
     column_labels = {
         'id': 'Mã loại phòng',
         'kind_of_room_name': 'Loại phòng',
-        'price': 'Giá',
-        'standard_number': 'Số lượng tiêu chuẩn',
-        'maximum_number': 'Số lượng tối đa',
-        'image': 'Hình ảnh',
+        'description': 'Mô tả',
+        'images': 'Hình ảnh',
         'note': 'Ghi chú',
         'rooms': 'Phòng'
     }
-    column_list = ['kind_of_room_name', 'price', 'standard_number', 'maximum_number', 'image', 'rooms', 'note']
-    column_searchable_list = ['kind_of_room_name', 'price']
-    column_filters = ['kind_of_room_name', 'price', 'standard_number', 'maximum_number']
-    form_columns = ['kind_of_room_name', 'price', 'standard_number', 'maximum_number', 'image', 'rooms', 'note']
+    column_list = ['kind_of_room_name', 'description', 'rooms', 'images', 'note']
+    column_searchable_list = ['kind_of_room_name']
+    column_filters = ['kind_of_room_name']
+    form_columns = ['kind_of_room_name', 'description', 'rooms', 'images', 'note']
 
 
 class ImageView(CommonView, AuthenticatedView):
@@ -166,25 +164,28 @@ class ImageView(CommonView, AuthenticatedView):
         'id': 'Mã hình ảnh',
         'rank': 'Thứ tự ảnh',
         'link': 'Đường dẫn ảnh',
-        'room_id': 'Mã phòng',
+        'kind_of_room_id': 'Mã loại phòng',
         'note': 'Ghi chú',
 
-        'room': 'Phòng'
+        'kind_of_room': 'Loại phòng'
     }
-    column_list = ['link', 'rank', 'room', 'room_id', 'note']
-    column_filters = ['room_id']
-    form_columns = ['link', 'rank', 'room', 'note']
+    column_list = ['link', 'rank', 'kind_of_room', 'kind_of_room_id', 'note']
+    column_filters = ['kind_of_room_id']
+    form_columns = ['link', 'rank', 'kind_of_room', 'note']
 
 
 class RoomView(CommonView, AuthenticatedView):
     column_labels = {
         'id': 'Mã phòng',
         'room_number': 'Số phòng',
+        'price': 'Giá',
+        'standard_number': 'Số lượng tiêu chuẩn',
+        'maximum_number': 'Số lượng tối đa',
         'description': 'Mô tả',
         'kind_of_room_id': 'Mã loại phòng',
+        'image': 'Hình ảnh',
         'note': 'Ghi chú',
         'comments': 'Bình luận',
-        'images': 'Hình ảnh',
 
         'kind_of_room': 'Loại phòng',
         'active': 'Hoạt động',
@@ -193,11 +194,12 @@ class RoomView(CommonView, AuthenticatedView):
         'book_rooms': 'Đặt phòng',
         'rents': 'Thuê phòng'
     }
-    column_list = ['room_number', 'description', 'kind_of_room', 'kind_of_room_id', 'active',
-                   'note']
-    column_searchable_list = ['room_number']
-    column_filters = ['room_number', 'kind_of_room_id', 'active']
-    form_columns = ['room_number', 'description', 'active', 'kind_of_room', 'images', 'note']
+    column_list = ['room_number', 'price', 'standard_number', 'maximum_number', 'description', 'kind_of_room',
+                   'kind_of_room_id', 'active', 'image', 'note']
+    column_searchable_list = ['room_number', 'price']
+    column_filters = ['room_number', 'kind_of_room_id', 'price', 'standard_number', 'maximum_number', 'active']
+    form_columns = ['room_number', 'price', 'standard_number', 'maximum_number',
+                    'description', 'active', 'kind_of_room', 'image', 'note']
 
 
 class CommonCoefficientView(CommonView, AuthenticatedView):

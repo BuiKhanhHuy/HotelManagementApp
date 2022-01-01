@@ -65,11 +65,9 @@ class Customer(BaseModel):
 class KindOfRoom(BaseModel):
     __tablename__ = 'kind_of_room'
     kind_of_room_name = Column(String(100), nullable=False, unique=True)
-    price = Column(Float, nullable=False)
-    standard_number = Column(Integer, nullable=False)
-    maximum_number = Column(Integer, nullable=False)
-    image = Column(String(255), nullable=False)
+    description = Column(String(1000), nullable=False)
     note = Column(String(255))
+    images = relationship('Image', backref='kind_of_room', lazy=True)
     rooms = relationship('Room', backref='kind_of_room', lazy=True)
 
     def __str__(self):
@@ -79,13 +77,16 @@ class KindOfRoom(BaseModel):
 class Room(BaseModel):
     __tablename__ = 'room'
     room_number = Column(Integer, nullable=False, unique=True)
-    description = Column(String(1000), nullable=False)
+    price = Column(Float, nullable=False)
+    standard_number = Column(Integer, default=2, nullable=False)
+    maximum_number = Column(Integer, default=3, nullable=False)
+    description = Column(String(500), nullable=False)
     active = Column(Boolean, default=True)
     kind_of_room_id = Column(Integer, ForeignKey('kind_of_room.id'), nullable=False)
+    image = Column(String(255), nullable=False)
     note = Column(String(255))
     rents = relationship('Rent', backref='room', lazy=True)
     comments = relationship('Comment', backref='room', lazy=True)
-    images = relationship('Image', backref='room', lazy=True)
 
     def __str__(self):
         return str(self.room_number)
@@ -95,7 +96,7 @@ class Image(BaseModel):
     __tablename__ = 'image'
     link = Column(String(255), nullable=False)
     rank = Column(Integer, nullable=False)
-    room_id = Column(Integer, ForeignKey('room.id'), nullable=False)
+    kind_of_room_id = Column(Integer, ForeignKey('kind_of_room.id'), nullable=False)
     note = Column(String(255))
 
     def __str__(self):
@@ -188,4 +189,8 @@ rent_detail = db.Table('rent_detail',
 
 
 if __name__ == "__main__":
+    # cus = Customer.query.filter(Customer.rents.any(Rent.id.__eq__(1))).all()
+    # for c in cus:
+    #     print(c.first_name)
     db.create_all()
+
