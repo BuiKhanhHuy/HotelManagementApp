@@ -1,5 +1,5 @@
 from app import db
-from sqlalchemy import Column, Integer, String, DateTime, Float, Enum,\
+from sqlalchemy import Column, Integer, String, DateTime, Float, Enum, or_, and_, between,\
     Boolean, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from datetime import datetime
@@ -50,7 +50,7 @@ class Customer(BaseModel):
     last_name = Column(String(50), nullable=False)
     birthday = Column(DateTime, nullable=False)
     gender = Column(String(20))
-    identification_card = Column(Integer, nullable=False, unique=True)
+    identification_card = Column(String(20), nullable=False, unique=True)
     customer_type_id = Column(Integer, ForeignKey('customer_type.id'), nullable=False)
     address = Column(String(255), nullable=False)
     phone_number = Column(Integer, nullable=False)
@@ -76,7 +76,7 @@ class KindOfRoom(BaseModel):
 
 class Room(BaseModel):
     __tablename__ = 'room'
-    room_number = Column(Integer, nullable=False, unique=True)
+    room_number = Column(String(15), nullable=False, unique=True)
     price = Column(Float, nullable=False)
     standard_number = Column(Integer, default=2, nullable=False)
     maximum_number = Column(Integer, default=3, nullable=False)

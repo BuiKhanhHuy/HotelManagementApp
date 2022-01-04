@@ -3,20 +3,27 @@
     <!-- Sidebar scroll-->
     <div class="scroll-sidebar">
         <!-- Sidebar navigation-->
-        <nav class="sidebar-nav">
+        <nav class="sidebar-nav position-fixed">
             <ul id="sidebarnav">
                 <!-- User Profile-->
+                 <li class="sidebar-item pt-2">
+                    <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#"
+                       aria-expanded="false">
+                        <i class=" fas fa-building"></i>
+                        <span class="hide-menu">Tất cả phòng</span>
+                    </a>
+                </li>
                 <li class="sidebar-item pt-2">
                     <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ url_for('book_room') }}"
                        aria-expanded="false">
-                        <i class="fas fa-table"></i>
+                        <i class="fas fa-clipboard-check"></i>
                         <span class="hide-menu">Đặt phòng</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
                     <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ url_for('rent') }}"
                        aria-expanded="false">
-                        <i class="fas fa-external-link-alt"></i>
+                        <i class=" fas fa-cart-plus"></i>
                         <span class="hide-menu">Thuê phòng</span>
                     </a>
                 </li>
