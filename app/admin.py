@@ -90,7 +90,7 @@ class BookRoomView(CommonView, AuthenticatedView):
     column_list = ['booking_date', 'check_in_date', 'check_out_date', 'rooms', 'customer', 'user', 'active',
                    'done', 'note']
     column_filters = ['booking_date', 'check_in_date', 'check_out_date', 'active', 'done']
-    form_columns = ['check_in_date', 'check_out_date', 'rooms', 'customer', 'user', 'note']
+    form_columns = ['check_in_date', 'check_out_date', 'rooms', 'customer', 'user', 'active', 'done', 'note']
 
 
 class RentView(CommonView, AuthenticatedView):

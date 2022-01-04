@@ -7,9 +7,20 @@
 {% block content %}
     <div class="page-wrapper">
         <div class="page-breadcrumb bg-white">
+            <div class="row align-items-center">
+                <div class="col-lg-8 col-md-4 col-sm-4 col-xs-12">
+                    <h5 class="page-title">
+                        <i class="fas fa-angle-double-right"></i>
+                        <a class="text-dark" href="">Home Page</a> /
+                        <a href="">Rent</a>
+                    </h5>
+                </div>
+            </div>
+        </div>
+        <div class="page-breadcrumb bg-white">
             <div class="row">
                 <div class="col-xl-3 col-md-6">
-                     <a href="{{ url_for('rent_advance') }}">
+                    <a href="{{ url_for('rent_advance') }}">
                         <div class="card bg-success text-white mb-4 rounded-lg shadow-sm">
                             <div class="align-items-center justify-content-between p-2 text-center">
                                 <i class="fas fa-calendar-check" style="font-size: 70px"></i>
