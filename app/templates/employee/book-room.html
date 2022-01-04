@@ -117,9 +117,11 @@
                                     VND
                                 </td>
                                 <td class="text-dark col-md-3 align-middle">{{ room.description }}</td>
-                                <td class="text-dark col-md-2 text-right align-middle">
-                                    <button class="btn btn-dark text-white btn-choose-book-room
-                                    btn-choose-rent-directly">Chọn phòng</button>
+                                <td class="text-dark col-md-2 text-center align-middle">
+                                    <button value="1" class="btn btn-info text-white btn-choose-book-room shadow-none"
+                                    onclick="btnButtonAddBookRoomClick(this, {{ room.id }}, `{{ room.room_number }}`,
+                                            `{{ room.kind_of_room.kind_of_room_name }}`,
+                                            {{ room.price }}, `{{ room.image }}` )">Chọn phòng</button>
                                 </td>
                             </tr>
                         {% endfor %}

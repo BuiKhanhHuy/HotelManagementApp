@@ -50,7 +50,7 @@
                             <form class="form-inline w-100" action="/action_page.php">
                                 <div class="row d-flex w-100">
                                     <div class="w-75 p-0">
-                                        <input class="form-control mr-sm-2 w-100" id="filter-room-number" type="search"
+                                        <input class="form-control mr-sm-2 w-100" id="filter-room-number" type="text"
                                                placeholder="Tìm kiếm số phòng" onkeyup="searchRoomNumber(this)">
                                     </div>
                                     <div class="w-25 p-0">
@@ -120,8 +120,8 @@
                                 </td>
                                 <td class="text-dark col-md-3 align-middle">{{ room.description }}</td>
                                 <td class="text-dark col-md-2 text-right align-middle">
-                                    <button class="btn btn-dark text-white btn-choose-book-room
-                                    btn-choose-rent-directly">Chọn phòng
+                                    <button class="btn btn-info text-white btn-choose-rent-directly shadow-none"
+                                    onclick="btnButtonAddRentRoomClick(this)">Chọn phòng
                                     </button>
                                 </td>
                             </tr>

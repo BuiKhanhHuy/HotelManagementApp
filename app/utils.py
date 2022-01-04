@@ -23,5 +23,10 @@ def all_max_people_options():
     return max_people_options
 
 
+# total room in book room
+def total_room_in_book_room(room_list):
+    return len(room_list.keys())
+
+
 if __name__ == '__main__':
-    print(all_max_people_options())
+    pass

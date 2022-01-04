@@ -1,12 +1,3 @@
-const btnRentDirectly = document.getElementsByClassName('btn-choose-rent-directly');
-
-for (let i = 0; i < btnRentDirectly.length; i++){
-    btnRentDirectly[i].onclick = function (){
-        // hàm thực hiện
-        alert('rent directly')
-    }
-}
-
 // lay html cua phong
 function getRoomHTML(room) {
     return `<tr>
@@ -23,8 +14,23 @@ function getRoomHTML(room) {
                 </td>
                 <td class="text-dark col-md-3 align-middle">${room['description']}</td>
                 <td class="text-dark col-md-2 text-right align-middle">
-                    <button class="btn btn-dark text-white btn-choose-book-room 
-                                    btn-choose-rent-directly">Chọn phòng</button>
+                    <button value="1" class="btn btn-info text-white btn-choose-rent-directly shadow-none"
+                    onclick="btnButtonAddRentRoomClick(this)">Chọn phòng</button>
                 </td>
             </tr>`
+}
+
+// click chon them phong thue
+function btnButtonAddRentRoomClick(objButton){
+    alert('oke thue phong')
+}
+
+// hieu ung button them vao thue phong duoc click
+function customButtonAddRentRoom(){
+
+}
+
+// them phong vao bo nho thue phong
+function addToRentRoomCart(){
+
 }
