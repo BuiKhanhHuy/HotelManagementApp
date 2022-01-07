@@ -1,58 +1,55 @@
 {% extends "home/layout/base.html" %}
 
-{% block content %}
-    <section class="section pb-4">
+{% block date_time %}
+     <section class="section pb-4" >
         <div class="container">
-
             <div class="row check-availabilty" id="next">
                 <div class="block-32" data-aos="fade-up" data-aos-offset="-200">
-
                     <form action="#">
                         <div class="row">
-                            <div class="col-md-6 mb-3 mb-lg-0 col-lg-3">
-                                <label for="checkin_date" class="font-weight-bold text-black">Check In</label>
-                                <div class="field-icon-wrap">
-                                    <div class="icon"><span class="icon-calendar"></span></div>
-                                    <input type="text" id="checkin_date" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3 mb-lg-0 col-lg-3">
-                                <label for="checkout_date" class="font-weight-bold text-black">Check Out</label>
-                                <div class="field-icon-wrap">
-                                    <div class="icon"><span class="icon-calendar"></span></div>
-                                    <input type="text" id="checkout_date" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3 mb-md-0 col-lg-3">
-                                <div class="row">
-                                    <div class="col-md-6 mb-3 mb-md-0">
-                                        <label for="adults" class="font-weight-bold text-black">Adults</label>
+                            <div class="col-md-6 mb-3 mb-lg-0 col-lg-3" style="padding: 0px 5px 0px 0px">
+                                <label for="adults" class="font-weight-bold text-black">Thể loại phòng</label>
                                         <div class="field-icon-wrap">
                                             <div class="icon"><span class="ion-ios-arrow-down"></span></div>
                                             <select name="" id="adults" class="form-control">
-                                                <option value="">1</option>
-                                                <option value="">2</option>
-                                                <option value="">3</option>
-                                                <option value="">4+</option>
+                                                <option value="">Tất Cả</option>
+                                                <option value="">Phòng Đơn</option>
+                                                <option value="">Phòng Gia Đình</option>
+                                                <option value="">Phòng Vip</option>
                                             </select>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3 mb-md-0">
-                                        <label for="children" class="font-weight-bold text-black">Children</label>
+                            </div>
+                            <div class="col-md-6 mb-3 mb-md-0 col-lg-5">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3 mb-md-0" style="padding: 0px 5px">
+                                        <label for="checkin_date" class="font-weight-bold text-black">Ngày Nhận</label>
                                         <div class="field-icon-wrap">
-                                            <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                            <select name="" id="children" class="form-control">
-                                                <option value="">1</option>
-                                                <option value="">2</option>
-                                                <option value="">3</option>
-                                                <option value="">4+</option>
-                                            </select>
+                                            <div class="icon"><span class="icon-calendar"></span></div>
+                                            <input type="text" id="checkin_date" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3 mb-md-0" style="padding: 0px 5px">
+                                        <label for="checkout_date" class="font-weight-bold text-black">Ngày Trả</label>
+                                        <div class="field-icon-wrap">
+                                            <div class="icon"><span class="icon-calendar"></span></div>
+                                            <input type="text" id="checkout_date" class="form-control">
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-lg-3 align-self-end">
-                                <button class="btn btn-warning btn-block text-white">Check Availabilty</button>
+                            <div class="col-md-6 mb-3 mb-lg-0 col-lg-2" style="padding: 0px 5px">
+                                <label for="children" class="font-weight-bold text-black">Giá</label>
+                                        <div class="field-icon-wrap">
+                                            <div class="icon"><span class="ion-ios-arrow-down"></span></div>
+                                            <select name="" id="children" class="form-control">
+                                                <option value="">Tất cả</option>
+                                                <option value="">Thấp đến Cao</option>
+                                                <option value="">Cao đến Thấp</option>
+                                            </select>
+                                        </div>
+                            </div>
+                            <div class="col-md-6 col-lg-2 align-self-end" style="padding: 0px 5px">
+                                <button class="btn btn-warning btn-block text-center text-white">Tìm kiếm</button>
                             </div>
                         </div>
                     </form>
@@ -62,84 +59,28 @@
             </div>
         </div>
     </section>
+{% endblock %}
+
+{% block content %}
+
 
 
     <section class="section">
         <div class="container">
 
             <div class="row">
+                {% for kind in kinds%}
                 <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
-                    <a href="#" class="room">
+                    <a href="{{url_for('booking_kinds',kind_of_room_id=kind.id)}}" class="room">
                         <figure class="img-wrap">
-                            <img src="images/img_1.jpg" alt="Free website template" class="img-fluid mb-3">
+                            <img src="{{kind.images}}" alt="{{kind.kind_of_room_name}}" class="img-fluid mb-3">
                         </figure>
                         <div class="p-3 text-center room-info">
-                            <h2>Single Room</h2>
-                            <span class="text-uppercase letter-spacing-1 text-warning">90$ / per night</span>
+                            <h2>{{kind.kind_of_room_name}}</h2>
                         </div>
                     </a>
                 </div>
-
-                <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
-                    <a href="#" class="room">
-                        <figure class="img-wrap">
-                            <img src="images/img_2.jpg" alt="Free website template" class="img-fluid mb-3">
-                        </figure>
-                        <div class="p-3 text-center room-info">
-                            <h2>Family Room</h2>
-                            <span class="text-uppercase letter-spacing-1 text-warning">120$ / per night</span>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
-                    <a href="#" class="room">
-                        <figure class="img-wrap">
-                            <img src="images/img_3.jpg" alt="Free website template" class="img-fluid mb-3">
-                        </figure>
-                        <div class="p-3 text-center room-info">
-                            <h2>Presidential Room</h2>
-                            <span class="text-uppercase letter-spacing-1 text-warning">250$ / per night</span>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
-                    <a href="#" class="room">
-                        <figure class="img-wrap">
-                            <img src="images/img_1.jpg" alt="Free website template" class="img-fluid mb-3">
-                        </figure>
-                        <div class="p-3 text-center room-info">
-                            <h2>Single Room</h2>
-                            <span class="text-uppercase letter-spacing-1 text-warning">90$ / per night</span>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
-                    <a href="#" class="room">
-                        <figure class="img-wrap">
-                            <img src="images/img_2.jpg" alt="Free website template" class="img-fluid mb-3">
-                        </figure>
-                        <div class="p-3 text-center room-info">
-                            <h2>Family Room</h2>
-                            <span class="text-uppercase letter-spacing-1 text-warning">120$ / per night</span>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
-                    <a href="#" class="room">
-                        <figure class="img-wrap">
-                            <img src="images/img_3.jpg" alt="Free website template" class="img-fluid mb-3">
-                        </figure>
-                        <div class="p-3 text-center room-info">
-                            <h2>Presidential Room</h2>
-                            <span class="text-uppercase letter-spacing-1 text-warning">250$ / per night</span>
-                        </div>
-                    </a>
-                </div>
-
+                {% endfor %}
             </div>
         </div>
     </section>

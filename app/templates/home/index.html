@@ -37,46 +37,18 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6 col-lg-4" data-aos="fade-up">
-                    <a href="#" class="room">
+                {% for kind in kinds%}
+                <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
+                    <a href="{{url_for('booking_kinds',kind_of_room_id=kind.id)}}" class="room">
                         <figure class="img-wrap">
-                            <img src="{{ url_for('static', filename='images/img_1.jpg') }}" alt="Free website template"
-                                 class="img-fluid mb-3">
+                            <img src="{{url_for('static', filename=kind.images[0].link)}}" alt="{{kind.kind_of_room_name}}" class="img-fluid mb-3">
                         </figure>
                         <div class="p-3 text-center room-info">
-                            <h2>Single Room</h2>
-                            <span class="text-uppercase letter-spacing-1 text-warning">90$ / per night</span>
+                            <h2>{{kind.kind_of_room_name}}</h2>
                         </div>
                     </a>
                 </div>
-
-                <div class="col-md-6 col-lg-4" data-aos="fade-up">
-                    <a href="#" class="room">
-                        <figure class="img-wrap">
-                            <img src="{{ url_for('static', filename='images/img_2.jpg') }}" alt="Free website template"
-                                 class="img-fluid mb-3">
-                        </figure>
-                        <div class="p-3 text-center room-info">
-                            <h2>Family Room</h2>
-                            <span class="text-uppercase letter-spacing-1 text-warning">120$ / per night</span>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-md-6 col-lg-4" data-aos="fade-up">
-                    <a href="#" class="room">
-                        <figure class="img-wrap">
-                            <img src="{{ url_for('static', filename='images/img_3.jpg') }}" alt="Free website template"
-                                 class="img-fluid mb-3">
-                        </figure>
-                        <div class="p-3 text-center room-info">
-                            <h2>Presidential Room</h2>
-                            <span class="text-uppercase letter-spacing-1 text-warning">250$ / per night</span>
-                        </div>
-                    </a>
-                </div>
-
-
+                {% endfor %}
             </div>
         </div>
     </section>

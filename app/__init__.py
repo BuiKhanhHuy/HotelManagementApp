@@ -10,14 +10,14 @@ app.secret_key = 'Od\x01\xb3\xce\x12(\xfc\xe4\x10Q\x04\x0c\xa8\x8dX'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:123456789@localhost/hoteldatabase?charset=utf8mb4"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-
 app.config['FLASK_ADMIN_SWATCH'] = 'Simplex'
 app.config['FLASK_ADMIN_FLUID_LAYOUT'] = True
+app.config['CUSTOMER_PAGE_SIZE'] = 3
 
 cloudinary.config(
-    cloud_name='dtnpj540t',
-    api_key='371357798369383',
-    api_secret='9zy7ehlUetIxxl7ibee4y3tmdL4'
+    cloud_name='dl6artkyb',
+    api_key='377958885536713',
+    api_secret='g0XCOiAv3pIpP1uFdYbz_Zwa6Sg'
 )
 
 
