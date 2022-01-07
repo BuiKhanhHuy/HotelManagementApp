@@ -11,8 +11,8 @@
                 <div class="col-lg-6 col-md-4 col-sm-4 col-xs-12">
                     <h5 class="page-title">
                         <i class="fas fa-angle-double-right"></i>
-                        <a class="text-dark" href="">Home Page</a> /
-                        <a href="">Book Room</a>
+                        <a class="text-dark" href="">Home page</a> /
+                        <a href="">Book room</a>
                     </h5>
                 </div>
             </div>
@@ -20,26 +20,47 @@
         <div class="page-breadcrumb bg-white">
             <div class="container-fluid p-0">
 
-                <div class="white-box shadow-lg mb-3 p-3">
-                    <div class="d-md-flex pb-2">
-                        <div class="col-md-3 pl-0 pr-4">
-                            <span class="font-bold"> Ngày nhận phòng</span>
-                            <input class="p-2 w-100 rounded-sm border" type="date" id="check-in-date"
-                                   onchange="checkCheckInDate(this)">
-                        </div>
-                        <div class="col-md-3 pl-0 pr-4">
-                            <span class="font-bold">Ngày trả phòng</span>
-                            <input class="p-2 w-100 rounded-sm border" type="date" id="check-out-date"
-                                   onchange="checkCheckOutDate(this)">
-                        </div>
-                        <div class="col-md-2 pt-3 pr-4 ml-auto">
-                            <button type="button" class="btn btn-warning w-100">
-                                ĐẶT PHÒNG <span class="badge badge-dark rounded-pill">0</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger alert-dismissible fade show">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
 
+                <div class="white-box shadow-lg mb-3 p-3">
+                    <form method="post" action="{{ url_for('book_room_detail') }}">
+                        <div class="d-md-flex pb-2">
+                            <div class="col-md-3 pl-0 pr-4">
+                                <span class="font-bold"> Ngày nhận phòng</span>
+                                <input class="p-2 w-100 rounded-sm border" type="date" id="check-in-date"
+                                       name="check_in_date_book_room"
+                                       onchange="checkCheckInDate(this)">
+                            </div>
+                            <div class="col-md-3 pl-0 pr-4">
+                                <span class="font-bold">Ngày trả phòng</span>
+                                <input class="p-2 w-100 rounded-sm border" type="date" id="check-out-date"
+                                       name="check_out_date_book_room"
+                                       onchange="checkCheckOutDate(this)">
+                            </div>
+                            <div class="col-md-2 pt-3 pr-4 ml-auto">
+                                <button type="submit" class="btn btn-warning w-100" id="book-room">
+                                    ĐẶT PHÒNG
+                                    <span id="total-book-room" class="badge badge-dark rounded-pill">
+                                        {% if total_room_booking and total_room_booking > 0 %}
+                                            {{ total_room_booking }}
+                                        {% else %}
+                                            0
+                                        {% endif %}
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
                 <div class="white-box shadow-lg mb-2 p-2">
                     <h4 class="font-weight-bold p-2">DANH SÁCH PHÒNG TRỐNG</h4>
                     <hr class="m-0">
@@ -108,20 +129,26 @@
                                 <td class="text-dark col-md-1 text-middle align-middle">
                                     <img src="{{ room.image }}" class="img-fluid">
                                 </td>
-                                <td class="text-dark col-md-1 text-center align-middle">{{ room.room_number }}</td>
-                                <td class="text-dark col-md-1 text-center align-middle">{{ room.maximum_number }}
+                                <td value="{{ room.room_number }}"
+                                    class="text-dark col-md-1 text-center align-middle">{{ room.room_number }}</td>
+                                <td value="{{ room.maximum_number }}"
+                                    class="text-dark col-md-1 text-center align-middle">{{ room.maximum_number }}
                                     khách
                                 </td>
-                                <td class="text-dark col-md-2 align-middle">{{ room.kind_of_room.kind_of_room_name }}</td>
-                                <td class="text-danger col-md-2 font-weight-bold align-middle">{{ "{0:,.0f}".format(room.price) }}
+                                <td value="{{ room.kind_of_room_id }}"
+                                    class="text-dark col-md-2 align-middle">{{ room.kind_of_room.kind_of_room_name }}</td>
+                                <td value="{{ room.price }}"
+                                    class="text-danger col-md-2 font-weight-bold align-middle">{{ "{0:,.0f}".format(room.price) }}
                                     VND
                                 </td>
                                 <td class="text-dark col-md-3 align-middle">{{ room.description }}</td>
                                 <td class="text-dark col-md-2 text-center align-middle">
-                                    <button value="1" class="btn btn-info text-white btn-choose-book-room shadow-none"
-                                    onclick="btnButtonAddBookRoomClick(this, {{ room.id }}, `{{ room.room_number }}`,
-                                            `{{ room.kind_of_room.kind_of_room_name }}`,
-                                            {{ room.price }}, `{{ room.image }}` )">Chọn phòng</button>
+                                    <button disabled value="{{ room.id }}"
+                                            class="btn btn-info text-white btn-choose-book-room btn-choose-room shadow-none"
+                                            id="id-btn-choose-room-{{ room.id }}"
+                                            onclick="clickButtonChooseRoom({{ room.id }}, '{{ room.room_number }}', '{{ room.kind_of_room.kind_of_room_name }}',
+                                                    {{ room.price }}, '{{ room.image }}' )">Chọn phòng
+                                    </button>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -158,11 +185,14 @@
             </div>
         </div>
         <!-- End Modal -->
+
+
     </div>
 {% endblock %}
 
 {% block tail_js %}
     {{ super() }}
+    <script src="{{ url_for('static', filename='js/employee/ajax/base.js') }}"></script>
     <script src="{{ url_for('static', filename='js/employee/ajax/find-room.js') }}"></script>
     <script src="{{ url_for('static', filename='js/employee/ajax/book-room.js') }}"></script>
 {% endblock %}

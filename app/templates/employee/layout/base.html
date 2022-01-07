@@ -29,14 +29,21 @@
               integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
               crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.css"
+              integrity="sha512-JcmylNmvdZJ8UcYcSDFWhvE6DwI8bKcnPKvBlwU2w/aRJ6qiZErv1Ixq99ykZgy3cCSp+QJp9su5buNLQjytng=="
+              crossorigin="anonymous" referrerpolicy="no-referrer"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.js"
+                integrity="sha512-t3zV/oAkSZUrvb/7p1q1+uh/i56JinQ+bmiulnHhbHZc7dq09CxJ1BByyi7A4+lF76+CcJtSVFtb7na7Oe7Cgg=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
         <link rel="canonical" href="https://www.wrappixel.com/templates/ample-admin-lite/"/>
         <!-- Favicon icon -->
         <link rel="icon" type="image/png" sizes="16x16"
               href="{{ url_for('static', filename='plugins/employee/images/favicon.pngplugins/employee/images/favicon.png') }}">
         <!-- Custom CSS -->
-        <link href="{{ url_for('static', filename='plugins/employee/bower_components/chartist/dist/chartist.min.css') }}"
-              rel="stylesheet">
+        <link
+                href="{{ url_for('static', filename='plugins/employee/bower_components/chartist/dist/chartist.min.css') }}"
+                rel="stylesheet">
         <link rel="stylesheet"
               href="{{ url_for('static', filename='plugins/employee/bower_components/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.css') }}">
         <!-- Custom CSS -->
@@ -91,7 +98,9 @@
     <script src="{{ url_for('static', filename='js/employee/sidebarmenu.js') }}"></script>
     <!--Custom JavaScript -->
     <script src="{{ url_for('static', filename='js/employee/custom.js') }}"></script>
-    <!--This page JavaScript -->
+
+
+
 {% endblock %}
 
 {% block tail %}

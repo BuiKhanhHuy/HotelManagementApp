@@ -1,5 +1,5 @@
 from app import db
-from sqlalchemy import Column, Integer, String, DateTime, Float, Enum, or_, and_, between,\
+from sqlalchemy import Column, Integer, String, DateTime, Float, Enum, and_, or_,\
     Boolean, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from datetime import datetime
@@ -46,10 +46,8 @@ class CustomerType(BaseModel):
 
 class Customer(BaseModel):
     __tablename__ = 'customer'
-    first_name = Column(String(20), nullable=False)
-    last_name = Column(String(50), nullable=False)
-    birthday = Column(DateTime, nullable=False)
-    gender = Column(String(20))
+    name = Column(String(80), nullable=False)
+    gender = Column(Boolean, default=True)
     identification_card = Column(String(20), nullable=False, unique=True)
     customer_type_id = Column(Integer, ForeignKey('customer_type.id'), nullable=False)
     address = Column(String(255), nullable=False)
@@ -59,7 +57,7 @@ class Customer(BaseModel):
     comments = relationship('Comment', backref='customer', lazy=True)
 
     def __str__(self):
-        return "{0} {1}".format(self.last_name, self.first_name)
+        return self.name
 
 
 class KindOfRoom(BaseModel):
@@ -189,8 +187,4 @@ rent_detail = db.Table('rent_detail',
 
 
 if __name__ == "__main__":
-    # cus = Customer.query.filter(Customer.rents.any(Rent.id.__eq__(1))).all()
-    # for c in cus:
-    #     print(c.first_name)
     db.create_all()
-

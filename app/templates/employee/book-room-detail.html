@@ -7,223 +7,225 @@
 {% block content %}
     <div class="page-wrapper">
         <div class="page-breadcrumb bg-white">
-            <div class="container-fluid p-2">
-                <!-- Row -->
-                <div class="row rounded-lg shadow-lg">
-                    <!-- Column -->
-                    <div class="col-lg-4 col-xlg-9 col-md-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <form class="form-horizontal form-material">
-                                    <div class="form-group mb-4">
-                                        <label class="col-md-12 p-0 font-weight-bold">Họ và tên</label>
-                                        <div class="col-md-12 border-bottom p-0">
-                                            <input type="text" placeholder="Trần Văn A"
-                                                   class="form-control p-0 border-0"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-4">
-                                        <label for="birthday" class="col-md-12 p-0 font-weight-bold">Ngày sinh</label>
-                                        <div class="col-md-12 border-bottom p-0">
-                                            <input type="date" class="form-control p-0 border-0"
-                                                   name="example-email" id="birthday"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb4 row">
-                                        <div class="radio col-sm-3">
-                                            <input type="radio" name="gender" id="male" class="with-gap"
-                                                   value="option1" checked="checked">
-                                            <label for="male">Nam</label>
-                                        </div>
-                                        <div class="radio col-sm-3">
-                                            <input type="radio" name="gender" id="Female" class="with-gap"
-                                                   value="option2">
-                                            <label for="Female">Nữ</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-4">
-                                        <label class="col-md-12 p-0 font-weight-bold">Số chứng minh nhân dân</label>
-                                        <div class="col-md-12 border-bottom p-0">
-                                            <input type="text" placeholder="111111111"
-                                                   class="form-control p-0 border-0"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-4">
-                                        <label class="col-sm-12 p-0 font-weight-bold">Quốc tịch</label>
-                                        <div class="col-sm-12 border-bottom p-0">
-                                            <select class="form-select shadow-none p-0 border-0 form-control-line">
-                                                <option>Việt nam</option>
-                                                <option>Anh</option>
-                                                <option>Mỹ</option>
-                                                <option>Canada</option>
-                                                <option>Thái Lan</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-4">
-                                        <label class="col-md-12 p-0 font-weight-bold">Số điện thoại</label>
-                                        <div class="col-md-12 border-bottom p-0">
-                                            <input type="text" placeholder="123 456 7890"
-                                                   class="form-control p-0 border-0"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-4">
-                                        <label class="col-md-12 p-0 font-weight-bold">Địa chỉ</label>
-                                        <div class="col-md-12 border-bottom p-0">
-                                            <input type="text" placeholder="Địa chỉ..."
-                                                   class="form-control p-0 border-0"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-4">
-                                        <label class="col-sm-12 p-0 font-weight-bold">Chọn phòng</label>
-                                        <div class="col-sm-12 border-bottom p-0">
-                                            <select class="form-select shadow-none p-0 border-0 form-control-line">
-                                                <option>101</option>
-                                                <option>102</option>
-                                                <option>103</option>
-                                                <option>104</option>
-                                                <option>105</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="form-group mb-4 text-center">
-                            <div class="col-sm-12">
-                                <button class="btn btn-dark text-white p-2">Thêm khách hàng</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Column -->
-                    <!-- Column -->
-                    <div class="col-lg-8 col-xlg-3 col-md-12 rounded-lg">
-                        <div class="card">
-                            <div class="card-body">
-                                <table class="table m-b-0">
-                                    <thead class="thead-dark">
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">First</th>
-                                        <th scope="col">Last</th>
-                                        <th scope="col">Handle</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group mb-4 text-center">
-                        <div class="col-sm-12">
-                            <button class="btn btn-success text-light font-weight-bold p-2">Xác nhận đặt phòng</button>
-                        </div>
-                    </div>
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-md-4 col-sm-4 col-xs-12">
+                    <h5 class="page-title">
+                        <i class="fas fa-angle-double-right"></i>
+                        <a class="text-dark" href="">Home page</a> /
+                        <a class="text-dark" href="">Book room</a> /
+                        <a href="">Book room detail</a>
+                    </h5>
                 </div>
             </div>
         </div>
+        <div class="page-breadcrumb bg-white">
+            <h3 class="text-center p-2 text-info font-weight-bold">
+                XÁC NHẬN ĐẶT PHÒNG
+            </h3>
+            {% if total_room_booking and total_room_booking > 0 %}
+                <!-- Row -->
+                <div class="row">
+                    <!-- Column -->
+                    <div class="col-md-4 col-lg-4 col-xl-4">
+                        <!-- Form -->
+                        <form class="form-horizontal form-material" method="post"
+                              action="{{ url_for('booking_result', result=1) }}">
+                            <div class="p-2 shadow-lg">
+                                <div class="card">
+                                    <h4 class="p-2 font-weight-bold text-secondary">Thông tin chung</h4>
+                                    <hr class="m-0">
+                                    <div class="p-3">
+                                        <div>
+                                            <div class="form-group mb-4">
+                                                <label class="col-md-12 p-0 font-weight-bold">Họ và tên
+                                                    <span class="text-danger">*</span></label>
+                                                <div class="col-md-12 border-bottom p-0">
+                                                    <input required type="text" placeholder="Trần Văn A" value=""
+                                                           name="name_book_room"
+                                                           id="name-book-room"
+                                                           class="form-control p-0 border-0"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb4 row">
+                                                <div class="radio col-sm-3">
+                                                    <input type="radio" value="True" name="gender_book_room"
+                                                           id="male-book-room" checked="checked">
+                                                    <label for="male-book-room">Nam</label>
+                                                </div>
+                                                <div class="radio col-sm-3">
+                                                    <input type="radio" value="False" name="gender_book_room"
+                                                           id="female-book-room" class="with-gap">
+                                                    <label for="female-book-room">Nữ</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-4">
+                                                <label class="col-md-12 p-0 font-weight-bold">Số CMND
+                                                    <span class="text-danger">*</span></label>
+                                                <div class="col-md-12 border-bottom p-0">
+                                                    <input required type="text" placeholder="số cmnd" value=""
+                                                           name="id_card_book_room"
+                                                           id="id-card-book-room"
+                                                           class="form-control p-0 border-0 card-book-room w-100"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-4">
+                                                <label class="col-sm-12 p-0 font-weight-bold">Loại khách
+                                                    <span class="text-danger">*</span></label>
+                                                <div class="col-sm-12 border-bottom p-0">
+                                                    <select class="form-select shadow-none p-0 border-0 form-control-line"
+                                                            value=""
+                                                            name="cus_type_book_room" id="cus-type-book-room">
+                                                        <option value="1" id="option-cus-type-1">Nội địa</option>
+                                                        <option value="2" id="option-cus-type-2">Nước ngoài</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-4">
+                                                <label class="col-md-12 p-0 font-weight-bold">Số điện thoại
+                                                    <span class="text-danger">*</span></label>
+                                                <div class="col-md-12 border-bottom p-0">
+                                                    <input required type="text" placeholder="123 456 7890" value=""
+                                                           name="phone_book_room"
+                                                           id="phone-book-room"
+                                                           class="form-control p-0 border-0"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-4">
+                                                <label class="col-md-12 p-0 font-weight-bold">Địa chỉ
+                                                    <span class="text-danger">*</span></label>
+                                                <div class="col-md-12 border-bottom p-0">
+                                                    <input required type="text" placeholder="Địa chỉ..." value=""
+                                                           name="address_book_room"
+                                                           id="address-book-room"
+                                                           class="form-control p-0 border-0"/>
+                                                </div>
+                                            </div>
+                                            <span class="font-12 text-secondary"><i
+                                                    class="far fa-lightbulb text-warning font-18 p-1"></i>
+                                        Gợi ý: Hãy nhập số CMND để tìm khách hàng đã từng đặt phòng, thuê phòng hoặc lưu trú tại khách sạn nhanh chóng.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group text-center">
+                                    <div class="d-flex p-3 text-white">
+                                        <div class="p-2">
+                                            <button type="submit" class="btn btn-success text-white p-2">Xác nhận đặt
+                                                phòng
+                                            </button>
+                                        </div>
+
+                                        <div class="p-2">
+                                            <a href="{{ url_for('booking_result', result=0) }}">
+                                                <button type="button" class="btn btn-secondary text-white p-2">Hủy đặt
+                                                    phòng
+                                                </button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <!-- Form -->
+                    </div>
+                    <!-- Column -->
+
+                    <!-- Column -->
+                    <div class="col-md-8 col-lg-8 col-xl-8">
+                        <div class="p-2 shadow-lg">
+                            <div class="card">
+                                <h4 class="p-2 font-weight-bold text-secondary">Thông tin phòng</h4>
+                                <hr class="m-0">
+                                <div class="p-3">
+                                    <div class="row py-2">
+                                        <div class="col-3">
+                                            <label class="col-sm-12 p-0 font-weight-bold">Phòng:</label>
+                                            <label>
+                                            <span id="room_number">
+                                            {% for room in rooms %}
+                                                {{ room['room_number'] }},
+                                            {% endfor %}
+                                            </span>
+                                            </label>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="col-sm-12 p-0 font-weight-bold">Ngày đặt phòng:</label>
+                                            <label>
+                                                {% if book_room_date %}
+                                                    {{ book_room_date }}
+                                                {% endif %}
+                                            </label>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="col-sm-12 p-0 font-weight-bold">Ngày nhận phòng:</label>
+                                            <label>
+                                                {% if check_in_date %}
+                                                    {{ check_in_date }}
+                                                {% endif %}
+                                            </label>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="col-sm-12 p-0 font-weight-bold">Ngày trả phòng:</label>
+                                            <label>
+                                                {% if check_out_date %}
+                                                    {{ check_out_date }}
+                                                {% endif %}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <table class="table m-0">
+                                        <thead class="thead-dark">
+                                        <tr>
+                                            <th class="col-1">Ảnh</th>
+                                            <th class="col-2 text-center">Số phòng</th>
+                                            <th class="col-4">Loại phòng</th>
+                                            <th class="col-3">Giá phòng</th>
+                                            <th class="col-2 text-center">Lựa chọn</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for room in rooms %}
+                                            <tr id="tr-room-{{ room['room_id'] }}">
+                                                <td class="col-1">
+                                                    <img src="{{ room['image'] }}" alt="Ảnh phòng" class="img-fluid">
+                                                </td>
+                                                <td class="col-2 align-middle text-center">{{ room['room_number'] }}</td>
+                                                <td class="col-4 align-middle">{{ room['kind_of_room_name'] }}</td>
+                                                <td class="col-3 align-middle">{{ "{0:,.0f}".format(room['price']) }}
+                                                    VND
+                                                </td>
+                                                <td class="col-2 align-middle text-right">
+                                                    <button id="del-room-{{ room['room_id'] }}"
+                                                            class="btn btn-danger text-white btn-del-room"
+                                                            {% if total_room_booking and total_room_booking == 1 %}
+                                                            disabled
+                                                            {% endif %}
+                                                            onclick="deleteRoomInBookRoomDetail({{ room['room_id'] }})">
+                                                        Xóa
+                                                        phòng
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Column -->
+                </div>
+                <!-- Row -->
+            {% else %}
+                <div class="alert alert-info">
+                    <strong>Thông tin!</strong> Hiện tại không có đơn đặt phòng nào chờ xác nhận.
+                </div>
+            {% endif %}
+        </div>
+
     </div>
+{% endblock %}
+
+{% block tail_js %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/employee/ajax/book-room-detail.js') }}"></script>
 {% endblock %}

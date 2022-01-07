@@ -1,3 +1,39 @@
+// =======BUTTON LUC DAT PHONG VA THUE PHONG TRUC TIEP========
+// tham so hieu ung click
+const dicValueButton = {};
+let btnChooseRoom = document.getElementsByClassName('btn-choose-room')
+for (let i = 0; i < btnChooseRoom.length; i++) {
+    dicValueButton[btnChooseRoom[i].value] = 0
+}
+
+// hieu ung button them vao dat phong duoc click
+function clickButtonChooseRoom(roomId) {
+    if (dicValueButton[roomId] === 0) {
+        dicValueButton[roomId] = 1
+    } else {
+        dicValueButton[roomId] = 0
+    }
+    customButtonChooseRoom(roomId, dicValueButton)
+}
+
+// thay doi hieu ung nut
+function customButtonChooseRoom(roomId, dicValueButton) {
+    let btnChooseRoom = document.getElementById(`id-btn-choose-room-${roomId}`)
+
+    if (dicValueButton[roomId] === 1) {
+        btnChooseRoom.innerText = "Hủy chọn";
+        btnChooseRoom.setAttribute("style", "background-color: #8f8a8a; border-color: #8f8a8a;");
+    } else {
+        btnChooseRoom.innerText = "Chọn phòng";
+        btnChooseRoom.setAttribute("style", "background-color: #2cabe3; border-color: #2cabe3;");
+    }
+
+}
+
+// =======BUTTON LUC DAT PHONG VA THUE PHONG TRUC TIEP========
+
+
+// ===========LOC THONG TIN PHONG CAN DAT, CAN THUE===========
 // kiem tra ngay chon co hop le
 function checkDate(startDate, endDate) {
     return startDate < endDate;
@@ -28,15 +64,18 @@ function checkCheckInDate() {
     let txtBody = ''
 
     if (!checkDate(today, valueCheckInDate)) {
+        disableButtonChooseRoom(true)
         txtBody = 'Ngày nhận phòng phải lớn hơn ngày hôm nay !'
         showBookRoomModal(txtTitle, txtBody)
         checkInDate.value = ''
     } else if (checkOutDate.value !== '') {
         if (!checkDate(valueCheckInDate, valueCheckOutDate)) {
+            disableButtonChooseRoom(true)
             txtBody = 'Ngày nhận phòng phải nhỏ hơn ngày trả phòng !'
             showBookRoomModal(txtTitle, txtBody)
             checkInDate.value = ''
         } else {
+            disableButtonChooseRoom(false)
             findRoom()
         }
     }
@@ -57,14 +96,17 @@ function checkCheckOutDate() {
     let txtBody = ''
 
     if (checkInDate.value === '') {
+        disableButtonChooseRoom(true)
         txtBody = 'Bạn vui lòng chọn ngày nhận phòng !'
         showBookRoomModal(txtTitle, txtBody)
         checkOutDate.value = ''
     } else if (!checkDate(valueCheckInDate, valueCheckOutDate)) {
+        disableButtonChooseRoom(true)
         txtBody = 'Ngày trả phòng phải lớn hơn ngày nhận phòng !'
         showBookRoomModal(txtTitle, txtBody)
         checkOutDate.value = ''
     } else {
+        disableButtonChooseRoom(false)
         findRoom()
     }
 }
@@ -74,10 +116,12 @@ function searchRoomNumber(objRoomNumber) {
     let txtTitle = 'Lỗi !'
     let txtBody = ''
     if (!checkCheckInOut()) {
+        disableButtonChooseRoom(true)
         txtBody = 'Bạn vui lòng chọn đầy đủ ngày nhận phòng và ngày trả phòng !'
         showBookRoomModal(txtTitle, txtBody)
         objRoomNumber.value = ''
     } else {
+        disableButtonChooseRoom(false)
         // tim kiem phong
         findRoom()
     }
@@ -88,10 +132,12 @@ filters = document.getElementsByClassName('filter-room')
 for (let i = 0; i < filters.length; i++) {
     filters[i].onchange = function () {
         if (!checkCheckInOut()) {
+            disableButtonChooseRoom(true)
             let txtTitle = 'Lỗi !'
             let txtBody = 'Bạn vui lòng chọn đầy đủ ngày nhận phòng và ngày trả phòng !'
             showBookRoomModal(txtTitle, txtBody)
         } else {
+            disableButtonChooseRoom(false)
             // tim kiem phong
             findRoom()
         }
@@ -125,7 +171,7 @@ function findRoom() {
 
 // ham load phong
 function loadRoom(checkInDate, checkOutDate, idKindOfRoom, price, maxPeople, roomNumber) {
-    fetch('/employee/find-room', {
+    fetch('/api/employee/find-room', {
         method: 'post',
         body: JSON.stringify({
             'check_in_date': checkInDate,
@@ -143,19 +189,28 @@ function loadRoom(checkInDate, checkOutDate, idKindOfRoom, price, maxPeople, roo
             let room = document.getElementById('content-room')
             let content = ``
 
-            for (let i = 0; i < data['rooms'].length; i++)
+            let length = data['rooms'].length
+
+            for (let i = 0; i < length; i++)
                 content += getRoomHTML(data['rooms'][i])
+
             room.innerHTML = content
+
+            for (let i = 0; i < length; i++)
+                customButtonChooseRoom(data['rooms'][i]['id'], dicValueButton)
         }
-    }).catch(error => {
-        console.log(error)
-    })
+    }).catch(error => console.log(error))
 }
 
+// disable button chon phong khi chua nhap ngay checkin, checkout hop le
+function disableButtonChooseRoom(flag) {
+    let btnChooseRoom = document.getElementsByClassName('btn-choose-room')
 
-// show book room modal
-function showBookRoomModal(textTitle, textBody) {
-    document.getElementById('id-modal-title').innerText = textTitle
-    document.getElementById('id-modal-body').innerText = textBody
-    $("#bookRoomModal").modal({show: true});
+    for (let i = 0; i < btnChooseRoom.length; i++) {
+        // flag == true -> disable
+        btnChooseRoom[i].disabled = !!flag;
+    }
 }
+
+// ===========LOC THONG TIN PHONG CAN DAT, CAN THUE===========
+
