@@ -11,9 +11,9 @@
                 <div class="col-lg-8 col-md-4 col-sm-4 col-xs-12">
                     <h5 class="page-title">
                         <i class="fas fa-angle-double-right"></i>
-                        <a class="text-dark" href="">Home Page</a> /
-                        <a class="text-dark" href="">Rent</a> /
-                        <a href="">Rent Directly</a>
+                        <a class="text-dark" href="">Home page</a> /
+                        <a class="text-dark" href="">rent</a> /
+                        <a href="">Rent directly</a>
                     </h5>
                 </div>
             </div>
@@ -23,23 +23,26 @@
             <div class="container-fluid p-0">
 
                 <div class="white-box shadow-lg mb-3 p-3">
-                    <div class="d-md-flex pb-2">
-                        <div class="col-md-3 pl-0 pr-4">
-                            <span class="font-bold"> Ngày nhận phòng</span>
-                            <input class="p-2 w-100 rounded-sm border" type="date" id="check-in-date"
-                                   onchange="checkCheckInDate(this)">
+                    <form method="get" action="#">
+                        <div class="d-md-flex pb-2">
+                            <div class="col-md-3 pl-0 pr-4">
+                                <span class="font-bold"> Ngày nhận phòng</span>
+                                <input class="p-2 w-100 rounded-sm border" type="date" id="check-in-date" name="check_in_date_rent_directly"
+                                       onchange="checkCheckInDate(this)">
+                            </div>
+                            <div class="col-md-3 pl-0 pr-4">
+                                <span class="font-bold">Ngày trả phòng</span>
+                                <input class="p-2 w-100 rounded-sm border" type="date" id="check-out-date" name="check_out_date_rent_directly"
+                                       onchange="checkCheckOutDate(this)">
+                            </div>
+                            <div class="col-md-2 pt-3 pr-4 ml-auto">
+                                <button type="submit" class="btn btn-warning w-100" id="rent-directly">
+                                    THUÊ PHÒNG <span id="total-rent-directly"
+                                                     class="badge badge-dark rounded-pill">0</span>
+                                </button>
+                            </div>
                         </div>
-                        <div class="col-md-3 pl-0 pr-4">
-                            <span class="font-bold">Ngày trả phòng</span>
-                            <input class="p-2 w-100 rounded-sm border" type="date" id="check-out-date"
-                                   onchange="checkCheckOutDate(this)">
-                        </div>
-                        <div class="col-md-2 pt-3 pr-4 ml-auto">
-                            <button type="button" class="btn btn-warning w-100">
-                                THUÊ PHÒNG <span class="badge badge-dark rounded-pill">0</span>
-                            </button>
-                        </div>
-                    </div>
+                    </form>
                 </div>
 
                 <div class="white-box shadow-lg mb-2 p-2">
@@ -119,9 +122,12 @@
                                     VND
                                 </td>
                                 <td class="text-dark col-md-3 align-middle">{{ room.description }}</td>
-                                <td class="text-dark col-md-2 text-right align-middle">
-                                    <button class="btn btn-info text-white btn-choose-rent-directly shadow-none"
-                                    onclick="btnButtonAddRentRoomClick(this)">Chọn phòng
+                                <td class="text-dark col-md-2 text-center align-middle">
+                                    <button disabled value="{{ room.id }}"
+                                            class="btn btn-info text-white btn-choose-rent-room btn-choose-room shadow-none"
+                                            id="id-btn-choose-room-{{ room.id }}"
+                                            onclick="btnButtonAddRentRoomClick({{ room.id }}, '{{ room.room_number }}', '{{ room.kind_of_room.kind_of_room_name }}',
+                                                    {{ room.price }}, '{{ room.image }}' )">Chọn phòng
                                     </button>
                                 </td>
                             </tr>
@@ -165,6 +171,7 @@
 
 {% block tail_js %}
     {{ super() }}
+    <script src="{{ url_for('static', filename='js/employee/ajax/base.js') }}"></script>
     <script src="{{ url_for('static', filename='js/employee/ajax/find-room.js') }}"></script>
     <script src="{{ url_for('static', filename='js/employee/ajax/rent-directly.js') }}"></script>
 {% endblock %}

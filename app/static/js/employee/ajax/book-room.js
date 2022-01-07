@@ -14,38 +14,25 @@ function getRoomHTML(room) {
                 </td>
                 <td class="text-dark col-md-3 align-middle">${room['description']}</td>
                 <td class="text-dark col-md-2 text-center align-middle">
-                    <button value="1" class="btn btn-info text-white btn-choose-book-room shadow-none" 
-                    onclick="btnButtonAddBookRoomClick(this, ${room['id']}, '${room['room_number']}', 
+                    <button value="${room['id']}" class="btn btn-info text-white btn-choose-book-room btn-choose-room shadow-none" 
+                    id="id-btn-choose-room-${room.id}" 
+                    onclick="btnButtonAddBookRoomClick(${room['id']}, '${room['room_number']}', 
                     '${room['kind_of_room_name']}', ${room['price']}, '${room['image']}')">Chọn phòng</button>
                 </td>
             </tr>`
 }
 
 // click chon them phong dat
-function btnButtonAddBookRoomClick(objButton, roomId, roomNumber, kindOfRoomName, price, image) {
-    // // hieu ung
-    // customButtonAddBookRoom(objButton)
-    // // gui du lieu len server
-    // addToBookRoomCart(roomId, roomNumber, kindOfRoomName, price, image)
-    alert('hihi')
-}
-
-// hieu ung button them vao dat phong duoc click
-function customButtonAddBookRoom(objButton) {
-    if (parseInt(objButton.value) === 1) {
-        objButton.value = 0
-        objButton.innerText = "Hủy chọn";
-        objButton.setAttribute("style", "background-color: #8f8a8a; border-color: #8f8a8a;");
-    } else {
-        objButton.value = 1
-        objButton.innerText = "Chọn phòng";
-        objButton.setAttribute("style", "background-color: #2cabe3; border-color: #2cabe3;");
-    }
+function btnButtonAddBookRoomClick(roomId, roomNumber, kindOfRoomName, price, image) {
+    // hieu ung
+    clickButtonChooseRoom(roomId)
+    // gui du lieu len server
+    addToBookRoomCart(roomId, roomNumber, kindOfRoomName, price, image)
 }
 
 // them phong vao bo nho dat phong
 function addToBookRoomCart(roomId, roomNumber, kindOfRoomName, price, image) {
-    fetch('/employee/add-to-book-room-cart', {
+    fetch('/api/employee/book-room/add-to-book-room-cart', {
         method: 'post',
         body: JSON.stringify({
             'room_id': roomId,
@@ -59,10 +46,11 @@ function addToBookRoomCart(roomId, roomNumber, kindOfRoomName, price, image) {
         }
     }).then(res => res.json()).then(data => {
         if (data.code === 200) {
-            alert(`Đã thêm thành công ${data['total_room']} phong`)
+            let totalBookRoom = document.getElementById('total-book-room')
+            if (data['total_room'] != null)
+                totalBookRoom.innerText = data['total_room']
+            else
+                totalBookRoom.innerText = 0
         }
-    }).catch(error => {
-
-    })
+    }).catch(error => error => console.log(error))
 }
-

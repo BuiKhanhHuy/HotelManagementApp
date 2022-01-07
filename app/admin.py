@@ -55,9 +55,7 @@ class CustomerTypeView(CommonView, AuthenticatedView):
 class CustomerView(CommonView, AuthenticatedView):
     column_labels = {
         'id': 'Mã khách hàng',
-        'first_name': 'Tên',
-        'last_name': 'Họ',
-        'birthday': 'Ngày sinh',
+        'name': 'Tên',
         'gender': 'Giới tính',
         'identification_card': 'Số CMND',
         'customer_type_id': 'Mã loại khách hàng',
@@ -67,8 +65,8 @@ class CustomerView(CommonView, AuthenticatedView):
         'note': 'Ghi chú',
         'comments': 'Bình luận',
     }
-    column_searchable_list = ['identification_card', 'phone_number', 'first_name']
-    column_filters = ['first_name', 'last_name', 'birthday', 'gender', 'identification_card',
+    column_searchable_list = ['identification_card', 'phone_number', 'name']
+    column_filters = ['name', 'gender', 'identification_card',
                       'address', 'phone_number', 'customer_type_id']
     form_excluded_columns = ['comments', 'rents', 'book_rooms']
 

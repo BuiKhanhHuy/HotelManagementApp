@@ -23,10 +23,12 @@ def all_max_people_options():
     return max_people_options
 
 
-# total room in book room
-def total_room_in_book_room(room_list):
-    return len(room_list.keys())
+def total_room_in_book_room(book_room_list):
+    if book_room_list and 'rooms' in book_room_list:
+        return len(book_room_list.get('rooms').keys())
+    return 0
 
 
 if __name__ == '__main__':
-    pass
+    dic = {'a': {'c': 1}}
+    print(dic.get('a').get('b'))

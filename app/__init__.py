@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 app.secret_key = 'Od\x01\xb3\xce\x12(\xfc\xe4\x10Q\x04\x0c\xa8\x8dX'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:123456789@localhost/hoteldatabase?charset=utf8mb4"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:123456789@localhost/hoteldb?charset=utf8mb4"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 app.config['FLASK_ADMIN_SWATCH'] = 'Simplex'
