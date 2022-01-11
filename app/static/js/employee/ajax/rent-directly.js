@@ -17,21 +17,22 @@ function getRoomHTML(room) {
                       <button value="${room['id']}" class="btn btn-info text-white btn-choose-rent-room btn-choose-room shadow-none"
                     id="id-btn-choose-room-${room.id}"
                     onclick="btnButtonAddRentRoomClick(${room['id']}, '${room['room_number']}',
-                    '${room['kind_of_room_name']}', ${room['price']}, '${room['image']}')">Chọn phòng</button>
+                    '${room['kind_of_room_name']}', ${room['price']}, '${room['image']}', ${room['maximum_number']})">
+                    Chọn phòng</button>
                 </td>
             </tr>`
 }
 
 // click chon them phong dat
-function btnButtonAddRentRoomClick(roomId, roomNumber, kindOfRoomName, price, image) {
+function btnButtonAddRentRoomClick(roomId, roomNumber, kindOfRoomName, price, image, maximum_number) {
     // hieu ung
     clickButtonChooseRoom(roomId)
     // gui du lieu len server
-    addToRentRoomCart(roomId, roomNumber, kindOfRoomName, price, image)
+    addToRentRoomCart(roomId, roomNumber, kindOfRoomName, price, image, maximum_number)
 }
 
 // them phong vao bo nho thue phong
-function addToRentRoomCart(roomId, roomNumber, kindOfRoomName, price, image) {
+function addToRentRoomCart(roomId, roomNumber, kindOfRoomName, price, image, maximum_number) {
     fetch('/api/employee/rent-directly/add-to-rent-directly-cart', {
         method: 'post',
         body: JSON.stringify({
@@ -39,18 +40,20 @@ function addToRentRoomCart(roomId, roomNumber, kindOfRoomName, price, image) {
             'room_number': roomNumber,
             'kind_of_room_name': kindOfRoomName,
             'price': price,
-            'image': image
+            'image': image,
+            'maximum_number': maximum_number
         }),
         headers: {
             'Content-Type': 'application/json'
         }
     }).then(res => res.json()).then(data => {
         if (data.code === 200) {
+            console.log(data)
             let totalBookRoom = document.getElementById('total-book-room')
             if (data['total_room'] != null)
                 totalBookRoom.innerText = data['total_room']
             else
-                totalBookRoom.innerText = 0
+                totalBookRoom.innerText = '0'
         }
     }).catch(error => error => console.log(error))
 }

@@ -6,76 +6,94 @@
 
 {% block content %}
     <div class="page-wrapper" id="myDIV">
-        <div class="page-breadcrumb bg-white remove-print">
-            <div class="row align-items-center">
-                <div class="col-lg-6 col-md-4 col-sm-4 col-xs-12">
-                    <h5 class="page-title">
-                        <i class="fas fa-angle-double-right"></i>
-                        <a class="text-dark" href="">Home page</a> /
-                        <a href="">Book room</a>
-                    </h5>
-                </div>
-            </div>
-        </div>
         <div class="page-breadcrumb bg-white">
-            <h3 class="text-uppercase text-info font-weight-bold remove-print">Thông tin đặt phòng</h3>
-            <div class="p-5">
-                <table class="table table-bordered text-black">
-                    <thead>
-                    <tr>
-                        <th colspan="6" class="col-12 border-2 text-center font-weight-bold">PHIẾU ĐẶT PHÒNG</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td colspan="4" class="col-6 border-2">Họ tên người đặt:
-                            <span class="font-weight-bold">{{ name_book_room }}</span></td>
-                        <td colspan="3" class="col-6 border-2">Các phòng đặt: <span class="font-weight-bold">
+            <h4 class="text-uppercase text-info font-weight-bold remove-print">Thông tin đặt phòng</h4>
+            <div class="p-4">
+                <div class="mb-5">
+                    <div class="d-flex">
+                        <div class="p-2 border border-secondary col-12 font-weight-bold font-16 text-center">
+                            PHIẾU ĐẶT PHÒNG
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="p-2 border border-secondary col-6">
+                            Họ tên người đặt:
+                            <span class="font-weight-bold">{{ name_book_room }}</span>
+                        </div>
+                        <div class="p-2 border border-secondary col-6">
+                            Các phòng đặt: <span class="font-weight-bold">
                             {% for room in book_room_list.get('rooms') %}
                                 {{ book_room_list.get('rooms')[room].get('room_number') }},
                             {% endfor %}
                         </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" class="col-6 border-2">Ngày nhận phòng:
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="p-2 border border-secondary col-6">
+                            Ngày nhận phòng:
                             <span class="font-weight-bold">
                                 {{ book_room_list.get('check_in_date').strftime("%d-%m-%Y") }}
                             </span>
-                        </td>
-                        <td colspan="3" class="col-6 border-2">Ngày trả phòng:
+                        </div>
+                        <div class="p-2 border border-secondary col-6">
+                            Ngày trả phòng:
                             <span class="font-weight-bold">
                                 {{ book_room_list.get('check_out_date').strftime("%d-%m-%Y") }}
                             </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-1 border-2 font-weight-bold text-center">STT</td>
-                        <td class="col-2 border-2 font-weight-bold text-center">Khách hàng</td>
-                        <td colspan="2" class="col-2 border-2 font-weight-bold text-center">Loại khách</td>
-                        <td class="col-2 border-2 font-weight-bold text-center">CMND</td>
-                        <td class="col-5 border-2 font-weight-bold text-center">Địa chỉ</td>
-                    </tr>
-                    <tr>
-                        <td class="col-1 text-center border-2">1</td>
-                        <td class="col-2 border-2">{{ name_book_room }}</td>
-                        <td colspan="2" class="col-2 border-2">
-                            {% if cus_type_book_room.__eq__(1) %}
-                            Nội địa
-                            {% else %}
-                            Nước ngoài
-                            {% endif %}
-                        </td>
-                        <td class="col-2 border-2">{{ id_card_book_room }}</td>
-                        <td class="col-5 border-2">{{ address_book_room }}</td>
-                    </tr>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="p-2 border border-secondary col-1 font-weight-bold text-center">
+                            STT
+                        </div>
+                        <div class="p-2 border border-secondary col-2 font-weight-bold text-center">
+                            Khách hạng
+                        </div>
+                        <div class="p-2 border border-secondary col-2 font-weight-bold text-center">
+                            Loại khách
+                        </div>
+                        <div class="p-2 border border-secondary col-2 font-weight-bold text-center">
+                            CMND
+                        </div>
+                        <div class="p-2 border border-secondary col-5 font-weight-bold text-center">
+                            Địa chỉ
+                        </div>
+                    </div>
 
-                    </tbody>
-                </table>
+                    <div>
+                        <div class="d-flex ">
+                            <div class="p-2 border border-secondary col-1 text-center">
+                                1
+                            </div>
+                            <div class="p-2 border border-secondary col-2 text-center">
+                                {{ name_book_room }}
+                            </div>
+                            <div class="p-2 border border-secondary col-2 text-center">
+                                {% if cus_type_book_room.__eq__(1) %}
+                                    Nội địa
+                                {% else %}
+                                    Nước ngoài
+                                {% endif %}
+                            </div>
+                            <div class="p-2 border border-secondary col-2 text-center">
+                                {{ id_card_book_room }}
+                            </div>
+                            <div class="p-2 border border-secondary col-5 text-center">
+                                {{ address_book_room }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="pt-5">
-                    <button class="btn-danger btn text-white bt-print-page"><i class="fas fa-sign-out-alt"></i> Quay về trang chính</button>
-                    <button class="btn-success btn text-white bt-print-page" onclick="printBookingForm()">
-                        <i class="fas fa-print"></i>  In phiếu đặt phòng</button>
+                    <a href="{{ url_for('book_room') }}">
+                        <button class="btn-danger btn text-white bt-print-page shadow-none"><i
+                                class="fas fa-sign-out-alt"></i>
+                            Quay về trang đặt phòng
+                        </button>
+                    </a>
+                    <button class="btn-success btn text-white bt-print-page shadow-none" onclick="printBookingForm()">
+                        <i class="fas fa-print"></i> In phiếu đặt phòng
+                    </button>
                 </div>
             </div>
         </div>

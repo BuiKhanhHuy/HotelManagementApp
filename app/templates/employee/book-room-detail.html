@@ -7,21 +7,9 @@
 {% block content %}
     <div class="page-wrapper">
         <div class="page-breadcrumb bg-white">
-            <div class="row align-items-center">
-                <div class="col-lg-6 col-md-4 col-sm-4 col-xs-12">
-                    <h5 class="page-title">
-                        <i class="fas fa-angle-double-right"></i>
-                        <a class="text-dark" href="">Home page</a> /
-                        <a class="text-dark" href="">Book room</a> /
-                        <a href="">Book room detail</a>
-                    </h5>
-                </div>
-            </div>
-        </div>
-        <div class="page-breadcrumb bg-white">
-            <h3 class="text-center p-2 text-info font-weight-bold">
+            <h4 class="text-center p-2 text-info font-weight-bold">
                 XÁC NHẬN ĐẶT PHÒNG
-            </h3>
+            </h4>
             {% if total_room_booking and total_room_booking > 0 %}
                 <!-- Row -->
                 <div class="row">
@@ -64,8 +52,8 @@
                                                 <div class="col-md-12 border-bottom p-0">
                                                     <input required type="text" placeholder="số cmnd" value=""
                                                            name="id_card_book_room"
-                                                           id="id-card-book-room"
-                                                           class="form-control p-0 border-0 card-book-room w-100"/>
+                                                           id="identification-card"
+                                                           class="form-control p-0 border-0 identification-card w-100"/>
                                                 </div>
                                             </div>
                                             <div class="form-group mb-4">
@@ -227,5 +215,6 @@
 
 {% block tail_js %}
     {{ super() }}
+    <script src="{{ url_for('static', filename='js/employee/ajax/awesomplete.js') }}"></script>
     <script src="{{ url_for('static', filename='js/employee/ajax/book-room-detail.js') }}"></script>
 {% endblock %}

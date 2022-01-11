@@ -1,0 +1,110 @@
+{% extends 'employee/layout/base.html' %}
+
+{% block title %}
+    <title>Xác nhận phòng thuê</title>
+{% endblock %}
+
+{% block content %}
+    <div class="page-wrapper">
+        <div class="page-breadcrumb bg-white">
+            <h4 class="text-uppercase text-info font-weight-bold remove-print">Thông tin phòng thuê</h4>
+            <!-- Row -->
+            <div class="p-2">
+                <div class="row shadow-lg">
+                    <div>
+                        <div class="p-3">
+                            <div class="row py-2">
+                                <div class="col-4">
+                                    <label class="col-sm-12 p-0 font-weight-bold">Phòng:</label>
+                                    <label>
+                                        <span id="room_number">
+                                        {% for room in rooms %}
+                                            {{ room['room_number'] }},
+                                        {% endfor %}
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="col-4">
+                                    <label class="col-sm-12 p-0 font-weight-bold">Ngày nhận phòng:</label>
+                                    <label>
+                                        {% if check_in_date %}
+                                            {{ check_in_date }}
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                <div class="col-4">
+                                    <label class="col-sm-12 p-0 font-weight-bold">Ngày trả phòng:</label>
+                                    <label>
+                                        {% if check_out_date %}
+                                            {{ check_out_date }}
+                                        {% endif %}
+                                    </label>
+                                </div>
+                            </div>
+                            <table class="table table-hover">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th class="col-1 align-middle text-center">Ảnh</th>
+                                    <th class="col-2 align-middle text-center">Số phòng</th>
+                                    <th class="col-2 align-middle">Loại phòng</th>
+                                    <th class="col-3 align-middle">Giá phòng</th>
+                                    <th class="col-2 align-middle text-center">Số khách tối đa</th>
+                                    <th class="col-2 align-middle text-center">Lựa chọn</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for room in rooms %}
+                                    <tr id="tr-room-{{ room['room_id'] }}">
+                                        <td class="col-1 align-middle">
+                                            <img src="{{ room.get('image') }}" alt="Ảnh phòng" class="img-fluid">
+                                        </td>
+                                        <td class="col-2 align-middle text-center">{{ room.get('room_number') }}</td>
+                                        <td class="col-2 align-middle">{{ room.get('kind_of_room_name') }}</td>
+                                        <td class="col-3 align-middle">{{ "{0:,.0f}".format(room.get('price')) }} VND
+                                        </td>
+                                        <td class="col-2 align-middle text-center">{{ room.get('maximum_number') }}</td>
+                                        <td class="col-2 align-middle text-center">
+                                            <button id="del-room-{{ room.get('room_id') }}"
+                                                    class="btn btn-danger text-white btn-del-room"
+                                                    {% if total_room_rent_directly and total_room_rent_directly == 1 %}
+                                                    disabled
+                                                    {% endif %}
+                                                    onclick="deleteRoomInRentDirectly({{ room['room_id'] }})">
+                                                Xóa phòng
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <!-- Center-aligned -->
+                            <ul class="pagination pagination-sm justify-content-center">
+                                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                            </ul>
+                            <!-- Center-aligned -->
+                        </div>
+                    </div>
+                    <div class="p-4 text-center">
+                        <a href="">
+                            <button type="button" class="btn btn-secondary text-white mr-1">Hủy thuê phòng</button>
+                        </a>
+                        <a href="{{ url_for('allocating_customers_rent_room') }}">
+                            <button type="button" class="btn btn-info text-white ml-1">Tiếp tục</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- Row -->
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block tail_js %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/employee/ajax/confirm-rent-room.js') }}"></script>
+{% endblock %}

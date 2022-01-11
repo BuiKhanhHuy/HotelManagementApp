@@ -1,0 +1,241 @@
+{% extends 'employee/layout/base.html' %}
+
+{% block title %}
+    <title>In phiếu thuê phòng</title>
+{% endblock %}
+
+{% block head_css %}
+    {{ super() }}
+    <link href="{{ url_for('static', filename='css/employee/print.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="page-wrapper" id="myDIV">
+        <div class="page-breadcrumb bg-white p-3">
+            <h4 class="text-uppercase text-info font-weight-bold remove-print">Thông tin thuê phòng</h4>
+            <div class="px-4 m-0">
+                <div class="p-0">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs remove-print">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#home">
+                                <i class="fas fa-object-ungroup mr-2"></i>Gộp phiếu
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#menu1">
+                                <i class="far fa-object-ungroup mr-2"></i>Tách phiếu
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div id="home" class="container tab-pane active"><br>
+                            <div class="overflow-auto remove-class" style="height: 400px;">
+                                <div class="d-flex">
+                                    <div class="p-2 border border-secondary col-12 font-weight-bold font-16 text-center">
+                                        PHIẾU THUÊ PHÒNG
+                                    </div>
+                                </div>
+                                <div class="d-flex">
+                                    <div class="p-2 border border-secondary col-6">
+                                        Phòng thuê:
+                                        <span class="font-weight-bold">
+                                            {% for room in rent_directly_list.get('rooms') %}
+                                                {{ rent_directly_list.get('rooms').get(room).get('room_number') }},
+                                            {% endfor %}
+                                         </span>
+                                    </div>
+                                    <div class="p-2 border border-secondary col-6">
+                                        Ngày nhận phòng:
+                                        <span class="font-weight-bold">
+                                            {{ rent_directly_list.get('check_in_date').strftime('%d-%m-%Y') }}
+                                         </span>
+                                    </div>
+                                </div>
+                                <div class="d-flex">
+                                    <div class="p-2 border border-secondary col-6">
+                                        Ngày trả phòng:
+                                        <span class="font-weight-bold">
+                                            {{ rent_directly_list.get('check_out_date').strftime('%d-%m-%Y') }}
+                                         </span>
+                                    </div>
+                                    <div class="p-2 border border-secondary col-6">
+                                    </div>
+                                </div>
+                                <div class="d-flex">
+                                    <div class="p-2 border border-secondary col-1 font-weight-bold text-center">STT
+                                    </div>
+                                    <div class="p-2 border border-secondary col-2 font-weight-bold text-center">Họ
+                                        Tên
+                                    </div>
+                                    <div class="p-2 border border-secondary col-2 font-weight-bold text-center">Loại
+                                        khách
+                                    </div>
+                                    <div class="p-2 border border-secondary col-2 font-weight-bold text-center">CMND
+                                    </div>
+                                    <div class="p-2 border border-secondary col-5 font-weight-bold text-center">Địa
+                                        chỉ
+                                    </div>
+                                </div>
+                                {% for room in rent_directly_list.get('rooms') %}
+                                    <div id="content-room-{{ room }}">
+                                        <div class="p-2 border border-secondary border-black col-12">
+                                             <span class="font-weight-bold">
+                                                Phòng {{ rent_directly_list.get('rooms').get(room).get('room_number') }}
+                                             </span>
+                                        </div>
+                                        <div id="content-customer-{{ room }}">
+                                            {% if 'customers' in rent_directly_list.get('rooms').get(room) %}
+                                                {% for customer in rent_directly_list.get('rooms').get(room).get('customers') %}
+                                                    <div class="d-flex ">
+                                                        <div class="p-2 border border-secondary col-1 text-center">
+                                                            {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('customer_id') }}
+                                                        </div>
+                                                        <div class="p-2 border border-secondary col-2">
+                                                            {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('name') }}
+                                                        </div>
+                                                        <div class="p-2 border border-secondary col-2">
+                                                            {% if rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('customer_type_id').__eq__(1) %}
+                                                                Nội địa
+                                                            {% else %}
+                                                                Nước ngoài
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="p-2 border border-secondary col-2 id-card">
+                                                            {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('identification_card') }}
+                                                        </div>
+                                                        <div class="p-2 border border-secondary col-5">
+                                                            {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('address') }}
+                                                        </div>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="d-flex ">
+                                                        <div class="p-1 border border-secondary col-12 text-secondary text-center">
+                                                            (Trống)
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div id="menu1" class="container tab-pane fade"><br>
+                            <div class="overflow-auto remove-class" style="height: 400px;">
+                                <div>
+                                    {% for room in rent_directly_list.get('rooms') %}
+                                        <div class="mb-5">
+                                            <div class="d-flex">
+                                                <div class="p-2 border border-secondary col-12 font-weight-bold font-16 text-center">
+                                                    PHIẾU THUÊ PHÒNG
+                                                </div>
+                                            </div>
+                                            <div class="d-flex">
+                                                <div class="p-2 border border-secondary col-6">
+                                                    Phòng thuê:
+                                                    <span class="font-weight-bold">
+                                                        {{ rent_directly_list.get('rooms').get(room).get('room_number') }}
+                                                     </span>
+                                                </div>
+                                                <div class="p-2 border border-secondary col-6">
+                                                    Ngày nhận phòng:
+                                                    <span class="font-weight-bold">
+                                                        {{ rent_directly_list.get('check_in_date').strftime('%d-%m-%Y') }}
+                                                     </span>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex">
+                                                <div class="p-2 border border-secondary col-6">
+                                                    Ngày trả phòng:
+                                                    <span class="font-weight-bold">
+                                                        {{ rent_directly_list.get('check_out_date').strftime('%d-%m-%Y') }}
+                                                    </span>
+                                                </div>
+                                                <div class="p-2 border border-secondary col-6 font-weight-bold">
+                                                </div>
+                                            </div>
+                                            <div class="d-flex">
+                                                <div class="p-2 border border-secondary col-1 font-weight-bold text-center">
+                                                    STT
+                                                </div>
+                                                <div class="p-2 border border-secondary col-2 font-weight-bold text-center">
+                                                    Họ
+                                                    Tên
+                                                </div>
+                                                <div class="p-2 border border-secondary col-2 font-weight-bold text-center">
+                                                    Loại
+                                                    khách
+                                                </div>
+                                                <div class="p-2 border border-secondary col-2 font-weight-bold text-center">
+                                                    CMND
+                                                </div>
+                                                <div class="p-2 border border-secondary col-5 font-weight-bold text-center">
+                                                    Địa
+                                                    chỉ
+                                                </div>
+                                            </div>
+
+                                            <div id="content-customer-1">
+                                                {% if 'customers' in rent_directly_list.get('rooms').get(room) %}
+                                                    {% for customer in rent_directly_list.get('rooms').get(room).get('customers') %}
+                                                        <div class="d-flex ">
+                                                            <div class="p-2 border border-secondary col-1 text-center">
+                                                                {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('customer_id') }}
+                                                            </div>
+                                                            <div class="p-2 border border-secondary col-2">
+                                                                {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('name') }}
+                                                            </div>
+                                                            <div class="p-2 border border-secondary col-2">
+                                                                {% if rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('customer_type_id').__eq__(1) %}
+                                                                    Nội địa
+                                                                {% else %}
+                                                                    Nước ngoài
+                                                                {% endif %}
+                                                            </div>
+                                                            <div class="p-2 border border-secondary col-2 id-card">
+                                                                {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('identification_card') }}
+                                                            </div>
+                                                            <div class="p-2 border border-secondary col-5">
+                                                                {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('address') }}
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                {% else %}
+                                                    <div class="d-flex ">
+                                                        <div class="p-1 border border-secondary col-12 text-secondary text-center">
+                                                            (Trống)
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-5">
+                    <a href="{{ url_for('rent_directly') }}">
+                        <button class="btn-danger btn text-white bt-print-page shadow-none"><i
+                                class="fas fa-sign-out-alt"></i>
+                            Quay về trang thuê phòng
+                        </button>
+                    </a>
+                    <button class="btn-success btn text-white bt-print-page shadow-none" onclick="printRentRoom()">
+                        <i class="fas fa-print"></i> In phiếu thuê phòng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block tail_js %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/employee/print.js') }}"></script>
+{% endblock %}
