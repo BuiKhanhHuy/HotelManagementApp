@@ -1,0 +1,283 @@
+{% extends 'employee/layout/base.html' %}
+
+{% block title %}
+    <title>Xác nhận phòng thuê</title>
+{% endblock %}
+
+{% block content %}
+    <div class="page-wrapper">
+        <div class="page-breadcrumb bg-white">
+            <h4 class="p-2 text-uppercase text-center text-info font-weight-bold remove-print">Phân phòng cho khách
+                thuê</h4>
+            <!-- Row -->
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong><i class="fas fa-exclamation-circle"></i></strong> Thêm khách hàng không thành công.
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% if total_room_rent_directly and total_room_rent_directly > 0 %}
+                <div class="px-2">
+                    <div class="row white-box shadow-lg p-0 mb-3">
+                        <div>
+                            <div class="p-3">
+                                <div class="row py-2">
+
+                                    <form class="form-material form-horizontal">
+                                        <div class="form-row">
+                                            <div class="col-md-3 mb-2 form-group">
+                                                <label for="name" class="col-md-12 p-0 font-weight-bold">Họ và tên
+                                                    <span class="text-danger">*</span></label>
+                                                <div class="col-md-12 border-bottom p-0">
+                                                    <input required type="text" placeholder="Trần Văn A"
+                                                           id="name"
+                                                           class="form-control p-0 border-0"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mb-2 form-group">
+                                                <label class="col-md-12 p-0 font-weight-bold">Số CMND
+                                                    <span class="text-danger">*</span></label>
+                                                <div class="col-md-12 border-bottom p-0">
+                                                    <input type="text" placeholder="000000000"
+                                                           id="identification-card"
+                                                           class="form-control p-0 identification-card border-0"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-2 col-md-3">
+                                                <label class="col-sm-12 p-0 font-weight-bold">Giới tính
+                                                    <span class="text-danger">*</span></label>
+                                                <div class="col-sm-12 border-bottom p-0">
+                                                    <select class="form-select shadow-none p-0 border-0 form-control-line"
+                                                            id="gender">
+                                                        <option value="1" id="male">Nam</option>
+                                                        <option value="0" id="female">Nữ</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mb-2 form-group">
+                                                <label class="col-md-12 p-0 font-weight-bold">Số điện thoại
+                                                    <span class="text-danger">*</span></label>
+                                                <div class="col-md-12 border-bottom p-0">
+                                                    <input required type="text" placeholder="1234567890"
+                                                           id="phone-number"
+                                                           class="form-control p-0 border-0"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-2 form-group">
+                                                <label class="col-md-12 p-0 font-weight-bold">Địa chỉ
+                                                    <span class="text-danger">*</span></label>
+                                                <div class="col-md-12 border-bottom p-0">
+                                                    <input required type="text"
+                                                           placeholder="3C Đ. Tôn Đức Thắng, Bến Nghé, Quận 1, Thành phố Hồ Chí Minh"
+                                                           id="address"
+                                                           class="form-control p-0 border-0"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-2 col-md-3">
+                                                <label class="col-sm-12 p-0 font-weight-bold">Loại khách
+                                                    <span class="text-danger">*</span></label>
+                                                <div class="col-sm-12 border-bottom p-0">
+                                                    <select class="form-select shadow-none p-0 border-0 form-control-line"
+                                                            id="customer-type-id">
+                                                        <option value="1" id="">Nội địa</option>
+                                                        <option value="2" id="">Nước ngoài</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-2 col-md-3">
+                                                <label class="col-sm-12 p-0 font-weight-bold">Ở phòng
+                                                    <span class="text-danger">*</span></label>
+                                                <div class="col-sm-12 border-bottom p-0">
+                                                    <select class="form-select shadow-none p-0 border-0 form-control-line"
+                                                            id="room-id">
+                                                        <option value="" disabled selected>Chọn phòng</option>
+                                                        {% for room in rent_directly_list.get('rooms') %}
+                                                            <option
+                                                                    data-number-choose="{{ rent_directly_list.get('rooms').get(room).get('number_of_choose') }}"
+                                                                    id='room-id-{{ rent_directly_list.get('rooms').get(room).get('room_id') }}'
+                                                                    value="{{ rent_directly_list.get('rooms').get(room).get('room_id') }}">
+                                                                {{ rent_directly_list.get('rooms').get(room).get('room_number') }}
+                                                            </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right pt-1 row">
+                                            <div class="col-8 mt-2 text-left">
+                                                <span class="font-12 text-secondary"><i
+                                                        class="far fa-lightbulb text-warning font-18 p-1"></i>
+                                                    Gợi ý: Hãy nhập số CMND để tìm khách hàng đã từng đặt phòng, thuê phòng hoặc lưu
+                                                    trú tại khách sạn nhanh chóng.
+                                                </span>
+                                            </div>
+                                            <div class="col-4">
+                                                <button class="btn btn-dark text-white"
+                                                        onclick="clickAddCustomer()"
+                                                        type="button">Cập nhật khách hàng
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row shadow-lg p-2 white-box">
+                        <div>
+                            <div class="row">
+                                <h4 class="col-6 pt-3 pl-3 font-weight-bold text-secondary">Danh sách khách hàng</h4>
+                                <div class="col-3 mt-3 text-secondary text-right">
+                                    Ngày nhận
+                                    phòng: {{ rent_directly_list.get('check_in_date').strftime('%d-%m-%Y') }}</div>
+                                <div class="col-3 mt-3 text-secondary text-right">
+                                    Ngày trả
+                                    phòng: {{ rent_directly_list.get('check_out_date').strftime('%d-%m-%Y') }}</div>
+                            </div>
+                            <hr class="mb-2 mt-0">
+                            <div class="px-1 overflow-auto position-relative" style="height: 250px">
+                                <div class="d-flex table-dark sticky-top">
+                                    <div class="p-2 text-white border border-1 col-1 font-weight-bold text-center">STT
+                                    </div>
+                                    <div class="p-2 text-white border border-1 col-2 font-weight-bold text-center">Họ
+                                        Tên
+                                    </div>
+                                    <div class="p-2 text-white border border-1 col-1 font-weight-bold text-center">Giới
+                                        tính
+                                    </div>
+                                    <div class="p-2 text-white border border-1 col-1 font-weight-bold text-center">Loại
+                                        khách
+                                    </div>
+                                    <div class="p-2 text-white border border-1 col-2 font-weight-bold text-center">CMND
+                                    </div>
+                                    <div class="p-2 text-white border border-1 col-1 font-weight-bold text-center">SĐT
+                                    </div>
+                                    <div class="p-2 text-white border border-1 col-4 font-weight-bold text-center">Địa
+                                        chỉ
+                                    </div>
+                                </div>
+
+                                {% for room in rent_directly_list.get('rooms') %}
+                                    <div id="content-room-{{ room }}">
+                                        <div class="p-1 border border-1 border-black col-12 text-danger font-weight-bold">
+                                            Phòng {{ rent_directly_list.get('rooms').get(room).get('room_number') }}
+                                        </div>
+                                        <div id="content-customer-{{ room }}">
+                                            {% if 'customers' in rent_directly_list.get('rooms').get(room) %}
+                                                {% for customer in rent_directly_list.get('rooms').get(room).get('customers') %}
+                                                    <div class="d-flex ">
+                                                        <div class="p-2 border border-1 col-1 text-center">
+                                                            {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('customer_id')}}
+                                                        </div>
+                                                        <div class="p-2 border border-1 col-2">
+                                                            {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('name') }}
+                                                        </div>
+                                                        <div class="p-2 border border-1 col-1">
+                                                            {% if rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('gender').__eq__(1) %}
+                                                                Nam
+                                                            {% else %}
+                                                                Nữ
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="p-2 border border-1 col-1">
+                                                            {% if rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('customer_type_id').__eq__(1) %}
+                                                                Nội địa
+                                                            {% else %}
+                                                                Nước ngoài
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="p-2 border border-1 col-2 id-card">
+                                                            {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('identification_card') }}
+                                                        </div>
+                                                        <div class="p-2 border border-1 col-1">
+                                                            {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('phone_number') }}
+                                                        </div>
+                                                        <div class="p-2 border border-1 col-4">
+                                                            {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('address') }}
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            {% else %}
+                                                <div class="d-flex ">
+                                                    <div class="p-1 border border-1 col-12 text-secondary text-center">
+                                                        (Trống)
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="p-4 text-center">
+                                <a href="">
+                                    <button type="button" class="btn btn-secondary text-white mr-1">Hủy thuê phòng</button>
+                                </a>
+                                <a href="{{ url_for('rent_result') }}">
+                                    <button type="button" class="btn btn-info text-white ml-1">Xác nhận thuê phòng</button>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Row -->
+            {% else %}
+                <div class="row p-0">
+                    <div class="alert alert-danger">
+                        Hiện tại không có phòng thuê để phân bổ phòng. Bạn có thể quay về
+                        <a href="{{ url_for('rent_directly') }}" class="alert-link"> trang thuê phòng </a> để chọn
+                        phòng.
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="my-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <i class="fa-solid fa-circle-exclamation text-danger font-24 p-2"></i>
+                        <h4 class="modal-title font-weight-bold font-20" id="id-modal-title">Tiêu đề</h4>
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body font-16" id="id-modal-body">
+                        Nội dung
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger text-light" data-dismiss="modal">Đóng</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- End Modal -->
+
+    </div>
+{% endblock %}
+
+{% block tail_js %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/employee/ajax/base.js') }}"></script>
+     <script src="{{ url_for('static', filename='js/employee/ajax/awesomplete.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/employee/ajax/allocating-customers.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/employee/ajax/allocating-customers-directly.js') }}"></script>
+{% endblock %}

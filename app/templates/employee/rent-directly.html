@@ -7,38 +7,44 @@
 {% block content %}
     <div class="page-wrapper">
         <div class="page-breadcrumb bg-white">
-            <div class="row align-items-center">
-                <div class="col-lg-8 col-md-4 col-sm-4 col-xs-12">
-                    <h5 class="page-title">
-                        <i class="fas fa-angle-double-right"></i>
-                        <a class="text-dark" href="">Home page</a> /
-                        <a class="text-dark" href="">rent</a> /
-                        <a href="">Rent directly</a>
-                    </h5>
-                </div>
-            </div>
-        </div>
-        <div class="page-breadcrumb bg-white">
 
             <div class="container-fluid p-0">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger alert-dismissible fade show">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
 
-                <div class="white-box shadow-lg mb-3 p-3">
-                    <form method="get" action="#">
+                <div class="white-box shadow-lg mb-3 p-2">
+                    <form method="post" action="{{ url_for('confirm_rental_directly_room') }}" class="p-2">
                         <div class="d-md-flex pb-2">
                             <div class="col-md-3 pl-0 pr-4">
                                 <span class="font-bold"> Ngày nhận phòng</span>
-                                <input class="p-2 w-100 rounded-sm border" type="date" id="check-in-date" name="check_in_date_rent_directly"
+                                <input class="p-2 w-100 rounded-sm border" type="date" id="check-in-date"
+                                       name="check_in_date_rent_directly"
                                        onchange="checkCheckInDate(this)">
                             </div>
                             <div class="col-md-3 pl-0 pr-4">
                                 <span class="font-bold">Ngày trả phòng</span>
-                                <input class="p-2 w-100 rounded-sm border" type="date" id="check-out-date" name="check_out_date_rent_directly"
+                                <input class="p-2 w-100 rounded-sm border" type="date" id="check-out-date"
+                                       name="check_out_date_rent_directly"
                                        onchange="checkCheckOutDate(this)">
                             </div>
                             <div class="col-md-2 pt-3 pr-4 ml-auto">
                                 <button type="submit" class="btn btn-warning w-100" id="rent-directly">
-                                    THUÊ PHÒNG <span id="total-rent-directly"
-                                                     class="badge badge-dark rounded-pill">0</span>
+                                    THUÊ PHÒNG
+                                    <span id="total-book-room" class="badge badge-dark rounded-pill">
+                                        {% if total_room_rent_directly and total_room_rent_directly > 0 %}
+                                            {{ total_room_rent_directly }}
+                                        {% else %}
+                                            0
+                                        {% endif %}
+                                    </span>
                                 </button>
                             </div>
                         </div>
@@ -50,7 +56,7 @@
                     <hr class="m-0">
                     <div class="d-md-flex p-2">
                         <div class="col-md-3 col-sm-3 col-xs-3 p-2">
-                            <form class="form-inline w-100" action="/action_page.php">
+                            <form class="form-inline w-100" action="#">
                                 <div class="row d-flex w-100">
                                     <div class="w-75 p-0">
                                         <input class="form-control mr-sm-2 w-100" id="filter-room-number" type="text"
@@ -126,8 +132,10 @@
                                     <button disabled value="{{ room.id }}"
                                             class="btn btn-info text-white btn-choose-rent-room btn-choose-room shadow-none"
                                             id="id-btn-choose-room-{{ room.id }}"
-                                            onclick="btnButtonAddRentRoomClick({{ room.id }}, '{{ room.room_number }}', '{{ room.kind_of_room.kind_of_room_name }}',
-                                                    {{ room.price }}, '{{ room.image }}' )">Chọn phòng
+                                            onclick="btnButtonAddRentRoomClick({{ room.id }}, '{{ room.room_number }}',
+                                                    '{{ room.kind_of_room.kind_of_room_name }}',
+                                                    {{ room.price }}, '{{ room.image }}', {{ room.maximum_number }} )">
+                                        Chọn phòng
                                     </button>
                                 </td>
                             </tr>
@@ -137,11 +145,11 @@
                 </div>
             </div>
             <!-- End Container fluid  -->
+
             <!-- Modal -->
-            <div class="modal fade" id="bookRoomModal">
+            <div class="modal fade" id="my-modal">
                 <div class="modal-dialog">
                     <div class="modal-content">
-
                         <!-- Modal Header -->
                         <div class="modal-header">
                             <i class="fa-solid fa-circle-exclamation text-danger font-24 p-2"></i>
@@ -152,17 +160,14 @@
                         <div class="modal-body font-16" id="id-modal-body">
                             Nội dung
                         </div>
-
                         <!-- Modal footer -->
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger text-light" data-dismiss="modal">Đóng</button>
                         </div>
-
                     </div>
                 </div>
             </div>
             <!-- End Modal -->
-
 
         </div>
         <!-- End Page wrapper  -->

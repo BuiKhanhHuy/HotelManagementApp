@@ -66,13 +66,13 @@ function checkCheckInDate() {
     if (!checkDate(today, valueCheckInDate)) {
         disableButtonChooseRoom(true)
         txtBody = 'Ngày nhận phòng phải lớn hơn ngày hôm nay !'
-        showBookRoomModal(txtTitle, txtBody)
+        showModal(txtTitle, txtBody)
         checkInDate.value = ''
     } else if (checkOutDate.value !== '') {
         if (!checkDate(valueCheckInDate, valueCheckOutDate)) {
             disableButtonChooseRoom(true)
             txtBody = 'Ngày nhận phòng phải nhỏ hơn ngày trả phòng !'
-            showBookRoomModal(txtTitle, txtBody)
+            showModal(txtTitle, txtBody)
             checkInDate.value = ''
         } else {
             disableButtonChooseRoom(false)
@@ -98,12 +98,12 @@ function checkCheckOutDate() {
     if (checkInDate.value === '') {
         disableButtonChooseRoom(true)
         txtBody = 'Bạn vui lòng chọn ngày nhận phòng !'
-        showBookRoomModal(txtTitle, txtBody)
+        showModal(txtTitle, txtBody)
         checkOutDate.value = ''
     } else if (!checkDate(valueCheckInDate, valueCheckOutDate)) {
         disableButtonChooseRoom(true)
         txtBody = 'Ngày trả phòng phải lớn hơn ngày nhận phòng !'
-        showBookRoomModal(txtTitle, txtBody)
+        showModal(txtTitle, txtBody)
         checkOutDate.value = ''
     } else {
         disableButtonChooseRoom(false)
@@ -118,7 +118,7 @@ function searchRoomNumber(objRoomNumber) {
     if (!checkCheckInOut()) {
         disableButtonChooseRoom(true)
         txtBody = 'Bạn vui lòng chọn đầy đủ ngày nhận phòng và ngày trả phòng !'
-        showBookRoomModal(txtTitle, txtBody)
+        showModal(txtTitle, txtBody)
         objRoomNumber.value = ''
     } else {
         disableButtonChooseRoom(false)
@@ -135,7 +135,7 @@ for (let i = 0; i < filters.length; i++) {
             disableButtonChooseRoom(true)
             let txtTitle = 'Lỗi !'
             let txtBody = 'Bạn vui lòng chọn đầy đủ ngày nhận phòng và ngày trả phòng !'
-            showBookRoomModal(txtTitle, txtBody)
+            showModal(txtTitle, txtBody)
         } else {
             disableButtonChooseRoom(false)
             // tim kiem phong

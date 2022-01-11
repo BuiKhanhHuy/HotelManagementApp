@@ -51,7 +51,7 @@ class Customer(BaseModel):
     identification_card = Column(String(20), nullable=False, unique=True)
     customer_type_id = Column(Integer, ForeignKey('customer_type.id'), nullable=False)
     address = Column(String(255), nullable=False)
-    phone_number = Column(Integer, nullable=False)
+    phone_number = Column(String(15), nullable=False)
     note = Column(String(255))
     book_rooms = relationship('BookRoom', backref='customer', lazy=True)
     comments = relationship('Comment', backref='customer', lazy=True)
@@ -187,4 +187,4 @@ rent_detail = db.Table('rent_detail',
 
 
 if __name__ == "__main__":
-    db.create_all()
+    pass

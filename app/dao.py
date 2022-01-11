@@ -1,3 +1,5 @@
+import datetime
+
 from app.models import *
 from sqlalchemy import func
 
@@ -92,25 +94,59 @@ def add_book_room(name, gender, identification_card, customer_type_id,
     db.session.commit()
 
 
+# add rent room
+def add_rent_room(rent_list):
+    if 'rooms' in rent_list:
+        rooms = rent_list.get('rooms')
+        for room in rooms:
+            if 'customers' in rooms[room]:
+                customers = rooms[room]['customers']
+
+                rent = Rent(check_in_date=rent_list['check_in_date'],
+                            check_out_date=rent_list['check_out_date'],
+                            room_id=rooms[room]['room_id'])
+
+                for cus in customers:
+                    customer = Customer.query.filter(
+                        Customer.identification_card.__eq__(customers[cus]['identification_card'])).first()
+                    if customer is None:
+                        customer = customer = Customer(name=customers[cus]['name'],
+                                                       identification_card=customers[cus]['identification_card'],
+                                                       gender=customers[cus]['gender'],
+                                                       customer_type_id=customers[cus]['customer_type_id'],
+                                                       address=customers[cus]['address'],
+                                                       phone_number=customers[cus]['phone_number'])
+                        db.session.add(customer)
+                    rent.customers.append(customer)
+                db.session.add(rent)
+        try:
+            db.session.commit()
+        except:
+            return False
+        return True
+    return False
+
+
+def load_book_room(identification_card=None,
+                   check_from_in_date=None, check_to_in_date=None):
+    # lay book room con hoat dong va chua nhan phong
+    # lay book room khong con hoạt dong va da khong nhan phong
+    book_rooms = BookRoom.query.filter(or_(and_(BookRoom.active.__eq__(True), BookRoom.done.__eq__(False)),
+                                           and_(BookRoom.active.__eq__(False), BookRoom.done.__eq__(False))))
+
+    if identification_card:
+        # lay id customer
+        cus = db.session.query(Customer.id).filter(Customer.identification_card.startswith(identification_card)).all()
+        book_rooms = book_rooms.filter(BookRoom.customer_id.in_([x[0] for x in cus]))
+
+    if check_from_in_date:
+        book_rooms = book_rooms.filter(BookRoom.check_in_date.__le__(check_from_in_date))
+
+    if check_to_in_date:
+        book_rooms = book_rooms.filter(BookRoom.check_in_date.__ge__(check_to_in_date))
+
+    return book_rooms.all()
+
+
 if __name__ == '__main__':
-    # check_in_date = datetime.strptime('2022-01-07T14:00:00.000Z', '%Y-%m-%dT%H:%M:%S.%fZ')
-    # check_out_date = datetime.strptime('2022-01-30T12:00:00.000Z', '%Y-%m-%dT%H:%M:%S.%fZ')
-    #
-    # # # lấy theo room
-    # rooms = Room.query.filter(~Room.rents.any(and_(Rent.active.__eq__(True),
-    #                                                or_(and_(check_in_date >= Rent.check_in_date,
-    #                                                         check_in_date <= Rent.check_out_date, ),
-    #                                                    and_(check_out_date >= Rent.check_in_date,
-    #                                                         check_out_date <= Rent.check_out_date),
-    #                                                    and_(check_in_date <= Rent.check_in_date,
-    #                                                         check_out_date >= Rent.check_out_date))))) \
-    #     .filter(~Room.book_rooms.any(and_(BookRoom.active.__eq__(True),
-    #                                       or_(and_(check_in_date >= BookRoom.check_in_date,
-    #                                                check_in_date <= BookRoom.check_out_date),
-    #                                           and_(check_out_date >= BookRoom.check_in_date,
-    #                                                check_out_date <= BookRoom.check_out_date),
-    #                                           and_(check_in_date <= BookRoom.check_in_date,
-    #                                                check_out_date >= BookRoom.check_out_date))))).all()
-    #
-    # print(rooms)
     pass
