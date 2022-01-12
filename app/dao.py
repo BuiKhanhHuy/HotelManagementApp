@@ -127,8 +127,14 @@ def add_rent_room(rent_list):
     return False
 
 
+# load phieu thue phong tu ma thue phong
+def load_book_room_from_id(book_room_id):
+    return BookRoom.query.get(book_room_id)
+
+
+# loc phieu thue phong
 def load_book_room(identification_card=None,
-                   check_from_in_date=None, check_to_in_date=None):
+                   check_in_date=None, check_out_date=None):
     # lay book room con hoat dong va chua nhan phong
     # lay book room khong con hoạt dong va da khong nhan phong
     book_rooms = BookRoom.query.filter(or_(and_(BookRoom.active.__eq__(True), BookRoom.done.__eq__(False)),
@@ -139,14 +145,84 @@ def load_book_room(identification_card=None,
         cus = db.session.query(Customer.id).filter(Customer.identification_card.startswith(identification_card)).all()
         book_rooms = book_rooms.filter(BookRoom.customer_id.in_([x[0] for x in cus]))
 
-    if check_from_in_date:
-        book_rooms = book_rooms.filter(BookRoom.check_in_date.__le__(check_from_in_date))
+    if check_in_date:
+        book_rooms = book_rooms.filter(BookRoom.check_in_date.__eq__(check_in_date))
 
-    if check_to_in_date:
-        book_rooms = book_rooms.filter(BookRoom.check_in_date.__ge__(check_to_in_date))
+    if check_out_date:
+        book_rooms = book_rooms.filter(BookRoom.check_out_date.__eq__(check_out_date))
 
     return book_rooms.all()
 
 
+# hoan tat nhan phong
+def successful_check_in(book_room_id):
+    if book_room_id:
+        book_room = BookRoom.query.get(book_room_id)
+        book_room.done = True
+        book_room.active = False
+        db.session.add(book_room)
+        try:
+            db.session.commit()
+        except:
+            return False
+    else:
+        return False
+    return True
+
+
+# load common coefficient
+def load_common_coefficient():
+    return CommonCoefficient.query.first()
+
+
+# payment
+def add_bill(rent_id):
+    total = 0
+    common_coefficient = load_common_coefficient()
+
+    rent = Rent.query.get(rent_id)
+    room = Room.query.filter(Room.rents.any(Rent.id == rent_id)).first()
+
+    price = room.price
+
+    if Customer.query.filter(Customer.rents.any(Rent.id == rent_id)).filter(
+            Customer.customer_type_id == 2).count() > 0:
+        price = price * 1.5
+
+    total += price * ((rent.check_out_date - rent.check_in_date).days + 1)
+
+    if Customer.query.filter(Customer.rents.any(Rent.id == rent_id)).count() >= 3:
+        total += total * common_coefficient.surcharge
+
+    bill = Bill(total=total, rent=rent)
+    db.session.add(bill)
+    try:
+        db.session.commit()
+    except:
+        return False
+    else:
+        return True
+
+
+# load rent de thanh toan
+def load_rent_payment(room_number=None, check_in_date=None, check_out_date=None):
+    rent = Rent.query.filter(Rent.active.__eq__(True))
+
+    if room_number:
+        room_ids = db.session.query(Room.id).filter(Room.room_number.startswith(room_number)).all()
+        rent = rent.filter(Rent.room_id.in_([x[0] for x in room_ids]))
+
+    if check_in_date:
+        rent = rent.filter(Rent.check_in_date.__eq__(check_in_date))
+
+    if check_out_date:
+        rent = rent.filter(Rent.check_out_date.__eq__(check_out_date))
+
+    return rent.all()
+
+
 if __name__ == '__main__':
     pass
+
+
+

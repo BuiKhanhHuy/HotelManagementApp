@@ -1,8 +1,6 @@
 from app import app
 import datetime
-import schedule
-import time
-from flask import render_template, request, redirect, url_for, jsonify, session, flash
+from flask import render_template, request, redirect, url_for, jsonify, session, flash, abort
 from app import dao, utils
 from app.admin import *
 
@@ -10,7 +8,8 @@ from app.admin import *
 @app.route("/")
 @app.route("/home")
 def index():
-    del session['rent_directly_list']
+    print(session.get('rent_advance_list'))
+    print(session.get('rent_directly_list'))
     return render_template("home/index.html")
 
 
@@ -51,6 +50,13 @@ def book_room_detail():
             check_out_date = check_out_date.replace(hour=12, minute=0, second=0)
         else:
             flash('Bạn chưa chọn ngày trả phòng!')
+            return redirect(url_for('book_room'))
+
+        # load he so chung - 28 ngay
+        common_coefficient = dao.load_common_coefficient()
+        if (check_in_date - book_room_date).days > common_coefficient.check_in_deadline:
+            flash('Ngày nhận phòng không quá {0} ngày kể từ ngày đặt phòng !'.format(
+                common_coefficient.check_in_deadline))
             return redirect(url_for('book_room'))
 
         if 'book_room_list' in session and 'rooms' in session['book_room_list'] \
@@ -181,33 +187,94 @@ def confirm_rental_directly_room():
 
 
 # phan bo khach vao phong thue
-@app.route("/employee/rent/rent-directly/allocating-customer")
-def allocating_customers_rent_room():
-    if 'rent_directly_list' in session and session['rent_directly_list'].__ne__({}):
-        rent_directly_list = session['rent_directly_list']
-        return render_template("employee/allocating-customers.html",
-                               rent_directly_list=rent_directly_list)
+@app.route("/employee/rent/allocating-customer/<int:allocating_customer_number>")
+def allocating_customers_rent_room(allocating_customer_number):
+    # them khach hang vao session thue phong truc tiep
+    if allocating_customer_number.__eq__(1):
+        if 'rent_directly_list' in session and session['rent_directly_list'].__ne__({}):
+            rent_directly_list = session['rent_directly_list']
+            return render_template("employee/allocating-customers.html",
+                                   allocating_customer_number=allocating_customer_number,
+                                   rent_list=rent_directly_list)
+        else:
+            flash('Hiện tại chưa có phòng nào được chọn!')
+        return redirect(url_for('rent_directly'))
 
+    # them khach hang vao session nhan phong da dat
+    elif allocating_customer_number.__eq__(2):
+
+        if request.args.get('book_room_id'):
+            book_room_id = int(request.args['book_room_id'])
+            # lay phieu dat phong ra
+            b_room = dao.load_book_room_from_id(book_room_id)
+
+            if 'rent_advance_list' not in session:
+                session['rent_advance_list'] = {}
+            rent_advance_list = session['rent_advance_list'] = {}
+            rent_advance_list['check_in_date'] = datetime.now().replace(hour=14, minute=0, second=0, microsecond=0)
+            rent_advance_list['check_out_date'] = b_room.check_out_date
+            rent_advance_list['book_room_id'] = book_room_id
+
+            if 'rooms' not in rent_advance_list:
+                rent_advance_list['rooms'] = {}
+            rooms = rent_advance_list['rooms'] = {}
+
+            for room in b_room.rooms:
+                rooms[room.id] = {
+                    'room_id': room.id,
+                    'room_number': room.room_number,
+                    'number_of_choose': room.maximum_number
+                }
+
+            rent_advance_list['rooms'] = rooms
+            session['rent_advance_list'] = rent_advance_list
+
+            return render_template("employee/allocating-customers.html",
+                                   allocating_customer_number=allocating_customer_number,
+                                   rent_list=rent_advance_list)
+        else:
+            flash('Bạn chưa chọn phiếu nhận phòng.')
+            return redirect(url_for('rent_advance'))
     else:
-        flash('Hiện tại chưa có phòng nào được chọn!')
-    return redirect(url_for('rent_directly'))
+        abort(404)
+    return redirect(url_for('rent_advance'))
 
 
 # ket qua thue phong
-@app.route("/employee/rent/result")
-def rent_result():
-    if 'rent_directly_list' in session:
-        rent_directly_list = session['rent_directly_list']
-        del session['rent_directly_list']
+@app.route("/employee/rent/result/<int:result_number>")
+def rent_result(result_number):
+    if result_number.__eq__(1):
+        if 'rent_directly_list' in session:
+            rent_directly_list = session['rent_directly_list']
+            del session['rent_directly_list']
 
-        if dao.add_rent_room(rent_directly_list):
-            flash('Thêm phiếu thuê phòng thành công')
+            if dao.add_rent_room(rent_directly_list):
+                flash('Thêm phiếu thuê phòng thành công')
+            else:
+                flash('Thêm phiếu thuê phòng thất bại!')
+
+            return render_template("employee/rent-print.html",
+                                   rent_list=rent_directly_list)
         else:
-            flash('Thêm phiếu thuê phòng thất bại!')
+            return redirect(url_for('rent_directly'))
+    else:
+        if result_number.__eq__(2):
+            if 'rent_advance_list' in session:
+                rent_advance_list = session['rent_advance_list']
 
-        return render_template("employee/rent-print.html",
-                               rent_directly_list=rent_directly_list)
-    return redirect(url_for('rent_directly'))
+                if dao.add_rent_room(rent_advance_list) \
+                        and dao.successful_check_in(rent_advance_list['book_room_id']):
+                    del session['rent_advance_list']
+                    flash('Thêm phiếu thuê phòng thành công')
+                else:
+                    flash('Thêm phiếu thuê phòng thất bại!')
+
+                return render_template("employee/rent-print.html",
+                                       rent_list=rent_advance_list)
+            else:
+                return redirect(url_for('rent_advance'))
+        else:
+            abort(404)
 
 
 # ==========END THUE PHONG TRUC TIEP================
@@ -238,7 +305,14 @@ def rent_advance():
 # trang thanh toan
 @app.route("/employee/payment")
 def payment():
-    return render_template('employee/payment.html')
+    rents = dao.load_rent_payment()
+    return render_template('employee/payment.html', rents=rents)
+
+
+# trang thanh toan chi tiet
+@app.route("/employee/payment-detail")
+def payment_detail():
+    return render_template("employee/payment-detail.html")
 
 
 # ==================END THANH TOAN=======================
@@ -316,6 +390,26 @@ def get_customer():
                    'customer_type_id': customer.customer_type.id}
 
     return jsonify({'code': 200, 'customer': cus_dic})
+
+
+# xoa session dat phong
+@app.route('/api/employee/book-room/clean-book-room', methods=['delete'])
+def delete_book_room_session():
+    code = 500
+    if 'book_room_list' in session:
+        del session['book_room_list']
+        code = 200
+    return {'code': code}
+
+
+# xoa session thue phong
+@app.route('/api/employee/rent-directly/clean-book-room', methods=['delete'])
+def delete_rent_directly_session():
+    code = 500
+    if 'rent_directly_list' in session:
+        del session['rent_directly_list']
+        code = 200
+    return {'code': code}
 
 
 # them phong vao cho dat phong
@@ -447,9 +541,9 @@ def delete_room_in_rent(room_id):
                     'room_numbers': room_numbers})
 
 
-# them khach hang vao ds phong thue truc tiep
-@app.route("/api/employee/rent-directly/add-customer", methods=['post'])
-def add_customer_to_directly():
+# them khach hang vao ds phong thue
+@app.route("/api/employee/add-customer/<int:add_customer_number>", methods=['post'])
+def add_customer_to_rent(add_customer_number):
     data = request.json
 
     name = data.get('name')
@@ -463,36 +557,71 @@ def add_customer_to_directly():
 
     code = 200
     customers = None
-    if 'rent_directly_list' in session:
-        rent_directly_list = session['rent_directly_list']
-        if 'rooms' in rent_directly_list:
-            rooms = rent_directly_list['rooms']
-            if room_id in rooms:
-                rooms[room_id]['number_of_choose'] = number_of_choose
-                if 'customers' not in rooms[room_id]:
-                    rooms[room_id]['customers'] = {}
 
-                customers = rooms[room_id]['customers']
+    # api them khach hang vao session thue truc tiep
+    if add_customer_number.__eq__(1):
+        if 'rent_directly_list' in session:
+            rent_directly_list = session['rent_directly_list']
+            if 'rooms' in rent_directly_list:
+                rooms = rent_directly_list['rooms']
+                if room_id in rooms:
+                    rooms[room_id]['number_of_choose'] = number_of_choose
+                    if 'customers' not in rooms[room_id]:
+                        rooms[room_id]['customers'] = {}
 
-                customer_id = len(customers) + 1
-                customers[str(customer_id)] = {
-                    'customer_id': customer_id,
-                    'name': name,
-                    'gender': gender,
-                    'customer_type_id': customer_type_id,
-                    'identification_card': identification_card,
-                    'phone_number': phone_number,
-                    'address': address
-                }
-                rooms[room_id]['customers'] = customers
+                    customers = rooms[room_id]['customers']
+
+                    customer_id = len(customers) + 1
+                    customers[str(customer_id)] = {
+                        'customer_id': customer_id,
+                        'name': name,
+                        'gender': gender,
+                        'customer_type_id': customer_type_id,
+                        'identification_card': identification_card,
+                        'phone_number': phone_number,
+                        'address': address
+                    }
+                    rooms[room_id]['customers'] = customers
+                else:
+                    code = 500
+                rent_directly_list['rooms'] = rooms
             else:
                 code = 500
-            rent_directly_list['rooms'] = rooms
+            session['rent_directly_list'] = rent_directly_list
         else:
             code = 500
-        session['rent_directly_list'] = rent_directly_list
+    # api them khach hang vao session nhan phong da dat
     else:
-        code = 500
+        if 'rent_advance_list' in session:
+            rent_advance_list = session['rent_advance_list']
+            if 'rooms' in rent_advance_list:
+                rooms = rent_advance_list['rooms']
+                if room_id in rooms:
+                    rooms[room_id]['number_of_choose'] = number_of_choose
+                    if 'customers' not in rooms[room_id]:
+                        rooms[room_id]['customers'] = {}
+
+                    customers = rooms[room_id]['customers']
+
+                    customer_id = len(customers) + 1
+                    customers[str(customer_id)] = {
+                        'customer_id': customer_id,
+                        'name': name,
+                        'gender': gender,
+                        'customer_type_id': customer_type_id,
+                        'identification_card': identification_card,
+                        'phone_number': phone_number,
+                        'address': address
+                    }
+                    rooms[room_id]['customers'] = customers
+                else:
+                    code = 500
+                rent_advance_list['rooms'] = rooms
+            else:
+                code = 500
+            session['rent_advance_list'] = rent_advance_list
+        else:
+            code = 500
     return jsonify({'code': code, 'room_id': room_id, 'customers': customers})
 
 
@@ -504,20 +633,20 @@ def find_book_room():
     identification_card = data.get('identification_card')
 
     # ngay checkin
-    check_from_in_date = data.get('check_from_in_date')
-    if check_from_in_date.__ne__(''):
-        check_from_in_date = datetime.strptime(check_from_in_date, '%Y-%m-%d')
-        check_from_in_date = check_from_in_date.replace(hour=14, minute=0, second=0, microsecond=0)
+    check_in_date = data.get('check_in_date')
+    if check_in_date.__ne__(''):
+        check_in_date = datetime.strptime(check_in_date, '%Y-%m-%d')
+        check_in_date = check_in_date.replace(hour=14, minute=0, second=0, microsecond=0)
     else:
-        check_from_in_date = None
+        check_in_date = None
 
     # ngay check out
-    check_to_in_date = data.get('check_to_in_date')
-    if check_to_in_date.__ne__(''):
-        check_to_in_date = datetime.strptime(check_to_in_date, '%Y-%m-%d')
-        check_to_in_date = check_to_in_date.replace(hour=14, minute=0, second=0, microsecond=0)
+    check_out_date = data.get('check_out_date')
+    if check_out_date.__ne__(''):
+        check_out_date = datetime.strptime(check_out_date, '%Y-%m-%d')
+        check_out_date = check_out_date.replace(hour=12, minute=0, second=0, microsecond=0)
     else:
-        check_to_in_date = None
+        check_out_date = None
 
     # lay ngay hom nay
     today = datetime.now()
@@ -525,13 +654,14 @@ def find_book_room():
 
     # danh sach phong dat
     book_rooms = dao.load_book_room(identification_card=identification_card,
-                                    check_from_in_date=check_from_in_date,
-                                    check_to_in_date=check_to_in_date)
+                                    check_in_date=check_in_date,
+                                    check_out_date=check_out_date)
     book_room_list = []
     for b_room in book_rooms:
         room_numbers = [x.room_number for x in b_room.rooms]
         days = (today - b_room.check_in_date).days
         book_room_list.append({
+            'book_room_id': b_room.id,
             'booking_date': b_room.booking_date.strftime('%d-%m-%Y'),
             'check_in_date': b_room.check_in_date.strftime('%d-%m-%Y'),
             'check_out_date': b_room.check_out_date.strftime('%d-%m-%Y'),
@@ -546,13 +676,57 @@ def find_book_room():
     return jsonify({'code': 200, 'book_room_list': book_room_list})
 
 
-# them khach hang vao ds phong nhan
-@app.route("/api/employee/rent-advance/add-customer", methods=['post'])
-def add_customer_to_advance():
-    pass
+# tat hoat dong cua phieu dat phong het han
+@app.route("/api/employee/rent-advance/inactive-book-room/<int:book_room_id>", methods=['delete'])
+def inactive_book_room(book_room_id):
+    code = 500
+    if dao.successful_check_in(book_room_id):
+        code = 200
+
+    return jsonify({'code': code})
+
+
+# tim phieu thue phong de thanh toan
+@app.route("/api/employee/payment/find-rent", methods=['post'])
+def find_rent_payment():
+    data = request.json
+
+    # so phong
+    room_number = data.get('room_number')
+
+    # ngay checkin
+    check_in_date = data.get('check_in_date')
+    if check_in_date.__ne__(''):
+        check_in_date = datetime.strptime(check_in_date, '%Y-%m-%d')
+        check_in_date = check_in_date.replace(hour=14, minute=0, second=0, microsecond=0)
+    else:
+        check_in_date = None
+
+    # ngay check out
+    check_out_date = data.get('check_out_date')
+    if check_out_date.__ne__(''):
+        check_out_date = datetime.strptime(check_out_date, '%Y-%m-%d')
+        check_out_date = check_out_date.replace(hour=12, minute=0, second=0, microsecond=0)
+    else:
+        check_out_date = None
+
+    rents = dao.load_rent_payment(room_number=room_number,
+                                  check_in_date=check_in_date,
+                                  check_out_date=check_out_date)
+    rent_list = []
+    for r in rents:
+        rent_list.append({
+            'rent_id': r.id,
+            'check_in_date': r.check_in_date.strftime('%d-%m-%Y'),
+            'check_out_date': r.check_out_date.strftime('%d-%m-%Y'),
+            'room_number': r.room.room_number
+        })
+
+    return jsonify({'code': 200, 'rent_list': rent_list})
 
 
 # =====================END API==========================
+
 
 # dang nhap
 @app.route("/login")

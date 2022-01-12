@@ -46,11 +46,23 @@ function addToBookRoomCart(roomId, roomNumber, kindOfRoomName, price, image) {
         }
     }).then(res => res.json()).then(data => {
         if (data.code === 200) {
+            notification(1, `Đã thêm thành công phòng ${roomNumber}.`)
             let totalBookRoom = document.getElementById('total-book-room')
             if (data['total_room'] != null)
                 totalBookRoom.innerText = data['total_room']
             else
                 totalBookRoom.innerText = 0
+        }
+    }).catch(error => error => console.log(error))
+}
+
+// refresh session book room
+function cleanBookRoomInSession() {
+    fetch('/api/employee/book-room/clean-book-room', {
+        method: 'delete',
+    }).then(res => res.json()).then(data => {
+        if (data.code === 200) {
+            location.reload()
         }
     }).catch(error => error => console.log(error))
 }

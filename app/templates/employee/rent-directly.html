@@ -35,17 +35,28 @@
                                        name="check_out_date_rent_directly"
                                        onchange="checkCheckOutDate(this)">
                             </div>
-                            <div class="col-md-2 pt-3 pr-4 ml-auto">
-                                <button type="submit" class="btn btn-warning w-100" id="rent-directly">
-                                    THUÊ PHÒNG
-                                    <span id="total-book-room" class="badge badge-dark rounded-pill">
-                                        {% if total_room_rent_directly and total_room_rent_directly > 0 %}
-                                            {{ total_room_rent_directly }}
-                                        {% else %}
-                                            0
-                                        {% endif %}
-                                    </span>
-                                </button>
+                            <div class="col-md-4 pt-3 pr-4 ml-auto">
+                                <div class="row">
+                                    <div class="col-md-6 text-right">
+                                        <button type="button" class="btn btn-dark w-75"
+                                                onclick="cleanRentDirectlyInSession()" id="rent-directly-refresh">
+                                            <i class="fas fa-broom"></i>
+                                            LÀM MỚI
+                                        </button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="submit" class="btn btn-warning w-100" id="rent-directly">
+                                            THUÊ PHÒNG
+                                            <span id="total-book-room" class="badge badge-dark rounded-pill">
+                                                                    {% if total_room_rent_directly and total_room_rent_directly > 0 %}
+                                                                        {{ total_room_rent_directly }}
+                                                                    {% else %}
+                                                                        0
+                                                                    {% endif %}
+                                                                </span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -90,7 +101,7 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="col-sm-2 col-sm-3 col-xs-3 p-2">
+                        <div class="col-sm-2 col-xs-3 p-2">
                             <select class="form-select shadow-none row border-top rounded-sm filter-room"
                                     id="filter-max-people">
                                 <option value="0" selected="selected">----Số khách tối đa----</option>
@@ -99,6 +110,11 @@
                                     </option>
                                 {% endfor %}
                             </select>
+                        </div>
+                        <div class="col-sm-2 col-xs-3 p-2">
+                            <button class="btn-dark btn" onclick="location.reload()"><i class="p-1 fas fa-redo"></i>Đặt
+                                lại
+                            </button>
                         </div>
                     </div>
                     <table class="table table-hover c_table">
@@ -110,7 +126,7 @@
                             <th class="text-white col-md-2 align-middle">Loại phòng</th>
                             <th class="text-white col-md-2 align-middle">Giá</th>
                             <th class="text-white col-md-3 align-middle">Mô tả</th>
-                            <th class="text-white col-md-2 text-center align-middle">Lựa chọn</th>
+                            <th class="text-white col-md-2 text-center align-middle">Chức năng</th>
                         </tr>
                         </thead>
                         <tbody id="content-room">

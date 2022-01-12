@@ -1,10 +1,127 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'employee/layout/base.html' %}
 
-</body>
-</html>
+{% block title %}
+    <title>Thanh toán</title>
+{% endblock %}
+
+{% block content %}
+    <div class="page-wrapper">
+        <div class="page-breadcrumb bg-white">
+            <div class="container-fluid p-0">
+
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger alert-dismissible fade show">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <div class="white-box shadow-lg mb-2 p-2">
+                    <h4 class="font-weight-bold p-2">DANH SÁCH PHIẾU THUÊ CHỜ THANH TOÁN</h4>
+                    <hr class="m-0">
+                    <div class="d-md-flex p-2">
+                        <div class="col-md-3 col-sm-3 col-xs-3 p-2 mt-auto">
+                            <form class="form-inline w-100" action="#">
+                                <div class="row d-flex w-100">
+                                    <div class="w-75 p-0">
+                                        <input class="form-control mr-sm-2 w-100" id="filter-room-number"
+                                               type="text"
+                                               placeholder="Nhập số phòng..." onkeyup="searchRoomNumber()">
+                                    </div>
+                                    <div class="w-25 p-0">
+                                                         <span class="input-group-text border h-100 bg-dark"
+                                                               id="search-addon">
+                                                            <i class="fas fa-search text-white m-auto"></i>
+                                                         </span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-3 p-2">
+                            <span class="font-weight-bold">Ngày nhận phòng từ ngày: </span>
+                            <input class="p-2 w-100 rounded-sm border form-control" type="date"
+                                   id="filter-check-in-date"
+                                   onchange="searchCheckInDate()">
+                        </div>
+                        <div class="col-md-3 p-2">
+                            <span class="font-weight-bold">Đến ngày: </span>
+                            <input class="p-2 w-100 rounded-sm border form-control" type="date"
+                                   id="filter-check-out-date"
+                                   onchange="searchCheckOutDate()">
+                        </div>
+                        <div class="col-md-3 p-2 mt-auto">
+                            <button class="btn-dark btn" onclick="resetFilter()"><i class="p-1 fas fa-redo"></i>Đặt lại
+                            </button>
+                        </div>
+                    </div>
+                    <table class="table table-hover c_table">
+                        <thead class="btn-dark">
+                        <tr>
+                            <th class="text-white col-3 text-center align-middle">Ngày nhận phòng</th>
+                            <th class="text-white col-3 text-center align-middle">Ngày trả phòng</th>
+                            <th class="text-white col-3 text-center align-middle">Số phòng</th>
+                            <th class="text-white col-3 text-center align-middle">Chức năng</th>
+                        </tr>
+                        </thead>
+                        <tbody id="content-rent">
+                        {% for rent in rents %}
+                            <tr>
+                                <td class="text-dark col-3 text-center align-middle">
+                                    {{ rent.check_in_date.strftime('%d-%m-%Y') }}
+                                </td>
+                                <td class="text-dark col-3 text-center align-middle">
+                                    {{ rent.check_out_date.strftime('%d-%m-%Y') }}
+                                </td>
+                                <td class="col-3 text-center text-danger font-weight-bold align-middle">
+                                    {{ rent.room.room_number }}
+                                </td>
+                                <td class="text-dark col-3 text-center align-middle">
+                                   <a href="{{ url_for('payment_detail') }}"> <button class="btn btn-info text-white">Thanh toán</button></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- End Container fluid  -->
+        </div>
+        <!-- End Page wrapper  -->
+
+        <!-- Modal -->
+        <div class="modal fade" id="my-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <i class="fa-solid fa-circle-exclamation text-danger font-24 p-2"></i>
+                        <h4 class="modal-title font-weight-bold font-20" id="id-modal-title">Tiêu đề</h4>
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body font-16" id="id-modal-body">
+                        Nội dung
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger text-light" data-dismiss="modal">Đóng</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- End Modal -->
+    </div>
+{% endblock %}
+
+{% block tail_js %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/employee/ajax/base.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/employee/ajax/payment.js') }}"></script>
+{% endblock %}

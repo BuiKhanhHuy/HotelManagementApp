@@ -8,6 +8,18 @@
     <div class="page-wrapper">
         <div class="page-breadcrumb bg-white">
             <div class="container-fluid p-0">
+
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger alert-dismissible fade show">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
                 <div class="white-box shadow-lg mb-2 p-2">
                     <h4 class="font-weight-bold p-2">DANH SÁCH ĐẶT PHÒNG</h4>
                     <hr class="m-0">
@@ -29,18 +41,20 @@
                                 </div>
                             </form>
                         </div>
-                         <div class="col-md-3 p-2">
-                             <span class="font-weight-bold">Ngày nhận phòng từ ngày: </span>
-                            <input class="p-2 w-100 rounded-sm border form-control" type="date" id="filter-from-check-in-date"
-                                   onchange="searchFromCheckInDate()">
+                        <div class="col-md-3 p-2">
+                            <span class="font-weight-bold">Ngày nhận phòng: </span>
+                            <input class="p-2 w-100 rounded-sm border form-control" type="date"
+                                   id="filter-check-in-date"
+                                   onchange="searchCheckInDate()">
                         </div>
                         <div class="col-md-3 p-2">
-                            <span class="font-weight-bold">Đến ngày: </span>
-                            <input class="p-2 w-100 rounded-sm border form-control" type="date" id="filter-to-check-in-date"
-                                   onchange="searchToCheckInDate()">
+                            <span class="font-weight-bold">Ngày trả phòng: </span>
+                            <input class="p-2 w-100 rounded-sm border form-control" type="date"
+                                   id="filter-check-out-date"
+                                   onchange="searchCheckOutDate()">
                         </div>
                         <div class="col-md-3 p-2 mt-auto">
-                            <button class="btn-dark btn" onclick="resetFilter()">Đặt lại</button>
+                            <button class="btn-dark btn" onclick="resetFilter()"><i class="p-1 fas fa-redo"></i>Đặt lại</button>
                         </div>
                     </div>
                     <table class="table table-hover c_table">
@@ -53,29 +67,25 @@
                             <th class="text-white col-1 text-center align-middle">CMND</th>
                             <th class="text-white col-2 align-middle">Phòng đặt</th>
                             <th class="text-white col-2 text-center align-middle">Trạng thái</th>
-                            <th class="text-white col-2 text-center align-middle">Lựa chọn</th>
+                            <th class="text-white col-2 text-center align-middle">Chức năng</th>
                         </tr>
                         </thead>
                         <tbody id="content-room">
                         {% for book_room in book_rooms %}
-                            <tr>
+                            <tr id="book-room-{{ book_room.id }}">
                                 <td class="text-dark col-1 text-center align-middle">
                                     {{ book_room.booking_date.strftime('%d-%m-%Y') }}
                                 </td>
-                                <td value=""
-                                    class="text-dark col-1 text-center align-middle">
+                                <td class="text-dark col-1 text-center align-middle">
                                     {{ book_room.check_in_date.strftime('%d-%m-%Y') }}
                                 </td>
-                                <td value=""
-                                    class="text-dark col-1 text-center align-middle">
+                                <td class="text-dark col-1 text-center align-middle">
                                     {{ book_room.check_out_date.strftime('%d-%m-%Y') }}
                                 </td>
-                                <td value=""
-                                    class="text-dark col-2 align-middle">
+                                <td class="text-dark col-2 align-middle">
                                     {{ book_room.customer.name }}
                                 </td>
-                                <td value=""
-                                    class="text-danger text-center col-1 font-weight-bold align-middle">
+                                <td class="text-danger text-center col-1 font-weight-bold align-middle">
                                     {{ book_room.customer.identification_card }}
                                 </td>
                                 <td class="text-dark col-2 align-middle">
@@ -97,16 +107,71 @@
                                 </td>
                                 <td class="text-dark col-2 text-center align-middle">
                                     {% if book_room.active.__eq__(True) and book_room.done.__eq__(False) %}
-                                        <button value=""
-                                                class="btn btn-info text-white shadow-none"
-                                                id=""
-                                                onclick="">Nhận phòng
-                                        </button>
+                                        <a href="{{ url_for('allocating_customers_rent_room',
+                                                allocating_customer_number=2, book_room_id=book_room.id) }}">
+                                            <button class="btn btn-info text-white shadow-none"
+                                                    id="">Nhận phòng
+                                            </button>
+                                        </a>
+                                        <script>
+                                            function getHTMLRoomInBookRoom(bookRoom) {
+                                                let txtRoomNumber = ''
+                                                let txtStatus = ''
+                                                let txtButton = ''
+
+                                                for (let i = 0; i < bookRoom['room_numbers'].length; i++)
+                                                    txtRoomNumber += bookRoom['room_numbers'][i] + ', '
+
+                                                if (bookRoom['active'] === true && bookRoom['done'] === false) {
+                                                    if (bookRoom['days'] > 0) {
+                                                        txtStatus = `<span class="badge badge-pill badge-warning">Phiếu đăt phòng đã quá hạn nhận phòng
+                                                                           <span class="font-weight-bold text-dark"> ${bookRoom['days']} </span> ngày
+                                                                    </span>`
+                                                    } else {
+                                                        txtStatus = `<span class="badge badge-pill badge-success">Chờ nhận phòng</span>`
+                                                    }
+                                                    txtButton = `<a href="{{ url_for('allocating_customers_rent_room', allocating_customer_number=2, book_room_id=book_room.id) }}">
+                                                        <button class="btn btn-info text-white shadow-none" onclick="">Nhận phòng</button></a>`
+
+                                                } else if (bookRoom['active'] === false && bookRoom['done'] === false) {
+                                                    txtStatus = `<span class="adge badge-pill badge-danger">Phiếu đặt phòng đã bị hủy do quá hạn</span>`
+                                                    txtButton = `<button class="btn btn-danger text-white shadow-none" onclick="inactiveBookRoom(${bookRoom['book_room_id']})">Không hiển thị</button>`
+                                                }
+
+                                                return `
+                                                        <tr id="book-room-${bookRoom['book_room_id']}">
+                                                            <td class="text-dark col-1 text-center align-middle">
+                                                                ${bookRoom['booking_date']}
+                                                            </td>
+                                                            <td class="text-dark col-1 text-center align-middle">
+                                                                ${bookRoom['check_in_date']}
+                                                            </td>
+                                                            <td class="text-dark col-1 text-center align-middle">
+                                                                ${bookRoom['check_out_date']}
+                                                            </td>
+                                                            <td class="text-dark col-2 align-middle">
+                                                                 ${bookRoom['customer_name']}
+                                                            </td>
+                                                            <td class="text-danger text-center col-1 font-weight-bold align-middle">
+                                                                ${bookRoom['identification_card']}
+                                                            </td>
+                                                            <td class="text-dark col-2 align-middle">
+                                                                ${txtRoomNumber}
+                                                            </td>
+                                                            <td class="text-dark col-2 align-middle">
+                                                                ${txtStatus}
+                                                            </td>
+                                                            <td class="text-dark col-2 text-center align-middle">
+                                                                ${txtButton}
+                                                            </td>
+                                                        </tr>
+                                                    `
+                                            }
+                                        </script>
                                     {% elif book_room.active.__eq__(False) and book_room.done.__eq__(False) %}
-                                        <button value=""
-                                                class="btn btn-danger text-white shadow-none"
+                                        <button class="btn btn-danger text-white shadow-none"
                                                 id=""
-                                                onclick="">Xóa phiếu
+                                                onclick="inactiveBookRoom({{ book_room.id }})">Không hiển thị
                                         </button>
                                     {% endif %}
                                 </td>
@@ -150,5 +215,6 @@
 
 {% block tail_js %}
     {{ super() }}
+    <script src="{{ url_for('static', filename='js/employee/ajax/base.js') }}"></script>
     <script src="{{ url_for('static', filename='js/employee/ajax/rent-advance.js') }}"></script>
 {% endblock %}
