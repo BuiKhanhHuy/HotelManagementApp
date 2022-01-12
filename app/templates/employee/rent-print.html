@@ -41,15 +41,15 @@
                                     <div class="p-2 border border-secondary col-6">
                                         Phòng thuê:
                                         <span class="font-weight-bold">
-                                            {% for room in rent_directly_list.get('rooms') %}
-                                                {{ rent_directly_list.get('rooms').get(room).get('room_number') }},
+                                            {% for room in rent_list.get('rooms') %}
+                                                {{ rent_list.get('rooms').get(room).get('room_number') }},
                                             {% endfor %}
                                          </span>
                                     </div>
                                     <div class="p-2 border border-secondary col-6">
                                         Ngày nhận phòng:
                                         <span class="font-weight-bold">
-                                            {{ rent_directly_list.get('check_in_date').strftime('%d-%m-%Y') }}
+                                            {{ rent_list.get('check_in_date').strftime('%d-%m-%Y') }}
                                          </span>
                                     </div>
                                 </div>
@@ -57,7 +57,7 @@
                                     <div class="p-2 border border-secondary col-6">
                                         Ngày trả phòng:
                                         <span class="font-weight-bold">
-                                            {{ rent_directly_list.get('check_out_date').strftime('%d-%m-%Y') }}
+                                            {{ rent_list.get('check_out_date').strftime('%d-%m-%Y') }}
                                          </span>
                                     </div>
                                     <div class="p-2 border border-secondary col-6">
@@ -78,35 +78,35 @@
                                         chỉ
                                     </div>
                                 </div>
-                                {% for room in rent_directly_list.get('rooms') %}
+                                {% for room in rent_list.get('rooms') %}
                                     <div id="content-room-{{ room }}">
                                         <div class="p-2 border border-secondary border-black col-12">
                                              <span class="font-weight-bold">
-                                                Phòng {{ rent_directly_list.get('rooms').get(room).get('room_number') }}
+                                                Phòng {{ rent_list.get('rooms').get(room).get('room_number') }}
                                              </span>
                                         </div>
                                         <div id="content-customer-{{ room }}">
-                                            {% if 'customers' in rent_directly_list.get('rooms').get(room) %}
-                                                {% for customer in rent_directly_list.get('rooms').get(room).get('customers') %}
+                                            {% if 'customers' in rent_list.get('rooms').get(room) %}
+                                                {% for customer in rent_list.get('rooms').get(room).get('customers') %}
                                                     <div class="d-flex ">
                                                         <div class="p-2 border border-secondary col-1 text-center">
-                                                            {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('customer_id') }}
+                                                            {{ rent_list.get('rooms').get(room).get('customers').get(customer).get('customer_id') }}
                                                         </div>
                                                         <div class="p-2 border border-secondary col-2">
-                                                            {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('name') }}
+                                                            {{ rent_list.get('rooms').get(room).get('customers').get(customer).get('name') }}
                                                         </div>
                                                         <div class="p-2 border border-secondary col-2">
-                                                            {% if rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('customer_type_id').__eq__(1) %}
+                                                            {% if rent_list.get('rooms').get(room).get('customers').get(customer).get('customer_type_id').__eq__(1) %}
                                                                 Nội địa
                                                             {% else %}
                                                                 Nước ngoài
                                                             {% endif %}
                                                         </div>
                                                         <div class="p-2 border border-secondary col-2 id-card">
-                                                            {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('identification_card') }}
+                                                            {{ rent_list.get('rooms').get(room).get('customers').get(customer).get('identification_card') }}
                                                         </div>
                                                         <div class="p-2 border border-secondary col-5">
-                                                            {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('address') }}
+                                                            {{ rent_list.get('rooms').get(room).get('customers').get(customer).get('address') }}
                                                         </div>
                                                     </div>
                                                 {% else %}
@@ -126,7 +126,7 @@
                         <div id="menu1" class="container tab-pane fade"><br>
                             <div class="overflow-auto remove-class" style="height: 400px;">
                                 <div>
-                                    {% for room in rent_directly_list.get('rooms') %}
+                                    {% for room in rent_list.get('rooms') %}
                                         <div class="mb-5">
                                             <div class="d-flex">
                                                 <div class="p-2 border border-secondary col-12 font-weight-bold font-16 text-center">
@@ -137,13 +137,13 @@
                                                 <div class="p-2 border border-secondary col-6">
                                                     Phòng thuê:
                                                     <span class="font-weight-bold">
-                                                        {{ rent_directly_list.get('rooms').get(room).get('room_number') }}
+                                                        {{ rent_list.get('rooms').get(room).get('room_number') }}
                                                      </span>
                                                 </div>
                                                 <div class="p-2 border border-secondary col-6">
                                                     Ngày nhận phòng:
                                                     <span class="font-weight-bold">
-                                                        {{ rent_directly_list.get('check_in_date').strftime('%d-%m-%Y') }}
+                                                        {{ rent_list.get('check_in_date').strftime('%d-%m-%Y') }}
                                                      </span>
                                                 </div>
                                             </div>
@@ -151,7 +151,7 @@
                                                 <div class="p-2 border border-secondary col-6">
                                                     Ngày trả phòng:
                                                     <span class="font-weight-bold">
-                                                        {{ rent_directly_list.get('check_out_date').strftime('%d-%m-%Y') }}
+                                                        {{ rent_list.get('check_out_date').strftime('%d-%m-%Y') }}
                                                     </span>
                                                 </div>
                                                 <div class="p-2 border border-secondary col-6 font-weight-bold">
@@ -179,27 +179,27 @@
                                             </div>
 
                                             <div id="content-customer-1">
-                                                {% if 'customers' in rent_directly_list.get('rooms').get(room) %}
-                                                    {% for customer in rent_directly_list.get('rooms').get(room).get('customers') %}
+                                                {% if 'customers' in rent_list.get('rooms').get(room) %}
+                                                    {% for customer in rent_list.get('rooms').get(room).get('customers') %}
                                                         <div class="d-flex ">
                                                             <div class="p-2 border border-secondary col-1 text-center">
-                                                                {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('customer_id') }}
+                                                                {{ rent_list.get('rooms').get(room).get('customers').get(customer).get('customer_id') }}
                                                             </div>
                                                             <div class="p-2 border border-secondary col-2">
-                                                                {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('name') }}
+                                                                {{ rent_list.get('rooms').get(room).get('customers').get(customer).get('name') }}
                                                             </div>
                                                             <div class="p-2 border border-secondary col-2">
-                                                                {% if rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('customer_type_id').__eq__(1) %}
+                                                                {% if rent_list.get('rooms').get(room).get('customers').get(customer).get('customer_type_id').__eq__(1) %}
                                                                     Nội địa
                                                                 {% else %}
                                                                     Nước ngoài
                                                                 {% endif %}
                                                             </div>
                                                             <div class="p-2 border border-secondary col-2 id-card">
-                                                                {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('identification_card') }}
+                                                                {{ rent_list.get('rooms').get(room).get('customers').get(customer).get('identification_card') }}
                                                             </div>
                                                             <div class="p-2 border border-secondary col-5">
-                                                                {{ rent_directly_list.get('rooms').get(room).get('customers').get(customer).get('address') }}
+                                                                {{ rent_list.get('rooms').get(room).get('customers').get(customer).get('address') }}
                                                             </div>
                                                         </div>
                                                     {% endfor %}
@@ -237,5 +237,6 @@
 
 {% block tail_js %}
     {{ super() }}
+    <script src="{{ url_for('static', filename='js/employee/ajax/base.js') }}"></script>
     <script src="{{ url_for('static', filename='js/employee/print.js') }}"></script>
 {% endblock %}

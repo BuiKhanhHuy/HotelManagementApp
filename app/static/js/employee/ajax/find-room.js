@@ -212,5 +212,4 @@ function disableButtonChooseRoom(flag) {
     }
 }
 
-// ===========LOC THONG TIN PHONG CAN DAT, CAN THUE===========
 

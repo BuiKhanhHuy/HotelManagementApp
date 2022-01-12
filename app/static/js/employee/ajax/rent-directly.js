@@ -57,3 +57,14 @@ function addToRentRoomCart(roomId, roomNumber, kindOfRoomName, price, image, max
         }
     }).catch(error => error => console.log(error))
 }
+
+// refresh session rent directly
+function cleanRentDirectlyInSession(){
+     fetch('/api/employee/rent-directly/clean-book-room', {
+        method: 'delete',
+    }).then(res => res.json()).then(data => {
+        if (data.code === 200) {
+            location.reload()
+        }
+    }).catch(error => error => console.log(error))
+}

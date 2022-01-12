@@ -5179,45 +5179,47 @@ button.close {
 a.close.disabled {
   pointer-events: none; }
 
-.toast {
-  -ms-flex-preferred-size: 350px;
-  flex-basis: 350px;
-  max-width: 350px;
-  font-size: 0.875rem;
-  background-color: rgba(255, 255, 255, 0.85);
-  background-clip: padding-box;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  -webkit-box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
-  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
-  opacity: 0;
-  border-radius: 0.25rem; }
-  .toast:not(:last-child) {
-    margin-bottom: 0.75rem; }
-  .toast.showing {
-    opacity: 1; }
-  .toast.show {
-    display: block;
-    opacity: 1; }
-  .toast.hide {
-    display: none; }
+/*.toast {*/
+/*  -ms-flex-preferred-size: 350px;*/
+/*  flex-basis: 350px;*/
+/*  max-width: 350px;*/
+/*  font-size: 0.875rem;*/
+/*  background-color: rgba(255, 255, 255, 0.85);*/
+/*  background-clip: padding-box;*/
+/*  border: 1px solid rgba(0, 0, 0, 0.1);*/
+/*  -webkit-box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);*/
+/*  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);*/
+/*  opacity: 0;*/
+/*  border-radius: 0.25rem; }*/
+/*  .toast:not(:last-child) {*/
+/*    margin-bottom: 0.75rem; }*/
+/*  .toast.showing {*/
+/*    opacity: 1; }*/
+/*  .toast.show {*/
+/*    display: block;*/
+/*    opacity: 1; }*/
+/*  .toast.hide {*/
+/*    display: none; }*/
 
-.toast-header {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  padding: 0.25rem 0.75rem;
-  color: #6c757d;
-  background-color: rgba(255, 255, 255, 0.85);
-  background-clip: padding-box;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  border-top-left-radius: calc(0.25rem - 1px);
-  border-top-right-radius: calc(0.25rem - 1px); }
+/*.toast-header {*/
+/*  display: -webkit-box;*/
+/*  display: -ms-flexbox;*/
+/*  display: flex;*/
+/*  -webkit-box-align: center;*/
+/*  -ms-flex-align: center;*/
+/*  align-items: center;*/
+/*  padding: 0.25rem 0.75rem;*/
+/*  color: #6c757d;*/
+/*  background-color: rgba(255, 255, 255, 0.85);*/
+/*  background-clip: padding-box;*/
+/*  border-bottom: 1px solid rgba(0, 0, 0, 0.05);*/
+/*  border-top-left-radius: calc(0.25rem - 1px);*/
+/*  border-top-right-radius: calc(0.25rem - 1px); }*/
 
-.toast-body {
-  padding: 0.75rem; }
+/*.toast-body {*/
+/*  padding: 0.75rem; }*/
+
+
 
 .modal-open {
   overflow: hidden; }
@@ -8749,7 +8751,7 @@ a.text-purple:hover, a.text-purple:focus {
     border-color: #e9ecef; } }
 
 /*******************
-Padding margin property 
+Padding margin property
 *******************/
 html[dir="ltr"] body .m-t-5 {
   margin-top: 5px; }
@@ -9017,8 +9019,8 @@ html[dir="ltr"] body .p-l-0 {
     #main-wrapper[data-layout="vertical"] .left-sidebar[data-sidebarbg="skin6"] .create-btn, #main-wrapper[data-layout="horizontal"] .left-sidebar[data-sidebarbg="skin6"] .create-btn {
       background: #4fc3f7; }
 
-/*============================================================== 
- For all pages 
+/*==============================================================
+ For all pages
  ============================================================== */
 #main-wrapper {
   width: 100%;
@@ -9513,70 +9515,70 @@ Preloader
 /*******************
 Notify
 *******************/
-.notify {
-  position: relative;
-  top: -18px;
-  right: -11px; }
-  .notify .heartbit {
-    position: absolute;
-    top: -20px;
-    right: -4px;
-    height: 25px;
-    width: 25px;
-    z-index: 10;
-    border: 5px solid #f62d51;
-    border-radius: 70px;
-    -moz-animation: heartbit 1s ease-out;
-    -moz-animation-iteration-count: infinite;
-    -o-animation: heartbit 1s ease-out;
-    -o-animation-iteration-count: infinite;
-    -webkit-animation: heartbit 1s ease-out;
-    -webkit-animation-iteration-count: infinite;
-    animation-iteration-count: infinite; }
-  .notify .point {
-    width: 6px;
-    height: 6px;
-    -webkit-border-radius: 30px;
-    -moz-border-radius: 30px;
-    border-radius: 30px;
-    background-color: #f62d51;
-    position: absolute;
-    right: 6px;
-    top: -10px; }
+/*.notify {*/
+/*  position: relative;*/
+/*  top: -18px;*/
+/*  right: -11px; }*/
+/*  .notify .heartbit {*/
+/*    position: absolute;*/
+/*    top: -20px;*/
+/*    right: -4px;*/
+/*    height: 25px;*/
+/*    width: 25px;*/
+/*    z-index: 10;*/
+/*    border: 5px solid #f62d51;*/
+/*    border-radius: 70px;*/
+/*    -moz-animation: heartbit 1s ease-out;*/
+/*    -moz-animation-iteration-count: infinite;*/
+/*    -o-animation: heartbit 1s ease-out;*/
+/*    -o-animation-iteration-count: infinite;*/
+/*    -webkit-animation: heartbit 1s ease-out;*/
+/*    -webkit-animation-iteration-count: infinite;*/
+/*    animation-iteration-count: infinite; }*/
+/*  .notify .point {*/
+/*    width: 6px;*/
+/*    height: 6px;*/
+/*    -webkit-border-radius: 30px;*/
+/*    -moz-border-radius: 30px;*/
+/*    border-radius: 30px;*/
+/*    background-color: #f62d51;*/
+/*    position: absolute;*/
+/*    right: 6px;*/
+/*    top: -10px; }*/
 
-@-moz-keyframes heartbit {
-  0% {
-    -moz-transform: scale(0);
-    opacity: 0.0; }
-  25% {
-    -moz-transform: scale(0.1);
-    opacity: 0.1; }
-  50% {
-    -moz-transform: scale(0.5);
-    opacity: 0.3; }
-  75% {
-    -moz-transform: scale(0.8);
-    opacity: 0.5; }
-  100% {
-    -moz-transform: scale(1);
-    opacity: 0.0; } }
+/*@-moz-keyframes heartbit {*/
+/*  0% {*/
+/*    -moz-transform: scale(0);*/
+/*    opacity: 0.0; }*/
+/*  25% {*/
+/*    -moz-transform: scale(0.1);*/
+/*    opacity: 0.1; }*/
+/*  50% {*/
+/*    -moz-transform: scale(0.5);*/
+/*    opacity: 0.3; }*/
+/*  75% {*/
+/*    -moz-transform: scale(0.8);*/
+/*    opacity: 0.5; }*/
+/*  100% {*/
+/*    -moz-transform: scale(1);*/
+/*    opacity: 0.0; } }*/
 
-@-webkit-keyframes heartbit {
-  0% {
-    -webkit-transform: scale(0);
-    opacity: 0.0; }
-  25% {
-    -webkit-transform: scale(0.1);
-    opacity: 0.1; }
-  50% {
-    -webkit-transform: scale(0.5);
-    opacity: 0.3; }
-  75% {
-    -webkit-transform: scale(0.8);
-    opacity: 0.5; }
-  100% {
-    -webkit-transform: scale(1);
-    opacity: 0.0; } }
+/*@-webkit-keyframes heartbit {*/
+/*  0% {*/
+/*    -webkit-transform: scale(0);*/
+/*    opacity: 0.0; }*/
+/*  25% {*/
+/*    -webkit-transform: scale(0.1);*/
+/*    opacity: 0.1; }*/
+/*  50% {*/
+/*    -webkit-transform: scale(0.5);*/
+/*    opacity: 0.3; }*/
+/*  75% {*/
+/*    -webkit-transform: scale(0.8);*/
+/*    opacity: 0.5; }*/
+/*  100% {*/
+/*    -webkit-transform: scale(1);*/
+/*    opacity: 0.0; } }*/
 
 /*******************
  General Topbar
@@ -10359,17 +10361,17 @@ Author: Wrappixel
 
 File: scss
 */
-/*============================================================== 
- For Desktop & above all (1650px) 
+/*==============================================================
+ For Desktop & above all (1650px)
  ============================================================== */
-/*============================================================== 
- For Laptop & above all (1370px) 
+/*==============================================================
+ For Laptop & above all (1370px)
  ============================================================== */
-/*-- ============================================================== 
- Small Desktop & above all (1024px) 
+/*-- ==============================================================
+ Small Desktop & above all (1024px)
  ============================================================== */
-/*-- ============================================================== 
- Ipad & above all(768px) 
+/*-- ==============================================================
+ Ipad & above all(768px)
  ============================================================== */
 @media (min-width: 768px) {
   .bc-content {
@@ -10377,8 +10379,8 @@ File: scss
     -ms-flex-pack: end;
     justify-content: flex-end; } }
 
-/*-- ============================================================== 
- Phone and below ipad(767px) 
+/*-- ==============================================================
+ Phone and below ipad(767px)
  ============================================================== */
 @media (max-width: 991.98px) {
   .do-block {

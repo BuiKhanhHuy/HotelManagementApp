@@ -36,6 +36,11 @@
                 integrity="sha512-t3zV/oAkSZUrvb/7p1q1+uh/i56JinQ+bmiulnHhbHZc7dq09CxJ1BByyi7A4+lF76+CcJtSVFtb7na7Oe7Cgg=="
                 crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+        <!-- notify -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/styles/metro/notify-metro.css"/>
+
         <link rel="canonical" href="https://www.wrappixel.com/templates/ample-admin-lite/"/>
         <!-- Favicon icon -->
         <link rel="icon" type="image/png" sizes="16x16"
@@ -98,9 +103,6 @@
     <script src="{{ url_for('static', filename='js/employee/sidebarmenu.js') }}"></script>
     <!--Custom JavaScript -->
     <script src="{{ url_for('static', filename='js/employee/custom.js') }}"></script>
-
-
-
 {% endblock %}
 
 {% block tail %}

@@ -1,4 +1,4 @@
-from flask import Flask, session
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_babelex import Babel
 import cloudinary

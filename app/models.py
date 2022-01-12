@@ -127,7 +127,7 @@ class Rent(BaseModel):
     room_id = Column(Integer, ForeignKey('room.id'), nullable=False)
     customers = relationship('Customer', secondary='rent_detail', lazy='subquery',
                              backref=backref('rents', lazy=True))
-    bill_details = relationship('BillDetail', backref='rent', lazy=True)
+    bill = relationship('Bill', backref='rent', lazy=True)
 
     def __str__(self):
         return "Phiếu thuê phòng: {0} - {1}".format(self.check_in_date, self.check_out_date)
@@ -137,19 +137,10 @@ class Bill(BaseModel):
     __tablename__ = 'bill'
     total = Column(Float, nullable=False)
     note = Column(String(255))
-    bill_details = relationship('BillDetail', backref='bill', lazy=True)
+    rent_id = Column(Integer, ForeignKey('rent.id'), nullable=False)
 
     def __str__(self):
         return "Mã hóa đơn {0}".format(self.id)
-
-
-class BillDetail(BaseModel):
-    __tablename__ = 'bill_detail'
-    number_of_day = Column(Integer, nullable=False)
-    price = Column(Float, nullable=False)
-    into_money = Column(Float, nullable=False)
-    bill_id = Column(Integer, ForeignKey('bill.id'), nullable=False)
-    rent_id = Column(Integer, ForeignKey('rent.id'), nullable=False)
 
 
 class Comment(db.Model):
@@ -187,4 +178,4 @@ rent_detail = db.Table('rent_detail',
 
 
 if __name__ == "__main__":
-    pass
+    db.create_all()
