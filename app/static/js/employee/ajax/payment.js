@@ -65,21 +65,4 @@ function apiSearchRentRoom(roomNumber, checkInDate, checkOutDate) {
 }
 
 
-// get HTML
-function getHTMLRentRoom(rent) {
-    return `<tr>
-                <td class="text-dark col-3 text-center align-middle">
-                    ${rent['check_in_date']}
-                </td>
-                <td class="text-dark col-3 text-center align-middle">
-                    ${rent['check_out_date']}
-                </td>
-                <td class="col-3 text-center text-danger font-weight-bold align-middle">
-                    ${rent['room_number']}
-                </td>
-                <td class="text-dark col-3 text-center align-middle">
-                    <button class="btn btn-info text-white">Thanh toán</button>
-                </td>
-            </tr>`
-}
 

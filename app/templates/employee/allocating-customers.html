@@ -10,13 +10,30 @@
             <h4 class="p-2 text-uppercase text-center text-info font-weight-bold remove-print">Phân phòng cho khách
                 thuê</h4>
             <!-- Row -->
-            {% with messages = get_flashed_messages() %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-danger alert-dismissible fade show">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <strong><i class="fas fa-exclamation-circle"></i></strong> Thêm khách hàng không thành công.
-                        </div>
+                    {% for category, message in messages %}
+                        {% if category.__eq__('error') %}
+                            <div class="alert alert-danger alert-dismissible fade show">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
+                            </div>
+                        {% elif category.__eq__('success') %}
+                            <div class="alert alert-success alert-dismissible fade show">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
+                            </div>
+                        {% elif category.__eq__('info') %}
+                            <div class="alert alert-info alert-dismissible fade show">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
+                            </div>
+                        {% elif category.__eq__('warning') %}
+                            <div class="alert alert-warning alert-dismissible fade show">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 {% endif %}
             {% endwith %}

@@ -9,13 +9,30 @@
         <div class="page-breadcrumb bg-white">
             <div class="container-fluid p-0">
 
-                {% with messages = get_flashed_messages() %}
+                {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-danger alert-dismissible fade show">
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
-                            </div>
+                        {% for category, message in messages %}
+                            {% if category.__eq__('error') %}
+                                <div class="alert alert-danger alert-dismissible fade show">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
+                                </div>
+                            {% elif category.__eq__('success') %}
+                                <div class="alert alert-success alert-dismissible fade show">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
+                                </div>
+                            {% elif category.__eq__('info') %}
+                                <div class="alert alert-info alert-dismissible fade show">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
+                                </div>
+                            {% elif category.__eq__('warning') %}
+                                <div class="alert alert-warning alert-dismissible fade show">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
+                                </div>
+                            {% endif %}
                         {% endfor %}
                     {% endif %}
                 {% endwith %}
@@ -23,54 +40,141 @@
                 <div class="white-box shadow-lg mb-2 p-2">
                     <h4 class="font-weight-bold p-2">CHI TIẾT HÓA ĐƠN</h4>
                     <hr class="m-0">
-                    <div>
-                        <div class="col-8 bg-danger mx-auto">
-                            <div class="d-flex">
-                                <div class="p-2 flex-fill bg-info">Ngày nhận phòng: </div>
-                                <div class="p-2 flex-fill bg-warning">Ngày trả phòng: </div>
-                                <div class="p-2 flex-fill bg-primary">Phòng: </div>
+                    <div class="mx-auto">
+                        <form class="form-material form-horizontal" method="post"
+                              action="{{ url_for('payment_result', rent_id=rent_room.id) }}">
+                            <div class="d-md-flex col-10 p-2 mx-auto">
+                                <div class="col-4">
+                                    Ngày nhận phòng: <span
+                                        class="font-weight-bold">{{ rent_room.check_in_date.strftime("%d-%m-%Y") }}</span>
+                                </div>
+                                <div class="col-4">
+                                    Ngày trả phòng: <span
+                                        class="font-weight-bold">{{ rent_room.check_out_date.strftime("%d-%m-%Y") }}</span>
+                                </div>
+                                <div class="col-4">
+                                    Phòng: <span class="font-weight-bold">{{ rent_room.room.room_number }}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-8 bg-danger mx-auto">
-                            dfjdfkjldkj
-                        </div>
+                            <div class="d-md-flex col-10 p-2 mx-auto">
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th class="col-4 text-center font-weight-bold">Họ tên</th>
+                                        <th class="col-2 text-center font-weight-bold">CMND</th>
+                                        <th class="col-2 text-center font-weight-bold">Loại khách</th>
+                                        <th class="col-4 text-center font-weight-bold">Địa chỉ</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for customer in rent_room.customers %}
+                                        <tr>
+                                            <td class="col-4">{{ customer.name }}</td>
+                                            <td class="col-2 text-center">{{ customer.identification_card }}</td>
+                                            <td class="col-2">
+                                                {% if customer.customer_type_id.__eq__(1) %}
+                                                    Nội địa
+                                                {% else %}
+                                                    Nước ngoài
+                                                {% endif %}
+                                            </td>
+                                            <td class="col-4">{{ customer.address }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-10 p-2 mx-auto row">
+                                <div class="col-6 px-0">
+                                    <div class="py-2">
+                                        Tiền phòng: <span
+                                            class="font-weight-bold px-2">{{ "{0:,.0f}".format(rent_room.room.price) }} VND</span>
+                                    </div>
+                                    <div class="py-2">
+                                        Phòng có khách nước ngoài:
+                                        <span class="font-weight-bold p-1">
+                                     {% if check_foreign.__eq__(True) %}
+                                         Có
+                                     {% else %}
+                                         Không
+                                     {% endif %}
+                                    </span> (Nhân hệ số {{ common_coefficient.number_foreign_visitor }})
+                                    </div>
+                                    <div class="py-2">
+                                        Thuê phòng với số khách tối đa:
+                                        <span class="font-weight-bold p-1">
+                                     {% if check_people_max.__eq__(True) %}
+                                         Có
+                                     {% else %}
+                                         Không
+                                     {% endif %}
+                                    </span> (Phụ thu {{ common_coefficient.surcharge*100 }}%)
+                                    </div>
+                                    <div class="py-2 font-20">
+                                        Tổng tiền:
+                                        <span class="font-weight-bold px-2 text-danger">{{ "{0:,.0f}".format(total) }} VND</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 my-auto">
+                                    <div class="col-12 mb-2 form-group">
+                                        <label class="col-md-12 p-0 font-weight-bold">Người thanh toán:
+                                            <span class="text-danger">*</span></label>
+                                        <div class="col-12 border-bottom p-0">
+                                            <input required type="text" placeholder="Trần Văn A"
+                                                   name="name_pay"
+                                                   class="form-control w-100 p-0 border-0"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="py-2 text-center">
+                                <a href="">
+                                    <button type="button" class="btn btn-secondary text-white mr-1">Hủy thanh toán
+                                    </button>
+                                </a>
+                                <a href="">
+                                    <button type="submit" class="btn btn-info text-white ml-1">Xác nhận thanh toán
+                                    </button>
+                                </a>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-            <!-- End Container fluid  -->
         </div>
-        <!-- End Page wrapper  -->
+        <!-- End Container fluid  -->
+    </div>
+    <!-- End Page wrapper  -->
 
-        <!-- Modal -->
-        <div class="modal fade" id="my-modal">
-            <div class="modal-dialog">
-                <div class="modal-content">
+    <!-- Modal -->
+    <div class="modal fade" id="my-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
 
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <i class="fa-solid fa-circle-exclamation text-danger font-24 p-2"></i>
-                        <h4 class="modal-title font-weight-bold font-20" id="id-modal-title">Tiêu đề</h4>
-                        <button type="button" class="close" data-dismiss="modal">×</button>
-                    </div>
-                    <!-- Modal body -->
-                    <div class="modal-body font-16" id="id-modal-body">
-                        Nội dung
-                    </div>
-
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger text-light" data-dismiss="modal">Đóng</button>
-                    </div>
-
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <i class="fa-solid fa-circle-exclamation text-danger font-24 p-2"></i>
+                    <h4 class="modal-title font-weight-bold font-20" id="id-modal-title">Tiêu đề</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
                 </div>
+                <!-- Modal body -->
+                <div class="modal-body font-16" id="id-modal-body">
+                    Nội dung
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger text-light" data-dismiss="modal">Đóng</button>
+                </div>
+
             </div>
         </div>
-        <!-- End Modal -->
+    </div>
+    <!-- End Modal -->
     </div>
 {% endblock %}
 
 {% block tail_js %}
     {{ super() }}
     <script src="{{ url_for('static', filename='js/employee/ajax/base.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/employee/ajax/payment-detail.js') }}"></script>
 {% endblock %}

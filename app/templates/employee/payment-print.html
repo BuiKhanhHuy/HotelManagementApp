@@ -1,0 +1,71 @@
+{% extends 'employee/layout/base.html' %}
+
+{% block title %}
+    <title>In phiếu thanh toán</title>
+{% endblock %}
+
+{% block head_css %}
+    {{ super() }}
+    <link href="{{ url_for('static', filename='css/employee/print.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="page-wrapper" id="myDIV">
+        <div class="page-breadcrumb bg-white p-3">
+            <h4 class="text-uppercase text-info font-weight-bold remove-print">Thông tin phiếu thanh toán</h4>
+            <div class="px-4 m-0">
+                <div class="p-3">
+                    <div class="mb-5">
+                        <div class="d-flex">
+                            <div class="p-2 border border-secondary col-12 font-weight-bold font-16 text-center">
+                                HÓA ĐƠN THANH TOÁN
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="p-2 border border-secondary col-6">
+                                Họ tên: <span class="font-weight-bold"> {{ name_pay }}</span>
+                                <span class="font-weight-bold">{{ name_book_room }}</span>
+                            </div>
+                            <div class="p-2 border border-secondary col-6">
+                                Phòng thuê: <span class="font-weight-bold"> {{ rent_room.room.room_number }}</span>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="p-2 border border-secondary col-6">
+                                Ngày nhận phòng:
+                                <span class="font-weight-bold">{{ rent_room.check_in_date.strftime("%d-%m-%Y") }}</span>
+                            </div>
+                            <div class="p-2 border border-secondary col-6">
+                                Ngày trả phòng:
+                                <span class="font-weight-bold">{{ rent_room.check_out_date.strftime("%d-%m-%Y") }}</span>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="p-2 border border-secondary col-12 font-weight-bold">
+                                Tổng tiền: <span class="font-weight-bold text-danger">{{ "{0:,.0f}".format(total) }} VND</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="pt-5">
+                        <a href="{{ url_for('payment') }}">
+                            <button class="btn-danger btn text-white bt-print-page shadow-none"><i
+                                    class="fas fa-sign-out-alt"></i>
+                                Quay về trang thanh toán
+                            </button>
+                        </a>
+                        <button class="btn-success btn text-white bt-print-page shadow-none" onclick="printRentRoom()">
+                            <i class="fas fa-print"></i> In phiếu thanh toán
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block tail_js %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/employee/ajax/base.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/employee/print.js') }}"></script>
+{% endblock %}

@@ -72,6 +72,15 @@ class KindOfRoom(BaseModel):
         return self.kind_of_room_name
 
 
+class RoomStatus(BaseModel):
+    __tablename__ = 'room_status'
+    room_status_name = Column(String(100), nullable=False)
+    rooms = relationship('Room', backref='room_status', lazy=True)
+
+    def __str__(self):
+        return self.room_status_name
+
+
 class Room(BaseModel):
     __tablename__ = 'room'
     room_number = Column(String(15), nullable=False, unique=True)
@@ -81,6 +90,7 @@ class Room(BaseModel):
     description = Column(String(500), nullable=False)
     active = Column(Boolean, default=True)
     kind_of_room_id = Column(Integer, ForeignKey('kind_of_room.id'), nullable=False)
+    room_status_id = Column(Integer, ForeignKey('room_status.id'), nullable=False)
     image = Column(String(255), nullable=False)
     note = Column(String(255))
     rents = relationship('Rent', backref='room', lazy=True)
@@ -137,6 +147,7 @@ class Bill(BaseModel):
     __tablename__ = 'bill'
     total = Column(Float, nullable=False)
     note = Column(String(255))
+    created_date = Column(DateTime, default=datetime.now())
     rent_id = Column(Integer, ForeignKey('rent.id'), nullable=False)
 
     def __str__(self):
@@ -178,4 +189,8 @@ rent_detail = db.Table('rent_detail',
 
 
 if __name__ == "__main__":
+    # === DU LIEU BAT BUOC ===
+    # Tinh trang phong: 1-Phong trong, 2-Phong da dat, 3-Phong dang thue
+    # Loai khach: 1-Noi dia, 2-Nuoc ngoai
+    # Tao he so chung
     db.create_all()

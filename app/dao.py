@@ -1,7 +1,5 @@
-import datetime
-
 from app.models import *
-from sqlalchemy import func
+from sqlalchemy import func, extract
 
 
 # load rooms
@@ -89,6 +87,9 @@ def add_book_room(name, gender, identification_card, customer_type_id,
     rooms = book_room_list.get('rooms')
     for room in rooms:
         r = Room.query.get(rooms[room].get('room_id'))
+        r.room_status_id = 2
+        db.session.add(r)
+
         book_room.rooms.append(r)
         db.session.add(book_room)
     db.session.commit()
@@ -100,11 +101,15 @@ def add_rent_room(rent_list):
         rooms = rent_list.get('rooms')
         for room in rooms:
             if 'customers' in rooms[room]:
+                r = Room.query.get(rooms[room]['room_id'])
+                r.room_status_id = 3
+                db.session.add(r)
+
                 customers = rooms[room]['customers']
 
                 rent = Rent(check_in_date=rent_list['check_in_date'],
                             check_out_date=rent_list['check_out_date'],
-                            room_id=rooms[room]['room_id'])
+                            room=r)
 
                 for cus in customers:
                     customer = Customer.query.filter(
@@ -139,7 +144,6 @@ def load_book_room(identification_card=None,
     # lay book room khong con hoạt dong va da khong nhan phong
     book_rooms = BookRoom.query.filter(or_(and_(BookRoom.active.__eq__(True), BookRoom.done.__eq__(False)),
                                            and_(BookRoom.active.__eq__(False), BookRoom.done.__eq__(False))))
-
     if identification_card:
         # lay id customer
         cus = db.session.query(Customer.id).filter(Customer.identification_card.startswith(identification_card)).all()
@@ -175,33 +179,46 @@ def load_common_coefficient():
     return CommonCoefficient.query.first()
 
 
+# kiem tra phieu thue co nguoi nuoc ngoai khong
+def check_foreign(rent_id):
+    if Customer.query.filter(Customer.rents.any(Rent.id == rent_id)).filter(
+            Customer.customer_type_id == 2).count().__gt__(0):
+        return True
+    return False
+
+
+# kiem tra phieu thue co so nguoi toi da hay khong
+def check_people_max(rent_id, max_people):
+    if Customer.query.filter(Customer.rents.any(Rent.id == rent_id)).count().__ge__(max_people):
+        return True
+    return False
+
+
+# load rent
+def load_rent(rent_id):
+    return Rent.query.filter(Rent.id.__eq__(rent_id), Rent.active.__eq__(True)).first()
+
+
 # payment
-def add_bill(rent_id):
+def payment(rent_id):
     total = 0
     common_coefficient = load_common_coefficient()
 
-    rent = Rent.query.get(rent_id)
-    room = Room.query.filter(Room.rents.any(Rent.id == rent_id)).first()
+    rent = Rent.query.filter(Rent.id.__eq__(rent_id), Rent.active.__eq__(True)).first()
+    if rent:
+        room = Room.query.filter(Room.rents.any(Rent.id == rent_id)).first()
 
-    price = room.price
+        price = room.price
 
-    if Customer.query.filter(Customer.rents.any(Rent.id == rent_id)).filter(
-            Customer.customer_type_id == 2).count() > 0:
-        price = price * 1.5
+        if check_foreign(rent_id):
+            price = price * 1.5
 
-    total += price * ((rent.check_out_date - rent.check_in_date).days + 1)
+        total += price * ((rent.check_out_date - rent.check_in_date).days + 1)
 
-    if Customer.query.filter(Customer.rents.any(Rent.id == rent_id)).count() >= 3:
-        total += total * common_coefficient.surcharge
+        if check_people_max(rent_id, room.maximum_number):
+            total += total * common_coefficient.surcharge
 
-    bill = Bill(total=total, rent=rent)
-    db.session.add(bill)
-    try:
-        db.session.commit()
-    except:
-        return False
-    else:
-        return True
+    return total
 
 
 # load rent de thanh toan
@@ -221,8 +238,82 @@ def load_rent_payment(room_number=None, check_in_date=None, check_out_date=None)
     return rent.all()
 
 
+# total bill waiting
+def total_rent_waiting():
+    return Rent.query.filter(Rent.active.__eq__(True)).count()
+
+
+# total book room waiting
+def total_book_room_waiting():
+    return BookRoom.query.filter(BookRoom.active.__eq__(True), BookRoom.done.__eq__(False)).count()
+
+
+# add bill
+def add_bill(rent_id, total):
+    rent = Rent.query.get(rent_id)
+    if rent:
+        r = Room.query.filter(Room.rents.any(Rent.id.__eq__(rent_id))).first()
+        r.room_status_id = 1
+        db.session.add(r)
+
+        rent.active = False
+        db.session.add(rent)
+
+        bill = Bill(total=total, rent=rent)
+        db.session.add(bill)
+        try:
+            db.session.commit()
+        except:
+            return False
+        else:
+            return True
+    return False
+
+
+# thong ke doanh thu theo thang
+def month_revenue_stats(year=None, month=None):
+    stats = db.session.query(KindOfRoom.id, KindOfRoom.kind_of_room_name,
+                             func.sum(Bill.total),
+                             func.count(Rent.id)) \
+        .join(Room, KindOfRoom.id.__eq__(Room.kind_of_room_id), isouter=True) \
+        .join(Rent, Room.id.__eq__(Rent.room_id), isouter=True) \
+        .join(Bill, Rent.id.__eq__(Bill.rent_id), isouter=True)
+
+    if year:
+        stats = stats.filter(extract('year', Bill.created_date).__eq__(year))
+
+    if month:
+        stats = stats.filter(extract('month', Bill.created_date).__eq__(month))
+
+    stats = stats.group_by(KindOfRoom.id, KindOfRoom.kind_of_room_name).all()
+
+    total = 0
+    for x in stats:
+        if x[2]:
+            total += x[2]
+
+    return stats, total
+
+
+# thong ke mat do su dung phong
+def month_density_stats(year=None, month=None):
+    stats = db.session.query(Room.id, Room.room_number,
+                             func.sum(func.date(Rent.check_out_date) - func.date(Rent.check_in_date))) \
+        .join(Rent, Room.id.__eq__(Rent.room_id), isouter=True)
+
+    if year:
+        stats = stats.filter(extract('year', Rent.check_in_date).__eq__(year))
+    if month:
+        stats = stats.filter(extract('month', Rent.check_in_date).__eq__(month))
+    stats = stats.group_by(Room.id, Room.room_number).all()
+
+    total = 0
+    for x in stats:
+        if x[2]:
+            total += x[2]
+
+    return stats, total
+
+
 if __name__ == '__main__':
     pass
-
-
-
