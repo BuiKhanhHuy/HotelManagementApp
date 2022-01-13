@@ -9,19 +9,38 @@
         <div class="page-breadcrumb bg-white">
             <div class="container-fluid p-0">
 
-                {% with messages = get_flashed_messages() %}
+                {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-danger alert-dismissible fade show">
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
-                            </div>
+                        {% for category, message in messages %}
+                            {% if category.__eq__('error') %}
+                                <div class="alert alert-danger alert-dismissible fade show">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
+                                </div>
+                            {% elif category.__eq__('success') %}
+                                <div class="alert alert-success alert-dismissible fade show">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
+                                </div>
+                            {% elif category.__eq__('info') %}
+                                <div class="alert alert-info alert-dismissible fade show">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
+                                </div>
+                            {% elif category.__eq__('warning') %}
+                                <div class="alert alert-warning alert-dismissible fade show">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
+                                </div>
+                            {% endif %}
                         {% endfor %}
                     {% endif %}
                 {% endwith %}
 
                 <div class="white-box shadow-lg mb-2 p-2">
-                    <h4 class="font-weight-bold p-2">DANH SÁCH PHIẾU THUÊ CHỜ THANH TOÁN</h4>
+                    <h4 class="font-weight-bold p-2">DANH SÁCH PHIẾU THUÊ CHỜ THANH TOÁN
+                        <span class="badge badge-pill badge-danger rounded-pill">{{ total_rent_waiting }}</span>
+                    </h4>
                     <hr class="m-0">
                     <div class="d-md-flex p-2">
                         <div class="col-md-3 col-sm-3 col-xs-3 p-2 mt-auto">
@@ -61,27 +80,57 @@
                     <table class="table table-hover c_table">
                         <thead class="btn-dark">
                         <tr>
-                            <th class="text-white col-3 text-center align-middle">Ngày nhận phòng</th>
-                            <th class="text-white col-3 text-center align-middle">Ngày trả phòng</th>
-                            <th class="text-white col-3 text-center align-middle">Số phòng</th>
+                            <th class="text-white col-2 text-center align-middle">Ngày nhận phòng</th>
+                            <th class="text-white col-2 text-center align-middle">Ngày trả phòng</th>
+                            <th class="text-white col-2 text-center align-middle">Số phòng</th>
+                            <th class="text-white col-3 text-center align-middle">Trạng thái</th>
                             <th class="text-white col-3 text-center align-middle">Chức năng</th>
                         </tr>
                         </thead>
                         <tbody id="content-rent">
                         {% for rent in rents %}
                             <tr>
-                                <td class="text-dark col-3 text-center align-middle">
+                                <td class="text-dark col-2 text-center align-middle">
                                     {{ rent.check_in_date.strftime('%d-%m-%Y') }}
                                 </td>
-                                <td class="text-dark col-3 text-center align-middle">
+                                <td class="text-dark col-2 text-center align-middle">
                                     {{ rent.check_out_date.strftime('%d-%m-%Y') }}
                                 </td>
-                                <td class="col-3 text-center text-danger font-weight-bold align-middle">
+                                <td class="col-2 text-center text-danger font-weight-bold align-middle">
                                     {{ rent.room.room_number }}
                                 </td>
-                                <td class="text-dark col-3 text-center align-middle">
-                                   <a href="{{ url_for('payment_detail') }}"> <button class="btn btn-info text-white">Thanh toán</button></a>
+                                <td class="col-3 text-center text-danger font-weight-bold align-middle">
+                                    {% if (today - rent.check_out_date).days.__ge__(0) %}
+                                        <span class="badge badge-pill badge-warning">Phiếu thuê phòng tới hạn thanh toán</span>
+                                    {% else %}
+                                        <span class="badge badge-pill badge-success">Phiếu thuê phòng chờ thanh toán</span>
+                                    {% endif %}
                                 </td>
+                                <td class="text-dark col-3 text-center align-middle">
+                                    <a href="{{ url_for('payment_detail', rent_id=rent.id) }}">
+                                        <button class="btn btn-info text-white">Thanh toán</button>
+                                    </a>
+                                </td>
+                                <script>
+                                    // get HTML
+                                    function getHTMLRentRoom(rent) {
+                                        return `<tr>
+                                                    <td class="text-dark col-3 text-center align-middle">
+                                                        ${rent['check_in_date']}
+                                                    </td>
+                                                    <td class="text-dark col-3 text-center align-middle">
+                                                        ${rent['check_out_date']}
+                                                    </td>
+                                                    <td class="col-3 text-center text-danger font-weight-bold align-middle">
+                                                        ${rent['room_number']}
+                                                    </td>
+                                                    <td class="text-dark col-3 text-center align-middle">
+                                                        <a href="{{ url_for('payment_detail', rent_id=rent.id) }}"> <button class="btn btn-info text-white">Thanh toán</button></a>
+                                                    </td>
+                                                </tr>`
+                                    }
+
+                                </script>
                             </tr>
                         {% endfor %}
                         </tbody>

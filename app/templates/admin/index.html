@@ -1,7 +1,277 @@
 {% extends "admin/master.html" %}
 
+{% block head_css %}
+    {{ super() }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+          integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/brands.min.js"
+            integrity="sha512-ucU0EUzj+QOFdK1TEc+d4Uzi5NCpqfxJpAX41XJDM7sNyB4nvAKmEBBsVQIUArE5k3xlU6jIMUH0f3d9HJxMkQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
 {% block body %}
-    <h1> hihi </h1>
-    <h1> hihi </h1>
-    <h1> hihi </h1>
+    <div class="p-2">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active " data-toggle="tab" href="#home">
+                    <i class="fas fa-hand-holding-usd pr-1"></i>
+                    Báo cáo doanh thu
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " data-toggle="tab" href="#menu1">
+                    <i class="fab fa-creative-commons-sampling-plus pr-1"></i>
+                    Báo cáo mật độ sử dụng phòng
+                </a>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div id="home" class="tab-pane active rounded-0"><br>
+                <h3 class="text-info">BÁO CÁO DOANH THU</h3>
+                <form method="post" action="/admin/">
+                    <div class="py-3 d-flex">
+                        <div>
+                            <input class="form-control rounded-sm shadow-sm" name="month_year" type="month">
+                        </div>
+                        <div class="px-1">
+                            <button class="btn btn-dark rounded-sm">Thống kê</button>
+                        </div>
+                        <div class="px-3">
+                            <button type="button" class="btn btn-success"><i class="fas fa-print pr-1"></i>In thống kê
+                                báo
+                                cáo
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card">
+                            <div class="card-header bg-dark text-white">
+                                <i class="fas fa-table "></i>
+                                Bảng thống kê doanh thu
+                            </div>
+                            <div class="card-body p-0">
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th colspan="5" class="text-center">BÁO CÁO DOANH THU THEO THÁNG</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td colspan="5" class="text-center">Tháng:
+                                            {{ "{0}-{1}".format(month, year) }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center font-weight-bold">STT</td>
+                                        <td class="text-center font-weight-bold">Loại phòng</td>
+                                        <td class="text-center font-weight-bold">Doanh thu</td>
+                                        <td class="text-center font-weight-bold">Số lượt thuê</td>
+                                        <td class="text-center font-weight-bold">Tỷ lệ</td>
+                                    </tr>
+                                    {% for stats_revenue in month_revenue_stats %}
+                                        <tr>
+                                            <td class="text-center">{{ stats_revenue[0] }}</td>
+                                            <td>{{ stats_revenue[1] }}</td>
+                                            {% if stats_revenue[2] %}
+                                                <td class="text-right">{{ "{0:,.0f} VND".format(stats_revenue[2]) }}</td>
+                                            {% else %}
+                                                <td class="text-right">0 VND</td>
+                                            {% endif %}
+                                            <td class="text-center">{{ stats_revenue[3] }}</td>
+                                            <td class="text-right">
+                                                {% if stats_revenue[2] %}
+                                                    {{ "{0:.2f}%".format(stats_revenue[2]/total_revenue*100) }}
+                                                {% else %}
+                                                    0%
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                    <tr>
+                                        <td colspan="5"><span class="font-weight-bold">Tổng doanh thu:</span>
+                                            <span class="font-weight-bold text-danger">{{ "{0:,.0f}".format(total_revenue) }} VND</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card">
+                            <div class="card-header bg-dark text-white">
+                                <i class="fas fa-chart-bar"></i>
+                                Biểu đồ thống kê doanh thu
+                            </div>
+                            <div class="card-body">
+                                <canvas id="char-month_revenue_stats"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="menu1" class="tab-pane fade"><br>
+                <h3 class="text-info">BÁO CÁO MẬT ĐỘ SỬ DỤNG PHÒNG</h3>
+                <form method="post" action="/admin/">
+                    <div class="py-3 d-flex">
+                        <div>
+                            <input class="form-control rounded-sm shadow-sm" name="month_year" type="month">
+                        </div>
+                        <div class="px-1">
+                            <button class="btn btn-dark rounded-sm">Thống kê</button>
+                        </div>
+                        <div class="px-3">
+                            <button type="button" class="btn btn-success">
+                                <i class="fas fa-print pr-1"></i>In thống kê
+                                báo cáo
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <div class="row">
+                    <div class="col-7">
+                        <div class="card">
+                            <div class="card-header bg-dark text-white">
+                                <i class="fas fa-table "></i>
+                                Bảng thống kê mật độ sử dụng phòng
+                            </div>
+                            <div class="card-body p-0">
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th colspan="5" class="text-center">BÁO CÁO MẬT ĐỘ SỬ DỤNG PHÒNG</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td colspan="5" class="text-center">Tháng:
+                                            {{ "{0}-{1}".format(month, year) }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center font-weight-bold">STT</td>
+                                        <td class="text-center font-weight-bold">Phòng</td>
+                                        <td class="text-center font-weight-bold">Số ngày thuê</td>
+                                        <td class="text-center font-weight-bold">Tỷ lệ</td>
+                                    </tr>
+                                    {% for stats_density in month_density_stats %}
+                                        <tr>
+                                            <td class="text-center">{{ stats_density[0] }}</td>
+                                            <td class="text-center">{{ stats_density[1] }}</td>
+                                            <td class="text-center">
+                                                {% if stats_density[2].__ne__(None) %}
+                                                    {{ stats_density[2] }}
+                                                {% else %}
+                                                    0
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-right">
+                                                {% if stats_density[2].__ne__(None) %}
+                                                    {{ "{0:.2f}%".format(stats_density[2]/total_density*100) }}
+                                                {% else %}
+                                                    0%
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div class="card">
+                            <div class="card-header bg-dark text-white">
+                                <i class="fas fa-chart-bar"></i>
+                                Biểu đồ thống kê mật độ sử dụng phòng
+                            </div>
+                            <div class="card-body">
+                                <canvas id="char-month_density_stats"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let type1 = 'bar', type2 = 'pie'
+        let labels1 = [], labels2 = []
+        let label1 = 'Biểu đồ thống kê doanh thu'
+        let label2 = 'Biểu đồ thống kê mật độ'
+        let data1 = [], data2 = []
+        let color1 = [], color2 = []
+        let borderColor1 = [], borderColor2 = []
+
+        // bieu do bao cao doanh thu
+        {% for stats1 in month_revenue_stats %}
+            {% if stats1[2].__ne__(None) %}
+                labels1.push(`{{ stats1[1] }}`)
+                data1.push({{ stats1[2] }})
+                r = Math.random() * 255
+                g = Math.random() * 255
+                b = Math.random() * 255
+
+                color1.push(`rgba(${r}, ${g}, ${b}, 0.7)`)
+                borderColor1.push((`rgba(${r}, ${g}, ${b}, 1)`))
+            {% endif %}
+        {% endfor %}
+
+        {% for stats2 in month_density_stats %}
+            {% if stats2[2].__ne__(None) %}
+                labels2.push(`{{ stats2[1]}}`)
+                data2.push({{ stats2[2] / total_density * 100 }})
+                r = Math.random() * 255
+                g = Math.random() * 255
+                b = Math.random() * 255
+
+                color2.push(`rgba(${r}, ${g}, ${b}, 0.7)`)
+                borderColor2.push((`rgba(${r}, ${g}, ${b}, 1)`))
+            {% endif %}
+        {% endfor %}
+
+        const ctx1 = document.getElementById('char-month_revenue_stats').getContext('2d');
+        const ctx2 = document.getElementById('char-month_density_stats').getContext('2d');
+
+
+        customCharts(ctx1, type1, labels1, label1, data1, color1, borderColor1)
+        customCharts(ctx2, type2, labels2, label2, data2, color2, borderColor2)
+
+        // customer chart
+        function customCharts(ctx, type, labels, label, data, colors, borderColors) {
+            const myChart = new Chart(ctx, {
+                type: type,
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: label,
+                        data: data,
+                        backgroundColor: colors,
+                        borderColor: borderColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}
+
+{% block tail_js %}
+    {{ super() }}
 {% endblock %}

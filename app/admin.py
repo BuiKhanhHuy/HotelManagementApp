@@ -1,8 +1,8 @@
-from app import app, db
+from app import app, db, dao
 from app.models import *
 from flask_admin import Admin, AdminIndexView, BaseView, expose
 from flask_admin.contrib.sqla import ModelView
-
+from flask import request
 
 class CommonView(ModelView):
     can_view_details = True
@@ -17,9 +17,30 @@ class AuthenticatedView(ModelView):
 
 
 class MyAdminIndexView(AdminIndexView):
-    @expose('/')
+    @expose('/', methods=['post', 'get'])
     def index(self):
-        return self.render('admin/index.html')
+        if request.method.__eq__('POST'):
+            month_year = request.form.get('month_year')
+            if month_year.__ne__(''):
+                year = datetime.strptime(month_year, "%Y-%m").year
+                month = datetime.strptime(month_year, "%Y-%m").month
+
+                month_revenue_stats = dao.month_revenue_stats(year, month)
+                month_density_stats = dao.month_density_stats(year, month)
+
+                return self.render('admin/index.html',
+                            month_revenue_stats=month_revenue_stats[0],
+                                   total_revenue=month_revenue_stats[1],
+                                   month_density_stats=month_density_stats[0],
+                                   total_density=month_density_stats[1],
+                                    year=year,month=month)
+        month_revenue_stats = dao.month_revenue_stats()
+        month_density_stats = dao.month_density_stats()
+        return self.render('admin/index.html',
+                           month_revenue_stats=month_revenue_stats[0],
+                           total_revenue=month_revenue_stats[1],
+                           month_density_stats=month_density_stats[0],
+                           total_density=month_density_stats[1])
 
 
 class UserView(CommonView, AuthenticatedView):
@@ -114,14 +135,27 @@ class BillView(CommonView, AuthenticatedView):
     column_labels = {
         'id': 'Mã hóa đơn thanh toán',
         'total': 'Tổng tiền',
+        'created_date': 'Ngày lập hóa đơn',
         'note': 'Ghi chú',
 
         'rent': 'Phiếu thuê phòng',
     }
-    column_list = ['id', 'rent', 'total', 'note']
+    column_list = ['id', 'rent', 'total','created_date', 'note']
     column_searchable_list = ['id', 'total']
-    column_filters = ['id', 'total']
+    column_filters = ['id', 'total', 'created_date']
     form_columns = ['rent', 'total', 'note']
+
+
+class RoomStatusView(CommonView, AuthenticatedView):
+    column_labels = {
+        'id': 'Mã tình trạng phòng',
+        'room_status_name': 'Tên tình trạng phòng',
+        'rooms': 'Phòng'
+    }
+    column_list = ['room_status_name', 'rooms']
+    column_searchable_list = ['room_status_name']
+    column_filters = ['room_status_name']
+    form_columns = ['room_status_name', 'rooms']
 
 
 class KindOfRoomView(CommonView, AuthenticatedView):
@@ -163,23 +197,25 @@ class RoomView(CommonView, AuthenticatedView):
         'maximum_number': 'Số lượng tối đa',
         'description': 'Mô tả',
         'kind_of_room_id': 'Mã loại phòng',
+        'room_status_id': 'Mã tình trạng',
         'image': 'Hình ảnh',
         'note': 'Ghi chú',
         'comments': 'Bình luận',
 
         'kind_of_room': 'Loại phòng',
+        'room_status': 'Tình trạng phòng',
         'active': 'Hoạt động',
         'book_rooms': 'Phiếu đặt phòng',
         'rents': 'Phiếu thuê phòng',
         'book_rooms': 'Đặt phòng',
         'rents': 'Thuê phòng'
     }
-    column_list = ['room_number', 'price', 'standard_number', 'maximum_number', 'description', 'kind_of_room',
+    column_list = ['room_number', 'price', 'standard_number', 'maximum_number', 'description', 'kind_of_room', 'room_status',
                    'kind_of_room_id', 'active', 'image', 'note']
     column_searchable_list = ['room_number', 'price']
-    column_filters = ['room_number', 'kind_of_room_id', 'price', 'standard_number', 'maximum_number', 'active']
+    column_filters = ['room_number', 'kind_of_room_id', 'room_status_id', 'price', 'standard_number', 'maximum_number', 'active']
     form_columns = ['room_number', 'price', 'standard_number', 'maximum_number',
-                    'description', 'active', 'kind_of_room', 'image', 'note']
+                    'description', 'active', 'kind_of_room', 'room_status', 'image', 'note']
 
 
 class CommonCoefficientView(CommonView, AuthenticatedView):
@@ -240,6 +276,9 @@ admin.add_sub_category(name='manage_votes ', parent_name='Quản lý phiếu')
 admin.add_view(ImageView(Image,
                          db.session, menu_icon_type='fa', menu_icon_value='fa-image', name='Hình ảnh phòng',
                          category='Quản lý phòng'))
+admin.add_view(RoomStatusView(RoomStatus,
+                              db.session, menu_icon_type='fa', menu_icon_value='fa-bars', name='Tình trạng phòng',
+                              category='Quản lý phòng'))
 admin.add_view(KindOfRoomView(KindOfRoom,
                               db.session, menu_icon_type='fa', menu_icon_value='fa-bars', name='Loại phòng',
                               category='Quản lý phòng'))

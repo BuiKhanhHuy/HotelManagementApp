@@ -31,6 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
+    input.addEventListener(`awesomplete-selectcomplete`, (e) => {
+        let valueInput = ''
+        valueInput = input.value.toString()
+        loadCustomerFromIdCard(valueInput)
+    });
 });
 
 // lay thong tin khach hang thong qua cmnd

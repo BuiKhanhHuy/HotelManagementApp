@@ -42,21 +42,21 @@ def book_room_detail():
             check_in_date = datetime.strptime(check_in_date, '%Y-%m-%d')
             check_in_date = check_in_date.replace(hour=14, minute=0, second=0)
         else:
-            flash('Bạn chưa chọn ngày nhận phòng!')
+            flash('Bạn chưa chọn ngày nhận phòng!', 'error')
             return redirect(url_for('book_room'))
 
         if check_out_date:
             check_out_date = datetime.strptime(check_out_date, '%Y-%m-%d')
             check_out_date = check_out_date.replace(hour=12, minute=0, second=0)
         else:
-            flash('Bạn chưa chọn ngày trả phòng!')
+            flash('Bạn chưa chọn ngày trả phòng!', 'error')
             return redirect(url_for('book_room'))
 
         # load he so chung - 28 ngay
         common_coefficient = dao.load_common_coefficient()
         if (check_in_date - book_room_date).days > common_coefficient.check_in_deadline:
             flash('Ngày nhận phòng không quá {0} ngày kể từ ngày đặt phòng !'.format(
-                common_coefficient.check_in_deadline))
+                common_coefficient.check_in_deadline), 'error')
             return redirect(url_for('book_room'))
 
         if 'book_room_list' in session and 'rooms' in session['book_room_list'] \
@@ -77,7 +77,7 @@ def book_room_detail():
                                    check_in_date=check_in_date.strftime("%d-%m-%Y"),
                                    check_out_date=check_out_date.strftime("%d-%m-%Y"))
         else:
-            flash('Bạn chưa chọn phòng để đặt!')
+            flash('Bạn chưa chọn phòng để đặt!', 'error')
             return redirect(url_for('book_room'))
     return redirect(url_for('book_room'))
 
@@ -113,7 +113,7 @@ def booking_result(result):
     else:
         if 'book_room_list' in session:
             del session['book_room_list']
-            flash('Hủy đặt phòng thành công', category='info')
+            flash('Hủy đặt phòng thành công.', 'success')
         return redirect(url_for('book_room_detail'))
 
 
@@ -155,14 +155,14 @@ def confirm_rental_directly_room():
             check_in_date = datetime.strptime(check_in_date, '%Y-%m-%d')
             check_in_date = check_in_date.replace(hour=14, minute=0, second=0)
         else:
-            flash('Bạn chưa chọn ngày nhận phòng!')
+            flash('Bạn chưa chọn ngày nhận phòng!', 'error')
             return redirect(url_for('rent_directly'))
 
         if check_out_date:
             check_out_date = datetime.strptime(check_out_date, '%Y-%m-%d')
             check_out_date = check_out_date.replace(hour=12, minute=0, second=0)
         else:
-            flash('Bạn chưa chọn ngày trả phòng!')
+            flash('Bạn chưa chọn ngày trả phòng!', 'error')
             return redirect(url_for('rent_directly'))
 
         if 'rent_directly_list' in session and 'rooms' in session['rent_directly_list'] \
@@ -181,7 +181,7 @@ def confirm_rental_directly_room():
                                    check_in_date=check_in_date.strftime("%d-%m-%Y"),
                                    check_out_date=check_out_date.strftime("%d-%m-%Y"))
         else:
-            flash('Bạn chưa chọn phòng để thuê!')
+            flash('Bạn chưa chọn phòng để thuê!', 'error')
             return redirect(url_for('rent_directly'))
     return redirect(url_for('rent_directly'))
 
@@ -197,7 +197,7 @@ def allocating_customers_rent_room(allocating_customer_number):
                                    allocating_customer_number=allocating_customer_number,
                                    rent_list=rent_directly_list)
         else:
-            flash('Hiện tại chưa có phòng nào được chọn!')
+            flash('Hiện tại chưa có phòng nào được chọn!', 'error')
         return redirect(url_for('rent_directly'))
 
     # them khach hang vao session nhan phong da dat
@@ -233,7 +233,7 @@ def allocating_customers_rent_room(allocating_customer_number):
                                    allocating_customer_number=allocating_customer_number,
                                    rent_list=rent_advance_list)
         else:
-            flash('Bạn chưa chọn phiếu nhận phòng.')
+            flash('Bạn chưa chọn phiếu nhận phòng.', 'error')
             return redirect(url_for('rent_advance'))
     else:
         abort(404)
@@ -249,9 +249,9 @@ def rent_result(result_number):
             del session['rent_directly_list']
 
             if dao.add_rent_room(rent_directly_list):
-                flash('Thêm phiếu thuê phòng thành công')
+                flash('Thêm phiếu thuê phòng thành công', 'success')
             else:
-                flash('Thêm phiếu thuê phòng thất bại!')
+                flash('Thêm phiếu thuê phòng thất bại!', 'error')
 
             return render_template("employee/rent-print.html",
                                    rent_list=rent_directly_list)
@@ -265,9 +265,9 @@ def rent_result(result_number):
                 if dao.add_rent_room(rent_advance_list) \
                         and dao.successful_check_in(rent_advance_list['book_room_id']):
                     del session['rent_advance_list']
-                    flash('Thêm phiếu thuê phòng thành công')
+                    flash('Thêm phiếu thuê phòng thành công', 'success')
                 else:
-                    flash('Thêm phiếu thuê phòng thất bại!')
+                    flash('Thêm phiếu thuê phòng thất bại!', 'error')
 
                 return render_template("employee/rent-print.html",
                                        rent_list=rent_advance_list)
@@ -306,13 +306,49 @@ def rent_advance():
 @app.route("/employee/payment")
 def payment():
     rents = dao.load_rent_payment()
-    return render_template('employee/payment.html', rents=rents)
+    today = datetime.now()
+    return render_template('employee/payment.html', rents=rents, today=today)
 
 
 # trang thanh toan chi tiet
-@app.route("/employee/payment-detail")
-def payment_detail():
-    return render_template("employee/payment-detail.html")
+@app.route("/employee/payment-detail/<int:rent_id>")
+def payment_detail(rent_id):
+    rent_room = dao.load_rent(rent_id)
+    if rent_room:
+        common_coefficient = dao.load_common_coefficient()
+        check_foreign = dao.check_foreign(rent_id)
+        check_people_max = dao.check_people_max(rent_id, rent_room.room.maximum_number)
+        total = dao.payment(rent_id)
+
+        return render_template("employee/payment-detail.html", rent_room=rent_room,
+                               common_coefficient=common_coefficient,
+                               check_foreign=check_foreign,
+                               check_people_max=check_people_max,
+                               total=total)
+    abort(404)
+
+
+# in phieu thanh toan
+@app.route("/employee/payment/<int:rent_id>", methods=['post'])
+def payment_result(rent_id):
+    if request.method.__eq__('POST'):
+        rent_room = dao.load_rent(rent_id)
+        if rent_room:
+            name_pay = request.form.get('name_pay')
+            total = dao.payment(rent_id=rent_id)
+
+            if dao.add_bill(rent_id=rent_id, total=total):
+                return render_template('employee/payment-print.html', rent_room=rent_room,
+                                       name_pay=name_pay,
+                                       total=total)
+            else:
+                flash('Xác nhận thanh toán không thành công!', 'error')
+                return redirect(url_for('payment_detail'))
+        else:
+            flash('Xác nhận thanh toán không thành công!', 'error')
+            return redirect(url_for('payment_detail'))
+
+    return redirect(url_for('payment_detail'))
 
 
 # ==================END THANH TOAN=======================
@@ -746,6 +782,12 @@ def page_not_found(error):
     return render_template('404.html')
 
 
+# loi 405
+@app.errorhandler(405)
+def page_not_found(error):
+    return render_template('405.html')
+
+
 # loi 401
 @app.errorhandler(401)
 def unauthorized(error):
@@ -762,7 +804,9 @@ def internal_server_error(error):
 def common_response():
     return {
         'total_room_booking': utils.total_room_in_list(session.get('book_room_list')),
-        'total_room_rent_directly': utils.total_room_in_list(session.get('rent_directly_list'))
+        'total_room_rent_directly': utils.total_room_in_list(session.get('rent_directly_list')),
+        'total_rent_waiting': dao.total_rent_waiting(),
+        'total_book_room_waiting': dao.total_book_room_waiting()
     }
 
 

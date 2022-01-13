@@ -63,6 +63,8 @@ function deleteRoomInBookRoomDetail(roomId) {
                 disabledDelRoomButton()
             }
 
+            notification(1, `Xóa thành công.`)
+
             let txtRoomNumbers = ''
             let roomNumbers = document.getElementById('room_number')
             for (let i = 0; i < data['room_numbers'].length; i++)
