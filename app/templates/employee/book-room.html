@@ -13,25 +13,25 @@
                     {% if messages %}
                         {% for category, message in messages %}
                             {% if category.__eq__('error') %}
-                            <div class="alert alert-danger alert-dismissible fade show">
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
-                            </div>
+                                <div class="alert alert-danger alert-dismissible fade show">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
+                                </div>
                             {% elif category.__eq__('success') %}
                                 <div class="alert alert-success alert-dismissible fade show">
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
-                            </div>
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
+                                </div>
                             {% elif category.__eq__('info') %}
                                 <div class="alert alert-info alert-dismissible fade show">
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
-                            </div>
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
+                                </div>
                             {% elif category.__eq__('warning') %}
                                 <div class="alert alert-warning alert-dismissible fade show">
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
-                            </div>
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong><i class="fas fa-exclamation-circle"></i></strong> {{ message }}
+                                </div>
                             {% endif %}
                         {% endfor %}
                     {% endif %}
@@ -56,7 +56,7 @@
                                 <div class="row">
                                     <div class="col-md-6 text-right">
                                         <button type="button" class="btn btn-dark w-75"
-                                               onclick="cleanBookRoomInSession()" id="book-room-refresh">
+                                                onclick="cleanBookRoomInSession()" id="book-room-refresh">
                                             <i class="fas fa-broom"></i>
                                             LÀM MỚI
                                         </button>
@@ -128,7 +128,9 @@
                             </select>
                         </div>
                         <div class="col-sm-2 col-xs-3 p-2">
-                            <button class="btn-dark btn" onclick="location.reload()"><i class="p-1 fas fa-redo"></i>Đặt lại</button>
+                            <button class="btn-dark btn" onclick="location.reload()"><i class="p-1 fas fa-redo"></i>Đặt
+                                lại
+                            </button>
                         </div>
                     </div>
                     <table class="table table-hover c_table">

@@ -1,3 +1,6 @@
+import hashlib
+
+from app import app
 from app.models import *
 from sqlalchemy import func, extract
 
@@ -74,6 +77,7 @@ def add_book_room(name, gender, identification_card, customer_type_id,
         customer = Customer(name=name, identification_card=identification_card,
                             gender=gender, customer_type_id=customer_type_id,
                             address=address, phone_number=phone_number)
+
     db.session.add(customer)
     # # them phieu dat phong vao db
     booking_date = book_room_list.get('book_room_date')
@@ -315,5 +319,18 @@ def month_density_stats(year=None, month=None):
     return stats, total
 
 
+# load user
+def load_user(user_id):
+    return User.query.get(user_id)
+
+
+# check user
+def check_user(user_name, password):
+    if user_name and password:
+        password = hashlib.md5(password.strip().encode('utf-8')).hexdigest()
+        user = User.query.filter(User.username.__eq__(user_name.strip()), User.password.__eq__(password)).first()
+        return user
+
+
 if __name__ == '__main__':
-    pass
+    print(hashlib.md5('123'.encode('utf-8')).hexdigest())

@@ -2,7 +2,9 @@ from app import app, db, dao
 from app.models import *
 from flask_admin import Admin, AdminIndexView, BaseView, expose
 from flask_admin.contrib.sqla import ModelView
-from flask import request
+from flask_login import current_user
+from flask import request, redirect, url_for
+
 
 class CommonView(ModelView):
     can_view_details = True
@@ -13,7 +15,13 @@ class CommonView(ModelView):
 
 
 class AuthenticatedView(ModelView):
-    pass
+    def is_accessible(self):
+        if current_user.is_authenticated \
+               and current_user.user_role == UserRole.ADMIN:
+            return True
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('login_admin', next=request.url))
 
 
 class MyAdminIndexView(AdminIndexView):
@@ -29,11 +37,11 @@ class MyAdminIndexView(AdminIndexView):
                 month_density_stats = dao.month_density_stats(year, month)
 
                 return self.render('admin/index.html',
-                            month_revenue_stats=month_revenue_stats[0],
+                                   month_revenue_stats=month_revenue_stats[0],
                                    total_revenue=month_revenue_stats[1],
                                    month_density_stats=month_density_stats[0],
                                    total_density=month_density_stats[1],
-                                    year=year,month=month)
+                                   year=year, month=month)
         month_revenue_stats = dao.month_revenue_stats()
         month_density_stats = dao.month_density_stats()
         return self.render('admin/index.html',
@@ -41,6 +49,14 @@ class MyAdminIndexView(AdminIndexView):
                            total_revenue=month_revenue_stats[1],
                            month_density_stats=month_density_stats[0],
                            total_density=month_density_stats[1])
+
+    def is_accessible(self):
+        if current_user.is_authenticated \
+               and current_user.user_role == UserRole.ADMIN:
+            return True
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('login_admin', next=request.url))
 
 
 class UserView(CommonView, AuthenticatedView):
@@ -140,7 +156,7 @@ class BillView(CommonView, AuthenticatedView):
 
         'rent': 'Phiếu thuê phòng',
     }
-    column_list = ['id', 'rent', 'total','created_date', 'note']
+    column_list = ['id', 'rent', 'total', 'created_date', 'note']
     column_searchable_list = ['id', 'total']
     column_filters = ['id', 'total', 'created_date']
     form_columns = ['rent', 'total', 'note']
@@ -210,10 +226,12 @@ class RoomView(CommonView, AuthenticatedView):
         'book_rooms': 'Đặt phòng',
         'rents': 'Thuê phòng'
     }
-    column_list = ['room_number', 'price', 'standard_number', 'maximum_number', 'description', 'kind_of_room', 'room_status',
+    column_list = ['room_number', 'price', 'standard_number', 'maximum_number', 'description', 'kind_of_room',
+                   'room_status',
                    'kind_of_room_id', 'active', 'image', 'note']
     column_searchable_list = ['room_number', 'price']
-    column_filters = ['room_number', 'kind_of_room_id', 'room_status_id', 'price', 'standard_number', 'maximum_number', 'active']
+    column_filters = ['room_number', 'kind_of_room_id', 'room_status_id', 'price', 'standard_number', 'maximum_number',
+                      'active']
     form_columns = ['room_number', 'price', 'standard_number', 'maximum_number',
                     'description', 'active', 'kind_of_room', 'room_status', 'image', 'note']
 

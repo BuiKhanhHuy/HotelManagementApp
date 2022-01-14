@@ -1,8 +1,11 @@
 from app import app
 import datetime
 from flask import render_template, request, redirect, url_for, jsonify, session, flash, abort
-from app import dao, utils
+from flask_login import login_required, login_user, logout_user
+from app import dao, utils, login
 from app.admin import *
+
+login.login_view = 'login_admin'
 
 
 @app.route("/")
@@ -16,9 +19,19 @@ def index():
 # ===================DAT PHONG==================
 
 
+# trang danh sach phong
+@app.route('/employee')
+@login_required
+def room_list():
+    return 'Trang danh sách phòng'
+
+
 # trang dat phong
 @app.route("/employee/book-room")
+@login_required
 def book_room():
+    if current_user.user_role.__ne__(UserRole.EMPLOYEE):
+        return redirect(url_for('login_admin'))
     kind_of_rooms = dao.load_kind_of_room()
     rooms = dao.load_rooms()
     all_price_options = utils.all_price_options()
@@ -32,6 +45,7 @@ def book_room():
 
 # trang dat phong chi tiet
 @app.route("/employee/book-room/book-room-detail", methods=['post', 'get'])
+@login_required
 def book_room_detail():
     # phuong thuc post chuyen sang dat phong
     if request.method.__eq__('POST'):
@@ -84,6 +98,7 @@ def book_room_detail():
 
 # ket qua dat phong
 @app.route("/employee/book-room/<int:result>", methods=['get', 'post'])
+@login_required
 def booking_result(result):
     if result.__eq__(1):
         if request.method.__eq__('POST'):
@@ -125,12 +140,14 @@ def booking_result(result):
 
 # trang thue phong
 @app.route("/employee/rent")
+@login_required
 def rent():
     return render_template('employee/rent.html')
 
 
 # trang thue phong truc tiep
 @app.route("/employee/rent/rent-directly")
+@login_required
 def rent_directly():
     kind_of_rooms = dao.load_kind_of_room()
     rooms = dao.load_rooms()
@@ -145,6 +162,7 @@ def rent_directly():
 
 # trang xac nhan phong thue truc tiep
 @app.route("/employee/rent/rent-directly/confirm-room", methods=['get', 'post'])
+@login_required
 def confirm_rental_directly_room():
     # phuong thuc post chuyen sang phong duoc thue
     if request.method.__eq__('POST'):
@@ -188,6 +206,7 @@ def confirm_rental_directly_room():
 
 # phan bo khach vao phong thue
 @app.route("/employee/rent/allocating-customer/<int:allocating_customer_number>")
+@login_required
 def allocating_customers_rent_room(allocating_customer_number):
     # them khach hang vao session thue phong truc tiep
     if allocating_customer_number.__eq__(1):
@@ -242,6 +261,7 @@ def allocating_customers_rent_room(allocating_customer_number):
 
 # ket qua thue phong
 @app.route("/employee/rent/result/<int:result_number>")
+@login_required
 def rent_result(result_number):
     if result_number.__eq__(1):
         if 'rent_directly_list' in session:
@@ -285,6 +305,7 @@ def rent_result(result_number):
 
 # trang nhan phong da dat
 @app.route("/employee/rent/rent-advance")
+@login_required
 def rent_advance():
     book_rooms = dao.load_book_room()
 
@@ -304,6 +325,7 @@ def rent_advance():
 
 # trang thanh toan
 @app.route("/employee/payment")
+@login_required
 def payment():
     rents = dao.load_rent_payment()
     today = datetime.now()
@@ -312,6 +334,7 @@ def payment():
 
 # trang thanh toan chi tiet
 @app.route("/employee/payment-detail/<int:rent_id>")
+@login_required
 def payment_detail(rent_id):
     rent_room = dao.load_rent(rent_id)
     if rent_room:
@@ -330,6 +353,7 @@ def payment_detail(rent_id):
 
 # in phieu thanh toan
 @app.route("/employee/payment/<int:rent_id>", methods=['post'])
+@login_required
 def payment_result(rent_id):
     if request.method.__eq__('POST'):
         rent_room = dao.load_rent(rent_id)
@@ -765,15 +789,39 @@ def find_rent_payment():
 
 
 # dang nhap
-@app.route("/login")
-def login_employee():
-    return render_template('home/login.html')
+@app.route("/admin/login", methods=['post', 'get'])
+def login_admin():
+    if request.method.__eq__('POST'):
+        user_name = request.form.get('user_name')
+        password = request.form.get('password')
+
+        user = dao.check_user(user_name, password)
+
+        if user is None:
+            return redirect(url_for('login_admin'))
+
+        login_user(user=user)
+
+        if user.user_role == UserRole.EMPLOYEE:
+            next_page = url_for('room_list')
+        elif user.user_role == UserRole.ADMIN:
+            next_page = '/admin'
+        else:
+            return redirect(url_for('login_admin'))
+
+        if 'next' in request.args:
+            next_page = request.args['next']
+
+        return redirect(next_page)
+
+    return render_template('employee/login.html')
 
 
-# dang ky
-@app.route("/register")
-def register_employee():
-    return render_template('home/register.html')
+# dang xuat
+@app.route("/logout", methods=['post', 'get'])
+def logout():
+    logout_user()
+    return redirect(url_for('login_admin'))
 
 
 # loi 404
@@ -798,6 +846,11 @@ def unauthorized(error):
 @app.errorhandler(500)
 def internal_server_error(error):
     return render_template('500.html')
+
+
+@login.user_loader
+def load_user(user_id):
+    return dao.load_user(user_id)
 
 
 @app.context_processor
