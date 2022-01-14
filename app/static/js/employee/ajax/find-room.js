@@ -36,7 +36,7 @@ function customButtonChooseRoom(roomId, dicValueButton) {
 // ===========LOC THONG TIN PHONG CAN DAT, CAN THUE===========
 // kiem tra ngay chon co hop le
 function checkDate(startDate, endDate) {
-    return startDate < endDate;
+    return startDate <= endDate;
 }
 
 // kiem tra gia tri check-in check-out da nhap chua
@@ -48,7 +48,7 @@ function checkCheckInOut() {
 }
 
 // bat su kien onchange cua check-in
-function checkCheckInDate() {
+function checkCheckInDate(type) {
     let checkInDate = document.getElementById('check-in-date')
     let valueCheckInDate = new Date(checkInDate.value)
     valueCheckInDate.setHours(14, 0, 0)
@@ -58,7 +58,13 @@ function checkCheckInDate() {
     valueCheckOutDate.setHours(12, 0, 0, 0)
 
     let today = new Date(Date.now())
-    today.setHours(14, 0, 0)
+    // today.setHours(14, 0, 0)
+    // neu la thue phong truc tiep thì tinh nguyen ngay hom nay
+    if(type === 2)
+    {
+        today = new Date(Date.now())
+        today.setHours(13, 0, 0)
+    }
 
     let txtTitle = 'Lỗi !'
     let txtBody = ''

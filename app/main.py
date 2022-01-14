@@ -11,8 +11,8 @@ login.login_view = 'login_admin'
 @app.route("/")
 @app.route("/home")
 def index():
-    print(session.get('rent_advance_list'))
-    print(session.get('rent_directly_list'))
+    # print(session['rent_directly_list'])
+    del session['rent_directly_list']
     return render_template("home/index.html")
 
 
@@ -22,8 +22,8 @@ def index():
 # trang danh sach phong
 @app.route('/employee')
 @login_required
-def room_list():
-    return 'Trang danh sách phòng'
+def dashboard():
+    return render_template('employee/dashboard.html')
 
 
 # trang dat phong
@@ -341,9 +341,12 @@ def payment_detail(rent_id):
         common_coefficient = dao.load_common_coefficient()
         check_foreign = dao.check_foreign(rent_id)
         check_people_max = dao.check_people_max(rent_id, rent_room.room.maximum_number)
-        total = dao.payment(rent_id)
+
+        today = datetime.now().replace(hour=12, minute=0, second=0, microsecond=0)
+        total = dao.payment(rent_id, today=today)
 
         return render_template("employee/payment-detail.html", rent_room=rent_room,
+                               today=today,
                                common_coefficient=common_coefficient,
                                check_foreign=check_foreign,
                                check_people_max=check_people_max,
@@ -359,9 +362,11 @@ def payment_result(rent_id):
         rent_room = dao.load_rent(rent_id)
         if rent_room:
             name_pay = request.form.get('name_pay')
-            total = dao.payment(rent_id=rent_id)
 
-            if dao.add_bill(rent_id=rent_id, total=total):
+            today = datetime.now().replace(hour=12, minute=0, second=0, microsecond=0)
+            total = dao.payment(rent_id=rent_id, today=today)
+
+            if dao.add_bill(rent_id=rent_id, total=total, today=today):
                 return render_template('employee/payment-print.html', rent_room=rent_room,
                                        name_pay=name_pay,
                                        total=total)
@@ -803,7 +808,7 @@ def login_admin():
         login_user(user=user)
 
         if user.user_role == UserRole.EMPLOYEE:
-            next_page = url_for('room_list')
+            next_page = url_for('dashboard')
         elif user.user_role == UserRole.ADMIN:
             next_page = '/admin'
         else:
@@ -858,8 +863,10 @@ def common_response():
     return {
         'total_room_booking': utils.total_room_in_list(session.get('book_room_list')),
         'total_room_rent_directly': utils.total_room_in_list(session.get('rent_directly_list')),
-        'total_rent_waiting': dao.total_rent_waiting(),
-        'total_book_room_waiting': dao.total_book_room_waiting()
+        'total_rent_waiting': dao.total_rent_waiting(active=True),
+        'total_book_room_waiting': dao.total_book_room_waiting(active=True, done=False),
+        'total_book_room_cancel': dao.total_book_room_waiting(active=False, done=False),
+        'total_rent_due': dao.total_rent_waiting(active=True, today=datetime.now())
     }
 
 
