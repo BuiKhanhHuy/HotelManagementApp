@@ -14,9 +14,9 @@
 {% block body %}
     <div class="p-2">
         <!-- Nav tabs -->
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs remove-print">
             <li class="nav-item">
-                <a class="nav-link active " data-toggle="tab" href="#home">
+                <a class="nav-link active" data-toggle="tab" href="#home">
                     <i class="fas fa-hand-holding-usd pr-1"></i>
                     Báo cáo doanh thu
                 </a>
@@ -32,9 +32,9 @@
         <!-- Tab panes -->
         <div class="tab-content">
             <div id="home" class="tab-pane active rounded-0"><br>
-                <h3 class="text-info">BÁO CÁO DOANH THU</h3>
+                <h3 class="text-info title">BÁO CÁO DOANH THU</h3>
                 <form method="post" action="/admin/">
-                    <div class="py-3 d-flex">
+                    <div class="py-3 d-flex remove-print">
                         <div>
                             <input class="form-control rounded-sm shadow-sm" name="month_year" type="month">
                         </div>
@@ -42,15 +42,14 @@
                             <button class="btn btn-dark rounded-sm">Thống kê</button>
                         </div>
                         <div class="px-3">
-                            <button type="button" class="btn btn-success"><i class="fas fa-print pr-1"></i>In thống kê
-                                báo
-                                cáo
+                            <button type="button" class="btn btn-success" onclick="printStats()">
+                                <i class="fas fa-print pr-1"></i>In thống kê báo cáo
                             </button>
                         </div>
                     </div>
                 </form>
-                <div class="row">
-                    <div class="col-6">
+                <div class="row row-remove">
+                    <div class="col-6 col6">
                         <div class="card">
                             <div class="card-header bg-dark text-white">
                                 <i class="fas fa-table "></i>
@@ -105,7 +104,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6">
+                    <div class="col-6 col6">
                         <div class="card">
                             <div class="card-header bg-dark text-white">
                                 <i class="fas fa-chart-bar"></i>
@@ -119,9 +118,9 @@
                 </div>
             </div>
             <div id="menu1" class="tab-pane fade"><br>
-                <h3 class="text-info">BÁO CÁO MẬT ĐỘ SỬ DỤNG PHÒNG</h3>
+                <h3 class="text-info title">BÁO CÁO MẬT ĐỘ SỬ DỤNG PHÒNG</h3>
                 <form method="post" action="/admin/">
-                    <div class="py-3 d-flex">
+                    <div class="py-3 d-flex remove-print">
                         <div>
                             <input class="form-control rounded-sm shadow-sm" name="month_year" type="month">
                         </div>
@@ -129,15 +128,15 @@
                             <button class="btn btn-dark rounded-sm">Thống kê</button>
                         </div>
                         <div class="px-3">
-                            <button type="button" class="btn btn-success">
+                            <button type="button" class="btn btn-success" onclick="printStats()">
                                 <i class="fas fa-print pr-1"></i>In thống kê
                                 báo cáo
                             </button>
                         </div>
                     </div>
                 </form>
-                <div class="row">
-                    <div class="col-7">
+                <div class="row row-remove">
+                    <div class="col-7 col7" >
                         <div class="card">
                             <div class="card-header bg-dark text-white">
                                 <i class="fas fa-table "></i>
@@ -187,7 +186,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-5">
+                    <div class="col-5 col5">
                         <div class="card">
                             <div class="card-header bg-dark text-white">
                                 <i class="fas fa-chart-bar"></i>
@@ -274,4 +273,5 @@
 
 {% block tail_js %}
     {{ super() }}
+    <script src="{{ url_for('static', filename='js/admin/stats-print.js') }}"></script>
 {% endblock %}

@@ -22,7 +22,7 @@ class User(BaseModel, UserMixin):
     __tablename__ = 'user'
     username = Column(String(50), nullable=False, unique=True)
     password = Column(String(50), nullable=False)
-    avatar = Column(String(50))
+    avatar = Column(String(255))
     email = Column(String(255), nullable=False, unique=True)
     active = Column(Boolean, default=True)
     joined_date = Column(DateTime, default=datetime.now())

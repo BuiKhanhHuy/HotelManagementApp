@@ -1,0 +1,45 @@
+{% extends 'employee/layout/base.html' %}
+
+{% block header %}
+{% endblock %}
+
+{% block left_sidebar %}
+{% endblock %}
+
+{% block content %}
+    <body class="bg-primary">
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-5">
+                            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                <div class="card-header"><h3 class="text-center font-weight-light my-4">ĐĂNG NHẬP</h3>
+                                </div>
+                                <div class="card-body">
+                                    <form method="post">
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="inputUserName" type="text" name="user_name"
+                                                   placeholder="example"/>
+                                            <label for="inputUserName">Tên người dùng</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="inputPassword" type="password" name="password"
+                                                   placeholder="Password"/>
+                                            <label for="inputPassword">Mật khẩu</label>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-lg-end mt-4 mb-0">
+                                            <button class="btn btn-primary" type="submit">Đăng nhập</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    </body>
+{% endblock %}

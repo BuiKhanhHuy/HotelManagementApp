@@ -28,19 +28,25 @@
 
             <!-- Right side toggle and nav items -->
             <ul class="navbar-nav ms-auto d-flex align-items-center">
-                <li>
-                    <a class="p-2" href=""><i class="far fa-bell font-24 text-warning"></i>
-                        <span class="rounded-pill bg-danger text-light font-10 p-1">99+</span>
-                    </a>
-                </li>
                 <!-- User profile and search -->
                 <li>
-                    <a class="profile-pic" href="#">
-                        <img src="{{ url_for('static', filename='plugins/employee/images/users/5.jpg') }}"
-                             alt="user-img" width="36"
-                             class="img-circle"><span
-                            class="text-white font-medium">Bùi Khánh Huy</span></a>
+                    <div class="dropdown">
+                        <a class="profile-pic dropdown-toggle" data-toggle="dropdown" href="#">
+                            <img src="{% if current_user.avatar %}{{ current_user.avatar }}
+                                        {% else %} {{ url_for('static', filename='images/employee/icon-user.png') }}{% endif %}"
+                                 alt="user-img" width="36"
+                                 class="img-circle"><span
+                                class="text-white font-medium">{{ current_user.username }}</span>
+                        </a>
+                        <div class="dropdown-menu m-0 p-0">
+                            <a class="dropdown-item text-danger bg-light font-weight-bold" href="{{ url_for('logout') }}">
+                                <i class="fas fa-sign-out-alt pr-1"></i>
+                                Đăng xuất
+                            </a>
+                        </div>
+                    </div>
                 </li>
+
                 <!-- User profile and search -->
             </ul>
         </div>
