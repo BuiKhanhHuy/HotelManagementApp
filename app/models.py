@@ -1,5 +1,5 @@
 from app import db
-from sqlalchemy import Column, Integer, String, DateTime, Float, Enum, and_, or_,\
+from sqlalchemy import Column, Integer, String, DateTime, Float, Enum, and_, or_, desc,\
     Boolean, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from datetime import datetime

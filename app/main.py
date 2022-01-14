@@ -1,22 +1,107 @@
-from app import app
+import math
 import datetime
-from flask import render_template, request, redirect, url_for, jsonify, session, flash, abort
-from flask_login import login_required, login_user, logout_user
-from app import dao, utils, login
+from flask import jsonify, session, flash, abort
+from flask_login import login_required
+from app import login
 from app.admin import *
+from app.forms import *
 
 login.login_view = 'login_admin'
 
 
+# ============CUSTOMER=============
+
+# Customer Index
 @app.route("/")
 @app.route("/home")
 def index():
-    # print(session['rent_directly_list'])
-    del session['rent_directly_list']
-    return render_template("home/index.html")
+    kinds = utils.load_kinds()
+    return render_template("home/index.html", kinds=kinds)
 
 
-# ===================DAT PHONG==================
+# dat phong theo the loai
+@app.route("/rooms", methods=['post', 'get'])
+def get_rooms():
+    # page = int(request.args.get('page', 1))
+    # rooms = utils.load_rooms_of_customer(kind_of_room_id=kind_of_room_id, page=page)
+    # kind = utils.load_kind(kind_of_room_id)
+    # imgs = utils.get_kinds_images(kind_of_room_id)
+    # counter = utils.count_rooms(kind_of_room_id)
+    # return render_template('home/rooms.html', rooms=rooms, kind=kind, imgs=imgs,
+    #                        page=int(page), C_Pages=math.ceil(counter/app.config['CUSTOMER_PAGE_SIZE']))
+
+    if request.method.__eq__('POST'):
+        kind_of_room_id = int(request.form.get('room_type'))
+
+        check_in_date = request.form.get('check_in_date')
+        check_in_date = datetime.strptime(check_in_date, "%Y-%m-%d")
+        check_in_date = check_in_date.replace(hour=14, minute=0, second=0, microsecond=0)
+
+        check_out_date = request.form.get('check_out_date')
+        check_out_date = datetime.strptime(check_out_date, "%Y-%m-%d")
+        check_out_date = check_out_date.replace(hour=12, minute=0, second=0, microsecond=0)
+
+        max_price = request.form.get('max_price')
+
+        rooms = dao.load_rooms(check_in_date=check_in_date,
+                               check_out_date=check_out_date,
+                               id_kind_of_room=kind_of_room_id,
+                               price=max_price)
+
+        return render_template('home/rooms.html', rooms=rooms)
+    return render_template('home/rooms.html')
+
+
+# dat phong
+@app.route("/room-type")
+def room_type():
+    kinds = dao.load_kind_of_room()
+    dic_image = dao.get_kinds_image()
+    return render_template('home/room-type.html', kinds=kinds, dic_image=dic_image)
+
+
+# chi phong
+@app.route("/room-detail")
+def room_detail():
+    room_id = request.args.get("room_id")
+    room = utils.load_rooms_of_customer(room_id=room_id)
+    return render_template('home/room_detail.html', room=room)
+
+
+# bieu mau dat phong
+@app.route("/reservations")
+def reservations():
+    countries = dao.load_countries()
+    return render_template('home/reservation.html', countries=countries)
+
+
+# lien he
+@app.route("/contact")
+def contact():
+    return render_template("home/contact.html")
+
+
+# about us
+@app.route("/about-us")
+def about_us():
+    return render_template("home/about.html")
+
+
+# tai khoan nguoi dung
+@app.route("/account")
+def load_profile_customer():
+    return render_template('home/account.html')
+
+
+# load nguoi dung
+@login.user_loader
+def load_customer_user(user_id):
+    return utils.get_customer_user_by_id(user_id=user_id)
+
+
+# ===================EMPLOYEE===============
+
+# ===================dat phong==================
 
 
 # trang danh sach phong
@@ -132,10 +217,9 @@ def booking_result(result):
         return redirect(url_for('book_room_detail'))
 
 
-# ===================END DAT PHONG==================
+# ===================ket thuc dat phong==================
 
-
-# ==========THUE PHONG TRUC TIEP====================
+# ======================thue phong truc tiep====================
 
 
 # trang thue phong
@@ -297,10 +381,10 @@ def rent_result(result_number):
             abort(404)
 
 
-# ==========END THUE PHONG TRUC TIEP================
+# ================ket thuc thue phong truc tiep================
 
 
-# ================NHAN PHONG DA DAT==================
+# =====================NHAN PHONG DA DAT==================
 
 
 # trang nhan phong da dat
@@ -317,10 +401,10 @@ def rent_advance():
                            book_rooms=book_rooms, today=today)
 
 
-# ================END NHAN PHONG DA DAT==============
+# ================ket thuc nhan phong da dat==============
 
 
-# ==================THANH TOAN=======================
+# ==================thanh toan=======================
 
 
 # trang thanh toan
@@ -380,10 +464,10 @@ def payment_result(rent_id):
     return redirect(url_for('payment_detail'))
 
 
-# ==================END THANH TOAN=======================
+# ==================ket thuc thanh toan=======================
 
 
-# =====================API==========================
+# =====================api==========================
 
 
 # tim phong
@@ -790,43 +874,7 @@ def find_rent_payment():
     return jsonify({'code': 200, 'rent_list': rent_list})
 
 
-# =====================END API==========================
-
-
-# dang nhap
-@app.route("/admin/login", methods=['post', 'get'])
-def login_admin():
-    if request.method.__eq__('POST'):
-        user_name = request.form.get('user_name')
-        password = request.form.get('password')
-
-        user = dao.check_user(user_name, password)
-
-        if user is None:
-            return redirect(url_for('login_admin'))
-
-        login_user(user=user)
-
-        if user.user_role == UserRole.EMPLOYEE:
-            next_page = url_for('dashboard')
-        elif user.user_role == UserRole.ADMIN:
-            next_page = '/admin'
-        else:
-            return redirect(url_for('login_admin'))
-
-        if 'next' in request.args:
-            next_page = request.args['next']
-
-        return redirect(next_page)
-
-    return render_template('employee/login.html')
-
-
-# dang xuat
-@app.route("/logout", methods=['post', 'get'])
-def logout():
-    logout_user()
-    return redirect(url_for('login_admin'))
+# =====================ket thuc api==========================
 
 
 # loi 404

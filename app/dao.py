@@ -1,8 +1,28 @@
 import hashlib
-
 from app import app
 from app.models import *
 from sqlalchemy import func, extract
+import pycountry
+
+
+# =========CUSTOMER==========
+
+# Lấy 1st ảnh theo thể loại
+def get_kinds_image():
+    kinds = KindOfRoom.query.all()
+    dic = {}
+    for k in kinds:
+        for x in k.images:
+            if x.rank == 1:
+                dic[k.id] = x.link
+    return dic
+
+
+def load_countries():
+    return [p for p in pycountry.countries]
+
+
+# =========EMPLOYEE==========
 
 
 # load rooms
