@@ -43,6 +43,7 @@
               crossorigin="anonymous">
         <!-- Theme Style -->
         <link rel="stylesheet" href="{{ url_for('static', filename='css/home/style.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/home/room_detail.css') }}">
     {% endblock %}
 
     {% block head %}
@@ -52,8 +53,7 @@
     {% endblock %}
 </head>
 
-
-<body>
+<body onload = "setUpDateTime()">
 {% block page_body %}
     {% block header %}
         {% include "home/layout/header.html" %}
@@ -64,31 +64,19 @@
             <div class="container">
                 <div class="row check-availabilty" id="next">
                     <div class="block-32" data-aos="fade-up" data-aos-offset="-200">
-                        <form action="#">
+                        <form action="{{url_for('booking')}}">
                             <div class="row">
-                                <div class="col-md-6 mb-3 mb-lg-0 col-lg-3" style="padding: 0px 5px 0px 0px">
-                                    <label for="adults" class="font-weight-bold text-black">Thể loại phòng</label>
-                                            <div class="field-icon-wrap">
-                                                <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                                <select name="" id="adults" class="form-control">
-                                                    <option value="">Tất Cả</option>
-                                                    <option value="">Phòng Đơn</option>
-                                                    <option value="">Phòng Gia Đình</option>
-                                                    <option value="">Phòng Vip</option>
-                                                </select>
-                                            </div>
-                                </div>
-                                <div class="col-md-6 mb-3 mb-md-0 col-lg-5">
+                                <div class="col-md-6 mb-3 mb-md-0 col-lg-8">
                                     <div class="row">
                                         <div class="col-md-6 mb-3 mb-md-0" style="padding: 0px 5px">
-                                            <label for="checkin_date" class="font-weight-bold text-black">Ngày Nhận</label>
+                                            <label for="checkin_date" class="font-weight-bold text-black" id="=check_in">Ngày Nhận</label>
                                             <div class="field-icon-wrap">
                                                 <div class="icon"><span class="icon-calendar"></span></div>
                                                 <input type="text" id="checkin_date" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-3 mb-md-0" style="padding: 0px 5px">
-                                            <label for="checkout_date" class="font-weight-bold text-black">Ngày Trả</label>
+                                            <label for="checkout_date" class="font-weight-bold text-black" id="=check_out">Ngày Trả</label>
                                             <div class="field-icon-wrap">
                                                 <div class="icon"><span class="icon-calendar"></span></div>
                                                 <input type="text" id="checkout_date" class="form-control">
@@ -96,19 +84,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3 mb-lg-0 col-lg-2" style="padding: 0px 5px">
-                                    <label for="children" class="font-weight-bold text-black">Giá</label>
-                                            <div class="field-icon-wrap">
-                                                <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                                <select name="" id="children" class="form-control">
-                                                    <option value="">Tất cả</option>
-                                                    <option value="">Thấp đến Cao</option>
-                                                    <option value="">Cao đến Thấp</option>
-                                                </select>
-                                            </div>
-                                </div>
-                                <div class="col-md-6 col-lg-2 align-self-end" style="padding: 0px 5px">
-                                    <button class="btn btn-warning btn-block text-center text-white">Tìm kiếm</button>
+                                <div class="col-md-6 col-lg-4 align-self-end" style="padding: 0px 5px">
+                                    <button class="btn btn-warning btn-block text-center text-white">Đặt phòng</button>
                                 </div>
                             </div>
                         </form>
@@ -164,6 +141,7 @@
             integrity="sha512-WHnaxy6FscGMvbIB5EgmjW71v5BCQyz5kQTcZ5iMxann3HczLlBHH5PQk7030XmmK5siar66qzY+EJxKHZTPEQ=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{{ url_for('static', filename='js/home/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/home/datetime.js') }}"></script>
 {% endblock %}
 
 {% block tail %}

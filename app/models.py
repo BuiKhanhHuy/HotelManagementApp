@@ -1,6 +1,6 @@
 from app import db
 from sqlalchemy import Column, Integer, String, DateTime, Float, Enum,\
-    Boolean, ForeignKey
+    Boolean, ForeignKey, and_, or_, desc
 from sqlalchemy.orm import relationship, backref
 from datetime import datetime
 from flask_login import UserMixin
@@ -22,7 +22,7 @@ class User(BaseModel, UserMixin):
     __tablename__ = 'user'
     username = Column(String(50), nullable=False, unique=True)
     password = Column(String(50), nullable=False)
-    avatar = Column(String(50))
+    avatar = Column(String(255))
     email = Column(String(255), nullable=False, unique=True)
     active = Column(Boolean, default=True)
     joined_date = Column(DateTime, default=datetime.now())

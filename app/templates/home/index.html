@@ -41,7 +41,7 @@
                 <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
                     <a href="{{url_for('booking_kinds',kind_of_room_id=kind.id)}}" class="room">
                         <figure class="img-wrap">
-                            <img src="{{url_for('static', filename=kind.images[0].link)}}" alt="{{kind.kind_of_room_name}}" class="img-fluid mb-3">
+                            <img src="{{dic_image.get(kind.id)}}" alt="{{kind.kind_of_room_name}}" class="img-fluid mb-3">
                         </figure>
                         <div class="p-3 text-center room-info">
                             <h2>{{kind.kind_of_room_name}}</h2>

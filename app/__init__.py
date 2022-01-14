@@ -1,6 +1,7 @@
 from flask import Flask, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_babelex import Babel
+from flask_login import LoginManager
 import cloudinary
 
 
@@ -23,6 +24,7 @@ cloudinary.config(
 
 db = SQLAlchemy(app=app)
 
+login = LoginManager(app=app)
 
 babel = Babel(app=app)
 
