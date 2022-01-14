@@ -4,6 +4,10 @@
     {{ super() }}
 {% endblock %}
 
+{% block head %}
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='plugins/employee/images/logo-icon.png') }}"/>
+{% endblock %}
+
 {% block page_body %}
 
     <div class="container{% if config.get('FLASK_ADMIN_FLUID_LAYOUT', False) %}-fluid{% endif %} p-0">
@@ -38,7 +42,8 @@
                    {{ current_user.username }}
                 </span>
                         <div class="dropdown-menu dropdown-menu-right py-2">
-                            <a class="dropdown-item text-danger font-weight-bold" href="{{ url_for('logout') }}">Đăng xuất</a>
+                            <a class="dropdown-item text-danger font-weight-bold" href="{{ url_for('logout') }}">Đăng
+                                xuất</a>
                         </div>
                     </div>
                 {% endblock %}

@@ -1,8 +1,28 @@
 import hashlib
-
 from app import app
 from app.models import *
 from sqlalchemy import func, extract
+import pycountry
+
+
+# =========CUSTOMER==========
+
+# Lấy 1st ảnh theo thể loại
+def get_kinds_image():
+    kinds = KindOfRoom.query.all()
+    dic = {}
+    for k in kinds:
+        for x in k.images:
+            if x.rank == 1:
+                dic[k.id] = x.link
+    return dic
+
+
+def load_countries():
+    return [p for p in pycountry.countries]
+
+
+# =========EMPLOYEE==========
 
 
 # load rooms
@@ -104,7 +124,7 @@ def add_rent_room(rent_list):
     if 'rooms' in rent_list:
         rooms = rent_list.get('rooms')
         for room in rooms:
-            if 'customers' in rooms[room]:
+            if 'customers' in rooms[room] and rooms[room]['customers'].__ne__({}):
                 r = Room.query.get(rooms[room]['room_id'])
                 r.room_status_id = 3
                 db.session.add(r)
@@ -204,7 +224,7 @@ def load_rent(rent_id):
 
 
 # payment
-def payment(rent_id):
+def payment(rent_id, today):
     total = 0
     common_coefficient = load_common_coefficient()
 
@@ -217,7 +237,7 @@ def payment(rent_id):
         if check_foreign(rent_id):
             price = price * 1.5
 
-        total += price * ((rent.check_out_date - rent.check_in_date).days + 1)
+        total += price * ((today - rent.check_in_date).days + 1)
 
         if check_people_max(rent_id, room.maximum_number):
             total += total * common_coefficient.surcharge
@@ -243,19 +263,27 @@ def load_rent_payment(room_number=None, check_in_date=None, check_out_date=None)
 
 
 # total bill waiting
-def total_rent_waiting():
-    return Rent.query.filter(Rent.active.__eq__(True)).count()
+def total_rent_waiting(active, today=None):
+    rent = Rent.query.filter(Rent.active.__eq__(active))
+    if today:
+        rent = rent.filter(Rent.check_out_date < today)
+    return rent.count()
+    # return Rent.query.filter(Rent.active.__eq__(True)).count()
 
 
 # total book room waiting
-def total_book_room_waiting():
-    return BookRoom.query.filter(BookRoom.active.__eq__(True), BookRoom.done.__eq__(False)).count()
+def total_book_room_waiting(active, done):
+    # return BookRoom.query.filter(BookRoom.active.__eq__(True), BookRoom.done.__eq__(False)).count()
+    return BookRoom.query.filter(BookRoom.active.__eq__(active), BookRoom.done.__eq__(done)).count()
 
 
 # add bill
-def add_bill(rent_id, total):
+def add_bill(rent_id, total, today):
     rent = Rent.query.get(rent_id)
     if rent:
+        rent.check_out_date = today
+        db.session.add(rent)
+
         r = Room.query.filter(Room.rents.any(Rent.id.__eq__(rent_id))).first()
         r.room_status_id = 1
         db.session.add(r)
@@ -263,7 +291,7 @@ def add_bill(rent_id, total):
         rent.active = False
         db.session.add(rent)
 
-        bill = Bill(total=total, rent=rent)
+        bill = Bill(total=total, rent=rent, created_date=today)
         db.session.add(bill)
         try:
             db.session.commit()

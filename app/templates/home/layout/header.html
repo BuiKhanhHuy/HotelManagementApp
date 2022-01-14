@@ -1,11 +1,25 @@
 <header class="site-header js-site-header">
     <div class="container-fluid">
         <div class="row align-items-center">
-            <div class="col-6 col-lg-4 site-logo" data-aos="fade"><a href="index.html">Sogo Hotel</a></div>
-            <div class="col-6 col-lg-8">
+            <div class="col-6 col-lg-4 site-logo" data-aos="fade"><a href="{{url_for('index')}}">Sogo Hotel</a></div>
 
+            <div class="col-4 col-lg-7" data-aos="fade" style="display:flex">
+                {%if current_user.is_authenticated %}
+                <p class="rounded-circle" style="margin-left:auto;padding:5px 5px 0 0;">
+                    {% if current_user.avatar %}
+                    <img class="rounded-circle" src="{{current_user.avatar}}" alt="{{current_user.username}}" style="width:30px; height:30px;">
+                    {% else %}
+                    <img class="rounded-circle" src="{{url_for('static', filename='images/person_5.jpg')}}" alt="{{current_user.username}}" style="width:30px; height:30px;">
+                    {% endif %}
+                </p>
+                <div style="color:#fd7e14; text-align:right; padding: 10px">
+                    {{current_user.username}}</div>
+                {% endif %}
+            </div>
 
-                <div class="site-menu-toggle js-site-menu-toggle" data-aos="fade">
+            <div class="col-2 col-lg-1" >
+
+                <div class="site-menu-toggle js-site-menu-toggle" data-aos="fade" style="top:10px">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -18,12 +32,16 @@
                             <div class="row full-height align-items-center">
                                 <div class="col-md-6 mx-auto">
                                     <ul class="list-unstyled menu">
-                                        <li class="active"><a href="index.html">Home</a></li>
-                                        <li><a href="rooms.html">Rooms</a></li>
-                                        <li><a href="about.html">About</a></li>
-                                        <li><a href="events.html">Events</a></li>
-                                        <li><a href="contact.html">Contact</a></li>
-                                        <li><a href="reservation.html">Reservation</a></li>
+                                        <li class="active"><a href="{{url_for('index')}}">Trang Chủ</a></li>
+                                        <li><a href="{{url_for('room_type')}}">Phòng</a></li>
+                                        <li><a href="{{url_for('about_us')}}">Về Chúng Tôi</a></li>
+                                        {%if current_user.is_authenticated %}
+                                        <li><a href="{{url_for('load_profile_customer')}}">Tài Khoản</a></li>
+                                        <li><a href="{{url_for('customer_logout')}}">Đăng Xuất</a></li>
+                                        {% else %}
+                                        <li><a href="{{url_for('customer_login')}}">Đăng Nhập</a></li>
+                                        <li><a href="{{url_for('customer_register')}}">Đăng Ký</a></li>
+                                        {% endif %}
                                     </ul>
                                 </div>
                             </div>

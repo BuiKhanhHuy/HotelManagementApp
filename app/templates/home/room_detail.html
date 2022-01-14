@@ -1,0 +1,47 @@
+{% extends "home/layout/base.html" %}
+{% block date_time %}{% endblock %}
+{% block content %}
+    <section class="section pb-4">
+        <div class="container">
+
+            <div class="">
+                <div class="row">
+                    <div class="col-md-6 mb-3 mb-lg-0 col-lg-7">
+                        <img class="w-100" src="{{ url_for('static', filename='images/slider-2.jpg') }}" data-aos="fade-up">
+                    </div>
+                    <div class="col-md-6 mb-3 mb-md-0 col-lg-5" data-aos="fade-up">
+                        <span class="title font-weight-normal">Chi tiết phòng số: 101</span>
+                        <div class="description font-weight-normal" style="color:green">Mô tả 101</div>
+                        <div class="people">Số lượng người tiêu chuẩn: 2</div>
+                        <div class="people">Số lượng người tối đa: 3</div>
+                        <div class="price"> 1,000,000 VNĐ/1NGÀY</div>
+                        <br><br>
+                        <div class="button-add">
+                            <a href="#"><i class=" fas fa-cart-plus"></i> Thêm vào danh sách</a>
+                        </div>
+                        <div class="button-done">
+                            <a href="{{ url_for('reservations') }}"><i class=" fas fa-clipboard-check"></i> Đặt phòng
+                                ngay</a>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="section pb-4">
+        <div class="container">
+            <h2>Bình luận:</h2>
+            <div class="media border p-3">
+                <img src="img_avatar3.png" alt="John Doe" class="mr-3 mt-3 rounded-circle" style="width:60px;">
+                <div class="media-body">
+                    <h4>John Doe <small><i>Posted on February 19, 2016</i></small></h4>
+                    <p>Lorem ipsum...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

@@ -1,0 +1,93 @@
+{% extends 'employee/layout/base.html' %}
+
+{% block title %}
+    <title>Tổng quan</title>
+{% endblock %}
+
+{% block content %}
+    <div class="page-wrapper">
+        <div class="page-breadcrumb bg-white">
+            <div class="container-fluid p-0">
+                <div class="white-box shadow-lg mb-2 p-4">
+                    <h4>TỔNG QUAN</h4>
+                    <hr>
+                    <div class="row">
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card bg-success text-white mb-4">
+                                <div class="card-body text-white"><span class="font-weight-bold">{{ total_book_room_waiting }}</span> phiếu đặt
+                                    phòng đang chờ nhận
+                                </div>
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <a class="small text-white stretched-link" href="{{ url_for('rent_advance') }}">Xem
+                                        chi tiết</a>
+                                    <div class="small text-white">
+                                        <i class="fas fa-angle-right"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card bg-danger text-white mb-4">
+                                <div class="card-body text-white"><span class="font-weight-bold">{{ total_book_room_cancel }}</span> phiếu đặt
+                                    phòng đã bị hủy
+                                </div>
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <a class="small text-white stretched-link" href="{{ url_for('rent_advance') }}">Xem
+                                        chi tiết</a>
+                                    <div class="small text-white">
+                                        <i class="fas fa-angle-right"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card bg-info text-white mb-4">
+                                <div class="card-body text-white"><span class="font-weight-bold">{{ total_rent_waiting }}</span> phiếu thuê
+                                    đang chờ thanh toán
+                                </div>
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <a class="small text-white stretched-link" href="{{ url_for('payment') }}">Xem chi
+                                        tiết</a>
+                                    <div class="small text-white">
+                                        <i class="fas fa-angle-right"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card bg-warning text-white mb-4">
+                                <div class="card-body text-white"><span class="font-weight-bold">{{ total_rent_due }}</span> phiếu thuê quá
+                                    hạn trả phòng
+                                </div>
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <a class="small text-white stretched-link" href="{{ url_for('payment') }}">Xem chi
+                                        tiết</a>
+                                    <div class="small text-white">
+                                        <i class="fas fa-angle-right"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="white-box shadow-lg mb-2 p-4">
+                   <h4>QUY ĐỊNH</h4>
+                    <hr>
+                    <div>
+                       <ul>
+                           <li>Thời gian nhận phòng: <span class="font-weight-bold">14h</span></li>
+                           <li>Thời gian trả phòng: <span class="font-weight-bold">12h</span></li>
+                           <li>Nếu thuê phòng sau <span class="font-weight-bold">14h</span>: ghi nhận thời điểm nhận phòng vẫn là <span class="font-weight-bold">14h</span></li>
+                       </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Container fluid  -->
+    </div>
+    <!-- End Page wrapper  -->
+{% endblock %}
+
+{% block tail_js %}
+    {{ super() }}
+{% endblock %}

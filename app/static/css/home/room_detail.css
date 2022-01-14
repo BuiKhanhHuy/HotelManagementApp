@@ -1,0 +1,44 @@
+.title{
+    font-size:24px;
+}
+.description{
+    font-weight:bold;
+    font-size: 26px;
+}
+.price{
+    color: #cfa013;
+}
+.button-add{
+    width:80%;
+    background-color:#ffc107;
+    text-align:center;
+    border-radius:10px;
+    margin-bottom:10px;
+}
+.button-add> a{
+    display:block;
+    width:100%;
+    padding:10px 0px;
+    color: #1a1a1a;
+}
+.button-done{
+    width:80%;
+    background-color:green;
+    text-align:center;
+    border-radius:10px;
+
+}
+.button-done> a{
+    display:block;
+    width:100%;
+    padding:10px 0px;
+    color: whitesmoke;
+}
+.fa-cart-plus {
+    font-size:20px;
+    padding-right: 10px;
+}
+.fa-clipboard-check{
+    font-size:20px;
+    padding-right: 10px;
+}

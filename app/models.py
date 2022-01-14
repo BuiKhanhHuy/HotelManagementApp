@@ -1,5 +1,5 @@
 from app import db
-from sqlalchemy import Column, Integer, String, DateTime, Float, Enum, and_, or_,\
+from sqlalchemy import Column, Integer, String, DateTime, Float, Enum, and_, or_, desc,\
     Boolean, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from datetime import datetime
@@ -147,7 +147,7 @@ class Bill(BaseModel):
     __tablename__ = 'bill'
     total = Column(Float, nullable=False)
     note = Column(String(255))
-    created_date = Column(DateTime, default=datetime.now())
+    created_date = Column(DateTime, nullable=False)
     rent_id = Column(Integer, ForeignKey('rent.id'), nullable=False)
 
     def __str__(self):
