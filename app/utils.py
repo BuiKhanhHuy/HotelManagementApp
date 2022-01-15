@@ -30,31 +30,21 @@ def get_customer_user_by_id(user_id):
 
 
 # load phong tat ca phong
-def load_rooms_of_customer(room_id=None, kind_of_room_id=None, check_in_date=None, check_out_date=None, price=None,
-                           page=1):
-    rooms = Room.query.filter(Room.active.__eq__(1))
-    if room_id:
-        rooms = Room.query.filter(Room.id.__eq__(int(room_id)))
+def load_rooms_of_customer(kind_of_room_id=None, check_in_date=None, check_out_date=None, page=1):
+    rooms = Room.query.filter(Room.active.__eq__(True))
+
     # filter theo dieu kien
     if kind_of_room_id and kind_of_room_id.__ne__(0):
         rooms = rooms.filter(Room.kind_of_room_id.__eq__(kind_of_room_id))
-    if price and price.__ne__(0):
-        # gia thap den cao
-        if price == 1:
-            rooms = rooms.filter(Room.price.order_by(price))
-        else:
-            # gia cao den thap
-            if price == 2:
-                rooms = rooms.filter(Room.price.order_by((desc(price))))
 
     if check_in_date and check_out_date:
-        rooms = Room.query.filter(~Room.rents.any(and_(Rent.active.__eq__(True),
-                                                       or_(and_(check_in_date >= Rent.check_in_date,
-                                                                check_in_date <= Rent.check_out_date, ),
-                                                           and_(check_out_date >= Rent.check_in_date,
-                                                                check_out_date <= Rent.check_out_date),
-                                                           and_(check_in_date <= Rent.check_in_date,
-                                                                check_out_date >= Rent.check_out_date))))) \
+        rooms = rooms.filter(~Room.rents.any(and_(Rent.active.__eq__(True),
+                                                  or_(and_(check_in_date >= Rent.check_in_date,
+                                                           check_in_date <= Rent.check_out_date, ),
+                                                      and_(check_out_date >= Rent.check_in_date,
+                                                           check_out_date <= Rent.check_out_date),
+                                                      and_(check_in_date <= Rent.check_in_date,
+                                                           check_out_date >= Rent.check_out_date))))) \
             .filter(~Room.book_rooms.any(and_(BookRoom.active.__eq__(True),
                                               or_(and_(check_in_date >= BookRoom.check_in_date,
                                                        check_in_date <= BookRoom.check_out_date),
@@ -62,21 +52,26 @@ def load_rooms_of_customer(room_id=None, kind_of_room_id=None, check_in_date=Non
                                                        check_out_date <= BookRoom.check_out_date),
                                                   and_(check_in_date <= BookRoom.check_in_date,
                                                        check_out_date >= BookRoom.check_out_date)))))
+    count = rooms.count()
+
     # phan trang
     page_size = app.config['CUSTOMER_PAGE_SIZE']
     start = (page - 1) * page_size
     end = start + page_size
-    return rooms.slice(start, end).all()
+    return rooms.slice(start, end).all(), count
 
 
-# load tat ca loai
-def load_kinds():
-    return KindOfRoom.query.all()
+# load loai phong
+def load_kinds(kind_of_room_id=None):
+    kind_of_room = KindOfRoom.query
+    if kind_of_room_id:
+        kind_of_room.filter(KindOfRoom.id.__eq__(kind_of_room_id))
+    return kind_of_room.all()
 
 
-# load 1 the loai
-def load_kind_from_id(kind_of_room_id):
-    return KindOfRoom.query.get(kind_of_room_id)
+# load chi tiet phong
+def load_room_detail(room_id):
+    return Room.query.get(room_id)
 
 
 # Lấy tất cả các ảnh theo thể loại
@@ -85,11 +80,6 @@ def get_kinds_images(kind_of_room_id=None):
     if kind_of_room_id:
         imgs = imgs.filter(Image.kind_of_room_id.__eq__(kind_of_room_id))
     return imgs.all()
-
-
-# Lấy tổng pages của 1 thể loại
-def count_rooms(kind_of_room_id):
-    return Room.query.filter(Room.kind_of_room_id.__eq__(kind_of_room_id)).count()
 
 
 # ============EMPLOYEE================
@@ -123,5 +113,4 @@ def total_room_in_list(room_list):
 
 
 if __name__ == '__main__':
-    dic = {'a': {'c': 1}}
-    print(dic.get('a').get('b'))
+    pass
