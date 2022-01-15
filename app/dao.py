@@ -32,13 +32,13 @@ def load_rooms(check_in_date=None, check_out_date=None,
     rooms = Room.query.filter(Room.active.__eq__(True))
 
     if check_in_date and check_out_date:
-        rooms = Room.query.filter(~Room.rents.any(and_(Rent.active.__eq__(True),
-                                                       or_(and_(check_in_date >= Rent.check_in_date,
-                                                                check_in_date <= Rent.check_out_date, ),
-                                                           and_(check_out_date >= Rent.check_in_date,
-                                                                check_out_date <= Rent.check_out_date),
-                                                           and_(check_in_date <= Rent.check_in_date,
-                                                                check_out_date >= Rent.check_out_date))))) \
+        rooms = rooms.filter(~Room.rents.any(and_(Rent.active.__eq__(True),
+                                                  or_(and_(check_in_date >= Rent.check_in_date,
+                                                           check_in_date <= Rent.check_out_date, ),
+                                                      and_(check_out_date >= Rent.check_in_date,
+                                                           check_out_date <= Rent.check_out_date),
+                                                      and_(check_in_date <= Rent.check_in_date,
+                                                           check_out_date >= Rent.check_out_date))))) \
             .filter(~Room.book_rooms.any(and_(BookRoom.active.__eq__(True),
                                               or_(and_(check_in_date >= BookRoom.check_in_date,
                                                        check_in_date <= BookRoom.check_out_date),
@@ -361,4 +361,4 @@ def check_user(user_name, password):
 
 
 if __name__ == '__main__':
-    print(hashlib.md5('123'.encode('utf-8')).hexdigest())
+    pass

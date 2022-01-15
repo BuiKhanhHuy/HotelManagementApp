@@ -15,7 +15,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['FLASK_ADMIN_SWATCH'] = 'Simplex'
 app.config['FLASK_ADMIN_FLUID_LAYOUT'] = True
 
-app.config['CUSTOMER_PAGE_SIZE'] = 3
+app.config['CUSTOMER_PAGE_SIZE'] = 6
 
 cloudinary.config(
     cloud_name='dtnpj540t',

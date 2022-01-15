@@ -11,60 +11,71 @@ login.login_view = 'login_admin'
 
 # ============CUSTOMER=============
 
-# Customer Index
+# customer index
 @app.route("/")
 @app.route("/home")
 def index():
+    print(session['cus_book_room_list'])
     kinds = utils.load_kinds()
     return render_template("home/index.html", kinds=kinds)
 
 
-# dat phong theo the loai
+# load phong customer
 @app.route("/rooms", methods=['post', 'get'])
 def get_rooms():
-    # page = int(request.args.get('page', 1))
-    # rooms = utils.load_rooms_of_customer(kind_of_room_id=kind_of_room_id, page=page)
-    # kind = utils.load_kind(kind_of_room_id)
-    # imgs = utils.get_kinds_images(kind_of_room_id)
-    # counter = utils.count_rooms(kind_of_room_id)
-    # return render_template('home/rooms.html', rooms=rooms, kind=kind, imgs=imgs,
-    #                        page=int(page), C_Pages=math.ceil(counter/app.config['CUSTOMER_PAGE_SIZE']))
+    error = ''
+    kind_of_room_id = int(request.args.get('kind_of_room_id', 0))
+    page = int(request.args.get('page', 1))
 
     if request.method.__eq__('POST'):
-        kind_of_room_id = int(request.form.get('room_type'))
+        if 'cus_book_room_list' not in session:
+            session['cus_book_room_list'] = {}
+        cus_book_room_list = session['cus_book_room_list']
 
         check_in_date = request.form.get('check_in_date')
+        if check_in_date.__eq__(''):
+            error = 'Ngày trả phòng là bắt buộc.'
+            return redirect(url_for('index'))
         check_in_date = datetime.strptime(check_in_date, "%Y-%m-%d")
         check_in_date = check_in_date.replace(hour=14, minute=0, second=0, microsecond=0)
 
         check_out_date = request.form.get('check_out_date')
+        if check_out_date.__eq__(''):
+            error = 'Ngày trả phòng là bắt buộc.'
+            return redirect(url_for('index'))
         check_out_date = datetime.strptime(check_out_date, "%Y-%m-%d")
         check_out_date = check_out_date.replace(hour=12, minute=0, second=0, microsecond=0)
 
-        max_price = request.form.get('max_price')
+        cus_book_room_list['check_in_date'] = check_in_date
+        cus_book_room_list['check_out_date'] = check_out_date
 
-        rooms = dao.load_rooms(check_in_date=check_in_date,
-                               check_out_date=check_out_date,
-                               id_kind_of_room=kind_of_room_id,
-                               price=max_price)
+        session['cus_book_room_list'] = cus_book_room_list
 
-        return render_template('home/rooms.html', rooms=rooms)
-    return render_template('home/rooms.html')
+    if 'cus_book_room_list' not in session:
+        error = 'Bạn hãy chọn đầy đủ ngày nhận phòng và trả phòng'
+        return redirect(url_for('index'))
+    else:
+        cus_book_room_list = session['cus_book_room_list']
+        rooms = utils.load_rooms_of_customer(kind_of_room_id=kind_of_room_id,
+                                             check_in_date=cus_book_room_list['check_in_date'],
+                                             check_out_date=cus_book_room_list['check_out_date'],
+                                             page=page)
+        return render_template('home/rooms.html', rooms=rooms[0],
+                               C_Pages=math.ceil(rooms[1] / app.config['CUSTOMER_PAGE_SIZE']),
+                               kind_of_room_id=kind_of_room_id)
 
 
-# dat phong
+# loai phong customer
 @app.route("/room-type")
 def room_type():
     kinds = dao.load_kind_of_room()
-    dic_image = dao.get_kinds_image()
-    return render_template('home/room-type.html', kinds=kinds, dic_image=dic_image)
+    return render_template('home/room-type.html', kinds=kinds)
 
 
-# chi phong
-@app.route("/room-detail")
-def room_detail():
-    room_id = request.args.get("room_id")
-    room = utils.load_rooms_of_customer(room_id=room_id)
+# chi tiet phong customer
+@app.route("/room-detail/<int:room_id>")
+def room_detail(room_id):
+    room = utils.load_room_detail(room_id)
     return render_template('home/room_detail.html', room=room)
 
 
@@ -914,7 +925,12 @@ def common_response():
         'total_rent_waiting': dao.total_rent_waiting(active=True),
         'total_book_room_waiting': dao.total_book_room_waiting(active=True, done=False),
         'total_book_room_cancel': dao.total_book_room_waiting(active=False, done=False),
-        'total_rent_due': dao.total_rent_waiting(active=True, today=datetime.now())
+        'total_rent_due': dao.total_rent_waiting(active=True, today=datetime.now()),
+        'kind_of_rooms': dao.load_kind_of_room(),
+        'cus_check_in_date': session.get('cus_book_room_list').get('check_in_date') if session.get(
+            'cus_book_room_list') else None,
+        'cus_check_out_date': session.get('cus_book_room_list').get('check_out_date') if session.get(
+            'cus_book_room_list') else None
     }
 
 
