@@ -15,7 +15,7 @@ login.login_view = 'login_admin'
 @app.route("/")
 @app.route("/home")
 def index():
-    print(session['cus_book_room_list'])
+    # del session['cus_book_room_list']
     kinds = utils.load_kinds()
     return render_template("home/index.html", kinds=kinds)
 

@@ -11,18 +11,18 @@ function setUpDateTime() {
     check_in.min = current_day.toISOString().substring(0, 10)
     check_out.min = current_day.toISOString().substring(0, 10)
 
-    // Ngay check in la ngay mai
-    if (check_in.value === '') {
-        current_day.setUTCHours(14, 0, 0, 0)
-        current_day.setDate(current_day.getDate() + 1);
-        check_in.value = current_day.toISOString().substring(0, 10);
-    }
-    // Ngay check out la sau ngay mai
-    if (check_out.value === '') {
-        current_day.setUTCHours(12, 0, 0, 0)
-        current_day.setDate(current_day.getDate() + 1);
-        check_out.value = current_day.toISOString().substring(0, 10);
-    }
+    // // Ngay check in la ngay mai
+    // if (check_in.value === '') {
+    //     current_day.setUTCHours(14, 0, 0, 0)
+    //     current_day.setDate(current_day.getDate() + 1);
+    //     check_in.value = current_day.toISOString().substring(0, 10);
+    // }
+    // // Ngay check out la sau ngay mai
+    // if (check_out.value === '') {
+    //     current_day.setUTCHours(12, 0, 0, 0)
+    //     current_day.setDate(current_day.getDate() + 1);
+    //     check_out.value = current_day.toISOString().substring(0, 10);
+    // }
 }
 
 
