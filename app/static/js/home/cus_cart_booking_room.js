@@ -31,7 +31,7 @@ function cal_day(d1, d2){
    return Math.floor((t2-t1)/(24*3600*1000));
 }
 function del_cus_cart_booking(room_id){
-    if(confirm("Do you want to delete?") == true){
+    if(confirm("Bạn có chắc chắn xóa phòng này khỏi giỏ hàng không?") == true){
         fetch('/api/delete-cart-booking/'+room_id,{
             method:'delete',
             headers:{

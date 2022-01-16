@@ -42,13 +42,8 @@
                         <h1 style="padding: 20px 0px;">{{ current_user.username }}</h1>
                         <p class="email">Email:{{ current_user.email }} </p>
                         <p>Ngày tham gia: {{ current_user.joined_date }}</p>
-                        <div style="margin: 24px 0;">
-                            <a href="#"><i class="fa fa-dribbble"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
-                            <a href="#"><i class="fa fa-linkedin"></i></a>
-                            <a href="#"><i class="fa fa-facebook"></i></a>
-                        </div>
                         <p><a class="button" href="{{ url_for('customer_logout') }}">Đăng xuất</a></p>
+                        <p><a class="button" href="{{ url_for('index') }}">Trang chủ</a></p>
                     </div>
                 </div>
             {% endif %}

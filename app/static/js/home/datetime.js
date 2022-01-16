@@ -80,7 +80,8 @@ function checkCheckOutDate() {
     if (checkInDate.value === '') {
         printError('Bạn vui lòng chọn ngày nhận phòng !')
         checkOutDate.value = ''
-    } else if (!checkDate(valueCheckInDate, valueCheckOutDate)) {
+    } else
+        if (!checkDate(valueCheckInDate, valueCheckOutDate)) {
         printError('Ngày trả phòng phải lớn hơn ngày nhận phòng !')
         checkOutDate.value = ''
     }

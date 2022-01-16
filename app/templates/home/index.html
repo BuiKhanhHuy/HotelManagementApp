@@ -1,10 +1,13 @@
 {% extends "home/layout/base.html" %}
 
+{% block heading %}
+    Trang chủ
+{% endblock %}
 
 {% block content %}
     <section class="py-5 bg-light">
         <div class="container">
-            <div class="row align-items-center">
+            <div class="row align-items-center" id="hearder">
                 <div class="col-md-12 col-lg-7 ml-auto order-lg-2 position-relative mb-5" data-aos="fade-up">
                     <figure class="img-absolute">
                         <img src="{{ url_for('static', filename='images/food-1.jpg') }}" alt="Image" class="img-fluid">
@@ -13,10 +16,12 @@
                          class="img-fluid rounded">
                 </div>
                 <div class="col-md-12 col-lg-4 order-lg-1" data-aos="fade-up">
-                    <h2 class="heading">Welcome!</h2>
-                    <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia and
-                        Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the
-                        coast of the Semantics, a large language ocean.</p>
+                    <h2 class="heading">Chào mừng!</h2>
+                    <p class="mb-4">Khách sạn tọa lạc tại một vị trí tuyệt đẹp ở quận 1 thuộc thành phố Hồ Chí Minh
+                        Sogo Hotel Saigon nằm gần các điểm tham quan nổi tiếng gần chỗ nghỉ bao gồm Chợ ẩm thực đường
+                        phố Bến Thành, Dinh Thống Nhất và trung tâm thương mại Takashimaya Việt Nam. Khách sạn
+                        có 29 phòng ngủ được trang bị các tiện nghi như truy cập wifi miễn phí, máy lạnh, ban công riêng,
+                        truyền hình vệ tinh, máy phà trà và cà phê,</p>
                     <p><a href="#" class="btn btn-warning text-white py-2 mr-3">Learn More</a> <span
                             class="mr-3 font-family-serif"><em>or</em></span> <a
                             href="https://vimeo.com/channels/staffpicks/93951774" data-fancybox
@@ -33,7 +38,7 @@
         <div class="container">
             <div class="row justify-content-center text-center mb-5">
                 <div class="col-md-7">
-                    <h2 class="heading" data-aos="fade-up">Photos</h2>
+                    <h2 class="heading" data-aos="fade-up">Hình ảnh</h2>
                     <p data-aos="fade-up" data-aos-delay="100">Far far away, behind the word mountains, far from the
                         countries Vokalia and Consonantia, there live the blind texts. Separated they live in
                         Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
@@ -189,7 +194,9 @@
 
         </div>
     </section>
+{% endblock %}
 
-
-
+{% block tail_js %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/home/index.js') }}"></script>
 {% endblock %}

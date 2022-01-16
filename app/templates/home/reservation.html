@@ -1,105 +1,192 @@
 {% extends "home/layout/base.html" %}
 
+{% block heading %}
+    Đặt phòng
+{% endblock %}
+
 {% block date_time %}
 {% endblock %}
 
 {% block content %}
-    <section class="section contact-section" id="next">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12" data-aos="fade-up" data-aos-delay="100">
-                    <div class="row">
-                        <h1 class="text-uppercase mx-auto ">đặt phòng Biểu mẫu <br><br></h1>
-                    </div>
-                </div>
-                <div class="col-md-9 mx-auto" data-aos="fade-up" data-aos-delay="200">
-                    <form action="#" method="post" class="bg-white  p-4 mb-5 border">
+    {% if success.__eq__(None) and success == False %}
+        <section class="section contact-section" id="next">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12" data-aos="fade-up" data-aos-delay="100">
                         <div class="row">
-                            <div class="col-md-8 form-group">
-                                <label class="text-black font-weight-bold" for="name">Họ tên<span class="text-danger">*</span></label>
-                                <input type="text" id="name" class="form-control ">
+                            <h1 class="text-uppercase mx-auto ">Xác nhận đặt phòng<br><br></h1>
+                        </div>
+                    </div>
+                    <div class="col-md-9 mx-auto" data-aos="fade-up" data-aos-delay="200">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="p-2">Ngày nhận phòng: <span
+                                        class="font-weight-bold">{{ check_in_date }}</span></label>
                             </div>
-                            <div class="col-md-4 form-group">
-                                <label class="text-black font-weight-bold" for="phone">SĐT <span class="text-danger">*</span></label>
-                                <input type="text" id="phone" class="form-control ">
+                            <div class="col-md-4">
+                                <label class="p-2">Ngày trả phòng: <span
+                                        class="font-weight-bold">{{ check_out_date }}</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="p-2">Phòng đặt: <span class="font-weight-bold">
+                                    {% for room in rooms %}
+                                        {{ room.get('room_id') }},
+                                    {% endfor %}
+                                </span></label>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div class="col-md-5 form-group">
-                                <label class="text-black font-weight-bold" for="identity_card">CCCD/CMND/(Visa)
-                                    <span class="text-danger">*</span></label>
-                                <input type="text" id="identity_card" class="form-control ">
-                            </div>
-                            <div class="col-md-4 form-group">
-                                <label class="text-black font-weight-bold" for="nationality">Quốc tịch
-                                    <span class="text-danger">*</span></label>
-                                <select name="" id="nationality" class="form-control">
-                                        {% for country in countries %}
-                                        <option value="{{country.numeric}}">{{country.name}}</option>
-                                        {% endfor %}
-                                </select>
-                            </div>
-                             <div class="col-md-3 form-group">
-                                <label for="Gender" class="font-weight-bold text-black">Giới tính
-                                 <span class="text-danger">*</span></label>
-                                <div class="field-icon-wrap">
-                                    <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                    <select name="" id="Gender" class="form-control">
-                                        <option value="0">Nam</option>
-                                        <option value="1">Nữ</option>
-                                        <option value="2">Khác</option>
-                                    </select>
+                        <form action="{{ url_for('reservations') }}" method="post" class="bg-white  p-4 mb-5 border">
+                            <div class="row">
+                                <div class="col-md-8 form-group">
+                                    <label class="text-black font-weight-bold">Họ tên<span
+                                            class="text-danger">*</span></label>
+                                    <input required type="text" name="name" class="form-control ">
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <label class="text-black font-weight-bold">SĐT <span
+                                            class="text-danger">*</span></label>
+                                    <input required type="text" name="phone" class="form-control ">
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-12 form-group">
-                                <label class="text-black font-weight-bold" for="email">Email
-                                 <span class="text-danger">*</span></label>
-                                <input type="email" id="email" class="form-control ">
+                            <div class="row">
+                                <div class="col-md-5 form-group">
+                                    <label class="text-black font-weight-bold">CCCD/CMND/(Visa)
+                                        <span class="text-danger">*</span></label>
+                                    <input required type="text" name="identity_card" class="form-control ">
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <label class="text-black font-weight-bold">Quốc tịch
+                                        <span class="text-danger">*</span></label>
+                                    <select name="nationality" class="form-control">
+                                        {% for country in countries %}
+                                            <option value="{{ country.numeric }}">{{ country.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <label class="font-weight-bold text-black">Giới tính
+                                        <span class="text-danger">*</span></label>
+                                    <div class="field-icon-wrap">
+                                        <div class="icon"><span class="ion-ios-arrow-down"></span></div>
+                                        <select name="gender" class="form-control">
+                                            <option selected value="1">Nam</option>
+                                            <option value="0">Nữ</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-6 form-group">
-                                <label class="text-black font-weight-bold" for="checkin_date">Ngày nhận phòng
-                                 <span class="text-danger">*</span></label>
-                                <input type="text" id="checkin_date" class="form-control">
+                            <div class="row">
+                                <div class="col-md-12 form-group">
+                                    <label class="text-black font-weight-bold">Địa chỉ
+                                        <span class="text-danger">*</span></label>
+                                    <input required type="text" name="address" class="form-control ">
+                                </div>
                             </div>
-                            <div class="col-md-6 form-group">
-                                <label class="text-black font-weight-bold" for="checkout_date">Ngày trả phòng
-                                <span class="text-danger">*</span></label>
-                                <input type="text" id="checkout_date" class="form-control">
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <button type="submit"
+                                            class="btn btn-warning text-white py-2 px-4 font-weight-bold">Xác nhận
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12 form-group">
-                                <label class="text-black font-weight-bold" for="identity_card">Phòng đặt</label>
-                                <input type="text" id="booking_room" class="form-control ">
-                            </div>
-                        </div>
-                        <div class="row mb-4">
-                            <div class="col-md-12 form-group">
-                                <label class="text-black font-weight-bold" for="message">Ghi chú</label>
-                                <textarea name="message" id="message" class="form-control " cols="30"
-                                          rows="8"></textarea>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 form-group">
-                                <input type="submit" value="Xác nhận"
-                                       class="btn btn-warning text-white py-2 px-4 font-weight-bold">
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-
+        </section>
+    {% else %}
+        {#    <section class="section contact-section" id="next">#}
+        {#        <div class="container">#}
+        {#            <div class="row">#}
+        {#                <div class="col-md-12" data-aos="fade-up" data-aos-delay="100">#}
+        {#                    <div class="row">#}
+        {#                        <h1 class="text-uppercase mx-auto ">Xác nhận đặt phòng<br><br></h1>#}
+        {#                    </div>#}
+        {#                </div>#}
+        {#                <div class="col-md-9 mx-auto" data-aos="fade-up" data-aos-delay="200">#}
+        {#                    <div class="row">#}
+        {#                        <div class="col-md-4">#}
+        {#                            <label class="p-2">Ngày nhận phòng: <span class="font-weight-bold">12-02-2022</span></label>#}
+        {#                        </div>#}
+        {#                        <div class="col-md-4">#}
+        {#                            <label class="p-2">Ngày nhận phòng:  <span class="font-weight-bold">12-02-2022</span></label>#}
+        {#                        </div>#}
+        {#                        <div class="col-md-4">#}
+        {#                            <label class="p-2">Phòng đặt: <span class="font-weight-bold">101, 102, 103, 104, 105, 106</span></label>#}
+        {#                        </div>#}
+        {#                    </div>#}
+        {#                    <form action="#" method="post" class="bg-white  p-4 mb-5 border">#}
+        {#                        <div class="row">#}
+        {#                            <div class="col-md-8 form-group">#}
+        {#                                <label class="text-black font-weight-bold" for="name">Họ tên<span#}
+        {#                                        class="text-danger">*</span></label>#}
+        {#                                <input type="text" id="name" class="form-control ">#}
+        {#                            </div>#}
+        {#                            <div class="col-md-4 form-group">#}
+        {#                                <label class="text-black font-weight-bold" for="phone">SĐT <span#}
+        {#                                        class="text-danger">*</span></label>#}
+        {#                                <input type="text" id="phone" class="form-control ">#}
+        {#                            </div>#}
+        {#                        </div>#}
+        {##}
+        {#                        <div class="row">#}
+        {#                            <div class="col-md-5 form-group">#}
+        {#                                <label class="text-black font-weight-bold" for="identity_card">CCCD/CMND/(Visa)#}
+        {#                                    <span class="text-danger">*</span></label>#}
+        {#                                <input type="text" id="identity_card" class="form-control ">#}
+        {#                            </div>#}
+        {#                            <div class="col-md-4 form-group">#}
+        {#                                <label class="text-black font-weight-bold" for="nationality">Quốc tịch#}
+        {#                                    <span class="text-danger">*</span></label>#}
+        {#                                <select name="" id="nationality" class="form-control">#}
+        {#                                    {% for country in countries %}#}
+        {#                                        <option value="{{ country.numeric }}">{{ country.name }}</option>#}
+        {#                                    {% endfor %}#}
+        {#                                </select>#}
+        {#                            </div>#}
+        {#                            <div class="col-md-3 form-group">#}
+        {#                                <label for="Gender" class="font-weight-bold text-black">Giới tính#}
+        {#                                    <span class="text-danger">*</span></label>#}
+        {#                                <div class="field-icon-wrap">#}
+        {#                                    <div class="icon"><span class="ion-ios-arrow-down"></span></div>#}
+        {#                                    <select name="" id="Gender" class="form-control">#}
+        {#                                        <option value="1">Nam</option>#}
+        {#                                        <option value="0">Nữ</option>#}
+        {#                                    </select>#}
+        {#                                </div>#}
+        {#                            </div>#}
+        {#                        </div>#}
+        {##}
+        {#                        <div class="row">#}
+        {#                            <div class="col-md-12 form-group">#}
+        {#                                <label class="text-black font-weight-bold" for="email">Email#}
+        {#                                    <span class="text-danger">*</span></label>#}
+        {#                                <input type="email" id="email" class="form-control ">#}
+        {#                            </div>#}
+        {#                        </div>#}
+        {#                        <div class="row mb-4">#}
+        {#                            <div class="col-md-12 form-group">#}
+        {#                                <label class="text-black font-weight-bold" for="message">Ghi chú</label>#}
+        {#                                <textarea name="message" id="message" class="form-control " cols="30"#}
+        {#                                          rows="8" maxlength="255"></textarea>#}
+        {#                            </div>#}
+        {#                        </div>#}
+        {##}
+        {#                        <div class="row">#}
+        {#                            <div class="col-md-6 form-group">#}
+        {#                                <button type="submit"#}
+        {#                                        class="btn btn-warning text-white py-2 px-4 font-weight-bold">Xác nhận#}
+        {#                                </button>#}
+        {#                            </div>#}
+        {#                        </div>#}
+        {#                    </form>#}
+        {#                </div>#}
+        {#            </div>#}
+        {#        </div>#}
+        {#    </section>#}
+    {% endif %}
 {% endblock %}
     
     

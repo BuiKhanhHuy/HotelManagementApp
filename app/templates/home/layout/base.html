@@ -1,4 +1,4 @@
-    <!DOCTYPE HTML>
+<!DOCTYPE HTML>
 <html>
 <head>
     {% block head_meta %}
@@ -8,6 +8,8 @@
         <meta name="description" content=""/>
         <meta name="keywords" content=""/>
         <meta name="author" content=""/>
+        <link rel="shortcut icon" type="image/png"
+              href="{{ url_for('static', filename='plugins/employee/images/logo-icon.png') }}"/>
     {% endblock %}
 
     {% block title %}
@@ -60,6 +62,32 @@
         {% include "home/layout/header.html" %}
     {% endblock %}
 
+
+    <section class="site-hero overlay"
+             style="background-image: url({{ url_for('static', filename='images/hero_4.jpg') }})"
+             data-stellar-background-ratio="0.5">
+        <div class="container">
+            <div class="row site-hero-inner justify-content-center align-items-center">
+                <div class="col-md-10 text-center" data-aos="fade-up">
+                <span class="custom-caption text-uppercase text-white d-block  mb-3">Chào mừng bạn đến với khách sạn 5 <span
+                        class="fa fa-star text-warning"></span> của chúng tôi</span>
+                    <h1 class="heading">
+                        {% block heading %}
+                            heading
+                        {% endblock %}
+                    </h1>
+                </div>
+            </div>
+        </div>
+
+        <a class="mouse smoothscroll" href="#next">
+            <div class="mouse-icon">
+                <span class="mouse-wheel"></span>
+            </div>
+        </a>
+    </section>
+    <!-- END section -->
+
     {% block date_time %}
         <section class="section pb-4">
             <div class="container">
@@ -92,7 +120,8 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-lg-3 align-self-end" style="padding: 0 5px">
-                                    <button class="btn btn-warning btn-block text-center text-white">Kiểm tra phòng</button>
+                                    <button class="btn btn-warning btn-block text-center text-white">Kiểm tra phòng
+                                    </button>
                                 </div>
                             </div>
                         </form>

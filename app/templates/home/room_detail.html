@@ -1,4 +1,9 @@
 {% extends "home/layout/base.html" %}
+
+{% block heading %}
+    Chi tiết phòng
+{% endblock %}
+
 {% block date_time %}{% endblock %}
 {% block content %}
     <section class="section pb-4">
@@ -16,7 +21,7 @@
                              data-aos="fade-up">
                     </div>
                         <div class="col-md-6 mb-3 mb-md-0 col-lg-5" data-aos="fade-up">
-                            <span class="title font-weight-normal">Loại phòng: {{ room.kind_of_room.kind_of_room_name }}</span>
+                            <span class="title font-weight-normal">{{ room.kind_of_room.kind_of_room_name }}</span>
                             <div class="description font-weight-normal p-1" style="color:green">Số
                                 phòng: {{ room.room_number }}</div>
                             <div class="people p-1">Số lượng người tiêu chuẩn: {{ room.standard_number }}</div>
@@ -38,7 +43,7 @@
             <h3>Mô tả sản phẩm</h3>
             <hr>
             <div>
-                djkfjdkfjdkjfdkjf
+               {% if room %} {{ room.description }} {% else %} Không có thông tin miêu tả! {% endif %}
             </div>
         </div>
     </section>

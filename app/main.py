@@ -15,7 +15,6 @@ login.login_view = 'login_admin'
 @app.route("/")
 @app.route("/home")
 def index():
-    # del session['cus_book_room_list']
     kinds = utils.load_kinds()
     return render_template("home/index.html", kinds=kinds)
 
@@ -51,8 +50,8 @@ def get_rooms():
 
         session['cus_book_room_list'] = cus_book_room_list
 
-    if 'cus_book_room_list' not in session:
-        error = 'Bạn hãy chọn đầy đủ ngày nhận phòng và trả phòng'
+    if 'cus_book_room_list' not in session or session.get('cus_book_room_list').__eq__({}):
+        error = 'Bạn hãy chọn ngày nhận phòng và trả phòng'
         return redirect(url_for('index'))
     else:
         cus_book_room_list = session['cus_book_room_list']
@@ -80,10 +79,41 @@ def room_detail(room_id):
 
 
 # bieu mau dat phong
-@app.route("/reservations")
+@app.route("/reservations", methods=['get', 'post'])
 def reservations():
+    success = False
+
+    # dat phong
+    if request.method.__eq__('POST'):
+        name = request.form.get('name')
+        phone = request.form.get('phone')
+        identification_card = request.form.get('identity_card')
+        nationality = request.form.get('nationality')
+        gender = request.form.get('gender')
+        address = request.form.get('address')
+
+        cus_type = 1 if nationality.__eq__('078') else 2
+        gender = eval(gender)
+
+        if 'cus_book_room_list' in session:
+            book_room_list = session.get('cus_book_room_list')
+
+            dao.add_book_room(name=name, gender=gender, identification_card=identification_card,
+                              customer_type_id=cus_type, phone_number=phone,
+                              address=address, book_room_list=book_room_list,
+                              user=current_user)
+
+            del session['cus_book_room_list']
+            success = True
+            return render_template('home/customer_order.html', book_room_list=book_room_list,
+                                   name_book_room=name,
+                                   cus_type_book_room=cus_type,
+                                   id_card_book_room=identification_card,
+                                   address_book_room=address,
+                                   success=success)
     countries = dao.load_countries()
-    return render_template('home/reservation.html', countries=countries)
+    return render_template('home/reservation.html', countries=countries,
+                           success=success)
 
 
 # lien he
@@ -105,7 +135,7 @@ def load_profile_customer():
 
 
 # load trang gio hang customer
-@app.route("/cart-booking-detail")
+@app.route("/cart-booking-detail", methods=['get', 'post'])
 @login_required
 def load_cart():
     # phuong thuc post chuyen sang dat phong
@@ -122,11 +152,12 @@ def load_cart():
 
             for room in room_list:
                 rooms.append(room_list[room])
+
             return render_template('home/customer_order.html', rooms=rooms,
                                    check_in_date=check_in_date.strftime("%d-%m-%Y"),
                                    check_out_date=check_out_date.strftime("%d-%m-%Y"))
 
-    return render_template('home/index.html')
+    return  render_template('home/customer_order.html')
 
 
 # load nguoi dung

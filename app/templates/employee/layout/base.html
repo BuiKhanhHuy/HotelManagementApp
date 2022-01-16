@@ -11,7 +11,8 @@
         <meta name="description"
               content="Ample Admin Lite is powerful and clean admin dashboard template, inpired from Bootstrap Framework">
         <meta name="robots" content="noindex,nofollow">
-        <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='plugins/employee/images/logo-icon.png') }}"/>
+        <link rel="shortcut icon" type="image/png"
+              href="{{ url_for('static', filename='plugins/employee/images/logo-icon.png') }}"/>
     {% endblock %}
     {% block title %}
         <title>Ample Admin Lite Template by WrapPixel</title>
@@ -21,7 +22,8 @@
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
         <!-- All library -->
-        <script src="{{ url_for('static', filename='plugins/employee/bower_components/jquery/dist/jquery.min.js') }}"></script>
+        {#        <script src="{{ url_for('static', filename='plugins/employee/bower_components/jquery/dist/jquery.min.js') }}"></script>#}
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <!-- Popper JS -->
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
         <!-- Latest compiled JavaScript -->
@@ -67,12 +69,12 @@
 <body>
 {% block page_body %}
     <!-- Preloader - style you can find in spinners.css -->
-<!--    <div class="preloader">-->
-<!--        <div class="lds-ripple">-->
-<!--            <div class="lds-pos"></div>-->
-<!--            <div class="lds-pos"></div>-->
-<!--        </div>-->
-<!--    </div>-->
+    <!--    <div class="preloader">-->
+    <!--        <div class="lds-ripple">-->
+    <!--            <div class="lds-pos"></div>-->
+    <!--            <div class="lds-pos"></div>-->
+    <!--        </div>-->
+    <!--    </div>-->
 
     <!-- Main wrapper - style you can find in pages.scss -->
     <div id="main-wrapper" data-layout="vertical" data-navbarbg="skin5" data-sidebartype="full"

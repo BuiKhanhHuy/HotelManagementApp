@@ -1,5 +1,9 @@
 {% extends "home/layout/base.html" %}
 
+{% block heading %}
+    Giỏ hàng
+{% endblock %}
+
 {% block date_time %}
 {% endblock %}
 
@@ -10,8 +14,8 @@
         <br><br>
         {% if 'cus_book_room_list' in session and session['cus_book_room_list']%}
         <div class="row">
-            <div class="col-6">Ngày đặt phòng: {{check_in_date}}</div>
-            <div class="col-6">Ngày trả phòng: {{check_out_date}} </div>
+            <div class="col-4">Ngày nhận phòng: {{check_in_date}}</div>
+            <div class="col-4">Ngày trả phòng: {{check_out_date}} </div>
             <br><br>
         </div>
 
@@ -32,9 +36,9 @@
                   <th scope="row">{{room.get('room_id')}}</th>
                     <td>{{room.get('room_number')}}</td>
                     <td>{{room.get('kind_of_room_name')}}</td>
-                    <td>{{ "{:,.0f}".format(room.get('price')) }}</td>
+                    <td>{{ "{:,.0f} VND".format(room.get('price')) }}</td>
                     <td>
-                        <button class="btn-danger btn-sm" onclick="del_cus_cart_booking({{room.get('room_id')}})">xóa</button>
+                        <button class="btn-danger btn btn-sm" onclick="del_cus_cart_booking({{room.get('room_id')}})">xóa</button>
                     </td>
                 </tr>
             {% endfor %}
@@ -46,13 +50,13 @@
             <h5>Tổng số phòng trong danh sách: <span id="total">{{cus_cart_stats}}</span></h5>
             <br>
             <a href="{{url_for('reservations')}}">
-                <input class="text-center btn-success btn-sm" value="Thanh toan" style="width:150px; cursor:pointer;">
+                <button class="text-center btn-warning text-white btn" style="">Đặt phòng</button>
             </a>
 
         </div>
 
         {% else %}
-        <h3 class="text-center text-danger">Không có sản phẩm danh sách</h3>
+        <h3 class="text-center text-danger">Không có phòng nào được chọn !</h3>
         {% endif %}
 
     </div>
