@@ -46,7 +46,11 @@ function addToBookRoomCart(roomId, roomNumber, kindOfRoomName, price, image) {
         }
     }).then(res => res.json()).then(data => {
         if (data.code === 200) {
-            notification(1, `Đã thêm thành công phòng ${roomNumber}.`)
+            if(data['isAdd'] === true)
+                notification(1, `Đã thêm thành công phòng ${roomNumber}.`)
+            else
+                notification(1, `Đã hủy thành công phòng ${roomNumber}.`)
+
             let totalBookRoom = document.getElementById('total-book-room')
             if (data['total_room'] != null)
                 totalBookRoom.innerText = data['total_room']

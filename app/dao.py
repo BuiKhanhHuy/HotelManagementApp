@@ -1,3 +1,4 @@
+import bdb
 import hashlib
 from app import app
 from app.models import *
@@ -360,5 +361,21 @@ def check_user(user_name, password):
         return user
 
 
+# app comment
+def add_comment(room_id, content, user_id):
+    book_room = BookRoom.query.filter(BookRoom.rooms.any(Room.id.__eq__(room_id)),
+                                      BookRoom.user_id.__eq__(user_id)).first()
+    if book_room:
+        comment = Comment(room_id=room_id, content=content, user_id=user_id)
+        today = datetime.now()
+        db.session.add(comment)
+        try:
+            db.session.commit()
+        except:
+            return None
+        else:
+            return today
+
+
 if __name__ == '__main__':
-    pass
+    add_comment(1, 'hihihih', 3)

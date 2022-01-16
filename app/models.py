@@ -54,7 +54,6 @@ class Customer(BaseModel):
     phone_number = Column(String(15), nullable=False)
     note = Column(String(255))
     book_rooms = relationship('BookRoom', backref='customer', lazy=True)
-    comments = relationship('Comment', backref='customer', lazy=True)
 
     def __str__(self):
         return self.name
@@ -63,7 +62,7 @@ class Customer(BaseModel):
 class KindOfRoom(BaseModel):
     __tablename__ = 'kind_of_room'
     kind_of_room_name = Column(String(100), nullable=False, unique=True)
-    description = Column(String(1000), nullable=False)
+    description = Column(String(500), nullable=False)
     note = Column(String(255))
     images = relationship('Image', backref='kind_of_room', lazy=True)
     rooms = relationship('Room', backref='kind_of_room', lazy=True)
@@ -87,7 +86,7 @@ class Room(BaseModel):
     price = Column(Float, nullable=False)
     standard_number = Column(Integer, default=2, nullable=False)
     maximum_number = Column(Integer, default=3, nullable=False)
-    description = Column(String(500), nullable=False)
+    description = Column(String(1000), nullable=False)
     active = Column(Boolean, default=True)
     kind_of_room_id = Column(Integer, ForeignKey('kind_of_room.id'), nullable=False)
     room_status_id = Column(Integer, ForeignKey('room_status.id'), nullable=False)
@@ -154,11 +153,10 @@ class Bill(BaseModel):
         return "Mã hóa đơn {0}".format(self.id)
 
 
-class Comment(db.Model):
+class Comment(BaseModel):
     __tablename__ = 'comment'
     user_id = Column(Integer, ForeignKey('user.id'), primary_key=True, nullable=False)
     room_id = Column(Integer, ForeignKey('room.id'), primary_key=True, nullable=False)
-    customer_id = Column(Integer, ForeignKey('customer.id'), nullable=False)
     created_date = Column(DateTime, default=datetime.now(), primary_key=True)
     content = Column(String(255), nullable=False)
 

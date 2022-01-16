@@ -61,13 +61,13 @@
                             </form>
                         </div>
                         <div class="col-md-3 p-2">
-                            <span class="font-weight-bold">Ngày nhận phòng từ ngày: </span>
+                            <span class="font-weight-bold">Ngày nhận phòng: </span>
                             <input class="p-2 w-100 rounded-sm border form-control" type="date"
                                    id="filter-check-in-date"
                                    onchange="searchCheckInDate()">
                         </div>
                         <div class="col-md-3 p-2">
-                            <span class="font-weight-bold">Đến ngày: </span>
+                            <span class="font-weight-bold">Ngày trả phòng: </span>
                             <input class="p-2 w-100 rounded-sm border form-control" type="date"
                                    id="filter-check-out-date"
                                    onchange="searchCheckOutDate()">
@@ -114,15 +114,26 @@
                                 <script>
                                     // get HTML
                                     function getHTMLRentRoom(rent) {
+                                        let days = rent['days']
+                                        let txtStatus = ''
+                                        if (days >= 0){
+                                            txtStatus = `<span class="badge badge-pill badge-warning">Phiếu thuê phòng tới hạn thanh toán</span>`
+                                        }
+                                        else{
+                                            txtStatus = `<span class="badge badge-pill badge-success">Phiếu thuê phòng chờ thanh toán</span>`
+                                        }
                                         return `<tr>
-                                                    <td class="text-dark col-3 text-center align-middle">
+                                                    <td class="text-dark col-2 text-center align-middle">
                                                         ${rent['check_in_date']}
                                                     </td>
-                                                    <td class="text-dark col-3 text-center align-middle">
+                                                    <td class="text-dark col-2 text-center align-middle">
                                                         ${rent['check_out_date']}
                                                     </td>
-                                                    <td class="col-3 text-center text-danger font-weight-bold align-middle">
+                                                    <td class="col-2 text-center text-danger font-weight-bold align-middle">
                                                         ${rent['room_number']}
+                                                    </td>
+                                                    <td class="col-3 text-center text-danger font-weight-bold align-middle">
+                                                        ${txtStatus}
                                                     </td>
                                                     <td class="text-dark col-3 text-center align-middle">
                                                         <a href="{{ url_for('payment_detail', rent_id=rent.id) }}"> <button class="btn btn-info text-white">Thanh toán</button></a>

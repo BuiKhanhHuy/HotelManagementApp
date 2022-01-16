@@ -86,16 +86,18 @@ def get_kinds_images(kind_of_room_id=None):
 
 # all price options
 def all_price_options():
-    max_price = dao.max_price_of_room()[0]
-    price_options = list()
-    total = 0
-    index = 1
-    step = 1000000
-    while total < max_price:
-        total += index * step
-        price_options.append(total)
-        index += 1
-    return price_options
+    max_price = dao.max_price_of_room()
+    if max_price:
+        max_price = max_price[0]
+        price_options = list()
+        total = 0
+        index = 1
+        step = 1000000
+        while total < max_price:
+            total += index * step
+            price_options.append(total)
+            index += 1
+        return price_options
 
 
 # all maximum people options

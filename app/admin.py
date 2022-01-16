@@ -100,12 +100,11 @@ class CustomerView(CommonView, AuthenticatedView):
         'address': 'Địa chỉ',
         'phone_number': 'Số điện thoại',
         'note': 'Ghi chú',
-        'comments': 'Bình luận',
     }
     column_searchable_list = ['identification_card', 'phone_number', 'name']
     column_filters = ['name', 'gender', 'identification_card',
                       'address', 'phone_number', 'customer_type_id']
-    form_excluded_columns = ['comments', 'rents', 'book_rooms']
+    form_excluded_columns = ['rents', 'book_rooms']
 
 
 class BookRoomView(CommonView, AuthenticatedView):
@@ -252,15 +251,13 @@ class CommentView(CommonView, AuthenticatedView):
         'id': 'Mã bình luận',
         'user_id': 'Mã người dùng',
         'room_id': 'Mã phòng',
-        'customer_id': 'Mã khách hàng',
         'created_date': 'Ngày tạo',
         'content': 'Nội dung',
 
         'user': 'Người dùng',
-        'customer': 'Khách hàng',
         'room': 'Phòng'
     }
-    column_filters = ['created_date', 'user_id', 'customer_id', 'room_id']
+    column_filters = ['created_date', 'user_id', 'room_id']
 
 
 admin = Admin(app=app, name='TRANG QUẢN TRỊ', template_mode='bootstrap4',
