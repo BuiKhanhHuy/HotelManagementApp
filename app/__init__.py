@@ -18,9 +18,9 @@ app.config['FLASK_ADMIN_FLUID_LAYOUT'] = True
 app.config['CUSTOMER_PAGE_SIZE'] = 6
 
 cloudinary.config(
-    cloud_name='dtnpj540t',
-    api_key='371357798369383',
-    api_secret='9zy7ehlUetIxxl7ibee4y3tmdL4'
+    cloud_name='dl6artkyb',
+    api_key='377958885536713',
+    api_secret='g0XCOiAv3pIpP1uFdYbz_Zwa6Sg'
 )
 
 

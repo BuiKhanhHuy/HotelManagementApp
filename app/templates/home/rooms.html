@@ -4,11 +4,7 @@
 {% block content %}
     <section class="section blog-post-entry bg-light">
         <div class="container">
-            {#            <div class="row justify-content-center text-center mb-5">#}
-            {#                <div class="col-md-7">#}
-            {#                    <h2 class="heading" data-aos="fade-up">Phòng standard</h2>#}
-            {#                </div>#}
-            {#            </div>#}
+
             <div class="row">
                 {% for room in rooms %}
                     <div class="col-lg-4 col-md-6 col-sm-6 col-12 post mb-5" data-aos="fade-up" data-aos-delay="100">
@@ -28,13 +24,14 @@
                                 <p>{{ "{:,.0f}".format(room.price) }} VNĐ/ 1 NGÀY</p>
                                 <div>
                                     <div class="p-1">
-                                        <a href="{{ url_for('room_detail', room_id=room.id) }}" class="btn btn-dark btn-block text-center w-75 text-white mx-auto">Xem
-                                            chi tiết
-                                            phòng
+                                        <a href="{{ url_for('room_detail', room_id=room.id) }}"
+                                           class="btn btn-dark btn-block text-center w-75 text-white mx-auto">
+                                            Xem chi tiết phòng
                                         </a>
                                     </div>
                                     <div class="p-1">
-                                        <button class="btn btn-warning btn-block text-center w-75 text-white mx-auto">
+                                        <button class="btn btn-warning btn-block text-center w-75 text-white mx-auto"
+                                                onclick="add_to_book_room({{room.id}},'{{room.room_number}}','{{room.kind_of_room.kind_of_room_name}}',{{room.price}})">
                                             Thêm vào giỏ hàng
                                         </button>
                                     </div>

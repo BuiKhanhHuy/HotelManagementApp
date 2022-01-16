@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+    <!DOCTYPE HTML>
 <html>
 <head>
     {% block head_meta %}
@@ -44,6 +44,7 @@
         <!-- Theme Style -->
         <link rel="stylesheet" href="{{ url_for('static', filename='css/home/style.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/home/room_detail.css') }}">
+
     {% endblock %}
 
     {% block head %}
@@ -69,7 +70,7 @@
                                 <div class="col-md-10 col-lg-9 mb-3 mb-md-0 col-lg-5">
                                     <div class="row">
                                         <div class="col-md-6 mb-3 mb-md-0" style="padding: 0 5px">
-                                            <label for="checkin_date" class="font-weight-bold text-black">Ngày
+                                            <label for="check-in-date" class="font-weight-bold text-black">Ngày
                                                 Nhận</label>
                                             <div class="field-icon-wrap">
                                                 <div class="icon"><span class="icon-calendar"></span></div>
@@ -79,7 +80,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-3 mb-md-0" style="padding: 0 5px">
-                                            <label for="check_outdate" class="font-weight-bold text-black">Ngày
+                                            <label for="check-out-date" class="font-weight-bold text-black">Ngày
                                                 Trả</label>
                                             <div class="field-icon-wrap">
                                                 <div class="icon"><span class="icon-calendar"></span></div>
@@ -147,6 +148,7 @@
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{{ url_for('static', filename='js/home/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/home/datetime.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/home/cus_cart_booking_room.js') }}"></script>
 {% endblock %}
 
 {% block tail %}

@@ -10,11 +10,11 @@
             </div>
             <div class="">
                 <div class="row">
+                    {% if room %}
                     <div class="col-md-6 mb-3 mb-lg-0 col-lg-7">
-                        <img class="w-100" src="{{ url_for('static', filename='images/slider-2.jpg') }}"
+                        <img class="w-100" src="{{ room.image }}"
                              data-aos="fade-up">
                     </div>
-                    {% if room %}
                         <div class="col-md-6 mb-3 mb-md-0 col-lg-5" data-aos="fade-up">
                             <span class="title font-weight-normal">Loại phòng: {{ room.kind_of_room.kind_of_room_name }}</span>
                             <div class="description font-weight-normal p-1" style="color:green">Số phòng: {{ room.room_number }}</div>

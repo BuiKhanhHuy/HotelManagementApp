@@ -1,27 +1,30 @@
 <header class="site-header js-site-header">
     <div class="container-fluid">
         <div class="row align-items-center">
-            <div class="col-6 col-lg-8 site-logo" data-aos="fade"><a href="{{ url_for('index') }}">Sogo Hotel</a></div>
+            <div class="col-6 col-lg-7 site-logo" data-aos="fade"><a href="{{ url_for('index') }}">Sogo Hotel</a></div>
 
-            <div class="col-4 col-lg-3" data-aos="fade" style="display:flex">
+            <div class="col-4 col-lg-4" data-aos="fade" style="display:flex">
+
+                {% if current_user.is_authenticated %}
                 <div class="ml-auto">
                     <button type="button" class="btn btn-outline-warning rounded-lg">
-                        <i class="fas fa-cart-plus"></i>Giỏ hàng <span class="badge bg-light">4</span>
+                        <a href="{{url_for('load_cart')}}" class="text-warning">
+                            <i class="fas fa-cart-plus"></i>Giỏ hàng <span class="badge bg-light" id="cusCartCounter">{{cus_cart_stats}}</span>
+                        </a>
                     </button>
                 </div>
-                {% if current_user.is_authenticated %}
-                    <p class="rounded-circle" style="margin-left:auto;padding:5px 5px 0 0;">
-                        {% if current_user.avatar %}
-                            <img class="rounded-circle my-auto" src="{{ current_user.avatar }}"
-                                 alt="{{ current_user.username }}" style="width:30px; height:30px;">
-                        {% else %}
-                            <img class="rounded-circle my-auto"
-                                 src="{{ url_for('static', filename='images/person_5.jpg') }}"
-                                 alt="{{ current_user.username }}" style="width:30px; height:30px;">
-                        {% endif %}
-                    </p>
-                    <div style="text-align:right; padding: 10px" class="pl-0 text-warning">
-                        {{ current_user.username }}</div>
+                <p class="rounded-circle" style="margin-left:auto;padding:10px 10px 0 0;">
+                    {% if current_user.avatar %}
+                        <img class="rounded-circle my-auto" src="{{ current_user.avatar }}"
+                             alt="{{ current_user.username }}" style="width:30px; height:30px;">
+                    {% else %}
+                        <img class="rounded-circle my-auto"
+                             src="{{ url_for('static', filename='images/person_5.jpg') }}"
+                             alt="{{ current_user.username }}" style="width:30px; height:30px;">
+                    {% endif %}
+                </p>
+                <div style="text-align:right; padding: 10px" class="pl-0 text-warning">
+                    {{ current_user.username }}</div>
                 {% endif %}
             </div>
 

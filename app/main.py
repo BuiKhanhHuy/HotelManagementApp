@@ -104,6 +104,31 @@ def load_profile_customer():
     return render_template('home/account.html')
 
 
+# load trang gio hang customer
+@app.route("/cart-booking-detail")
+@login_required
+def load_cart():
+    # phuong thuc post chuyen sang dat phong
+    if 'cus_book_room_list' in session and session['cus_book_room_list']:
+        if 'rooms' in session['cus_book_room_list'] \
+                and 'check_in_date' in session['cus_book_room_list'] \
+                and 'check_out_date' in session['cus_book_room_list']:
+
+            check_in_date = session['cus_book_room_list']['check_in_date']
+            check_out_date = session['cus_book_room_list']['check_out_date']
+
+            rooms = []
+            room_list = session['cus_book_room_list']['rooms']
+
+            for room in room_list:
+                rooms.append(room_list[room])
+            return render_template('home/customer_order.html', rooms=rooms,
+                                   check_in_date=check_in_date.strftime("%d-%m-%Y"),
+                                   check_out_date=check_out_date.strftime("%d-%m-%Y"))
+
+    return render_template('home/index.html')
+
+
 # load nguoi dung
 @login.user_loader
 def load_customer_user(user_id):
@@ -552,6 +577,25 @@ def get_customer():
     return jsonify({'code': 200, 'customer': cus_dic})
 
 
+# Delete item gio hang Customer
+@app.route('/api/delete-cart-booking/<room_id>', methods=['delete'])
+def delete_cus_cart_booking(room_id):
+    cus_book_room_list = session['cus_book_room_list']
+    room_list = cus_book_room_list.get('rooms')
+    print(room_id)
+    if 'cus_book_room_list' in session:
+        cus_book_room_list = session['cus_book_room_list']
+        if 'rooms' in cus_book_room_list:
+            room_list = cus_book_room_list['rooms']
+            if room_id in room_list:
+                del room_list[room_id]
+                cus_book_room_list['rooms'] = room_list
+                session['cus_book_room_list'] = cus_book_room_list
+
+    total_room = utils.total_room_in_list(cus_book_room_list)
+    return jsonify({'total_room': total_room})
+
+
 # xoa session dat phong
 @app.route('/api/employee/book-room/clean-book-room', methods=['delete'])
 def delete_book_room_session():
@@ -608,6 +652,46 @@ def add_to_book_room_cart():
     session['book_room_list'] = book_room_list
 
     total_room = utils.total_room_in_list(book_room_list)
+    return jsonify({'code': 200, 'total_room': total_room})
+
+
+# them phong vao cho dat phong ====Customer====
+@app.route("/api/booking/add-to-book-room-cart", methods=['post'])
+def add_to_book_room_cart_of_customer():
+    # customer ko co thi redirect qua trang chu chinh date-time
+    if 'cus_book_room_list' not in session:
+        return redirect(url_for('index'))
+    cus_book_room_list = session['cus_book_room_list']
+
+    # tao danh sach phong
+    if 'rooms' not in session['cus_book_room_list']:
+        cus_book_room_list['rooms'] = {}
+    room_list = cus_book_room_list['rooms']
+
+    # lay du lieu tu client
+    data = request.json
+    room_id = str(data.get('room_id'))
+    room_number = data.get('room_number')
+    kind_of_room_name = data.get('kind_of_room_name')
+    price = data.get('price')
+    image = data.get('image')
+
+    # them hoac xoa phong o session
+    if room_id in room_list:
+        del room_list[room_id]
+    else:
+        room_list[room_id] = {
+            'room_id': room_id,
+            'room_number': room_number,
+            'kind_of_room_name': kind_of_room_name,
+            'price': price,
+            'image': image
+        }
+
+    cus_book_room_list['rooms'] = room_list
+    session['cus_book_room_list'] = cus_book_room_list
+
+    total_room = utils.total_room_in_list(cus_book_room_list)
     return jsonify({'code': 200, 'total_room': total_room})
 
 
@@ -927,6 +1011,7 @@ def common_response():
         'total_book_room_cancel': dao.total_book_room_waiting(active=False, done=False),
         'total_rent_due': dao.total_rent_waiting(active=True, today=datetime.now()),
         'kind_of_rooms': dao.load_kind_of_room(),
+        'cus_cart_stats': utils.total_room_in_list(session.get('cus_book_room_list')),
         'cus_check_in_date': session.get('cus_book_room_list').get('check_in_date') if session.get(
             'cus_book_room_list') else None,
         'cus_check_out_date': session.get('cus_book_room_list').get('check_out_date') if session.get(
