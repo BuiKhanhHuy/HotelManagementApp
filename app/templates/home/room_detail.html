@@ -17,7 +17,8 @@
                     </div>
                         <div class="col-md-6 mb-3 mb-md-0 col-lg-5" data-aos="fade-up">
                             <span class="title font-weight-normal">Loại phòng: {{ room.kind_of_room.kind_of_room_name }}</span>
-                            <div class="description font-weight-normal p-1" style="color:green">Số phòng: {{ room.room_number }}</div>
+                            <div class="description font-weight-normal p-1" style="color:green">Số
+                                phòng: {{ room.room_number }}</div>
                             <div class="people p-1">Số lượng người tiêu chuẩn: {{ room.standard_number }}</div>
                             <div class="people p-1">Số lượng người tối đa: {{ room.maximum_number }}</div>
                             <h3 class="price p-1"> {{ "{0:,.0f}".format(room.price) }} VNĐ/ 1 NGÀY</h3>
@@ -44,15 +45,46 @@
 
     <section class="section pb-4">
         <div class="container">
-            <h2>Bình luận:</h2>
-            <div class="media border p-3">
-                <img src="img_avatar3.png" alt="John Doe" class="mr-3 mt-3 rounded-circle" style="width:60px;">
-                <div class="media-body">
-                    <h4>John Doe <small><i>Posted on February 19, 2016</i></small></h4>
-                    <p>Lorem ipsum...</p>
+            <h2>Bình luận</h2>
+            <div class="form-group">
+                <textarea maxlength="255" class="form-control" id="comment-{{ room.id }}"
+                          placeholder="Đánh giá của bạn..." rows="3"></textarea>
+            </div>
+            <div class="pb-4">
+                <button type="button" class="btn btn-warning text-white" onclick="addComment({{ room.id}})">Thêm đánh giá</button>
+            </div>
+            <div class="p-2">
+                <div class="media p-3">
+                    <img src="{{ url_for('static', filename='images/person_1.jpg') }}" alt="John Doe"
+                         class="mr-3 mt-3 rounded-circle" style="width:60px;">
+                    <div class="media-body">
+                        <h4>John Doe <small><i>Posted on February 19, 2016</i></small></h4>
+                        <p>Phòng oke lắm bạn ạ...</p>
+                    </div>
+                </div>
+                <div class="media p-3">
+                    <img src="{{ url_for('static', filename='images/person_1.jpg') }}" alt="John Doe"
+                         class="mr-3 mt-3 rounded-circle" style="width:60px;">
+                    <div class="media-body">
+                        <h4>John Doe <small><i>Posted on February 19, 2016</i></small></h4>
+                        <p>Phòng oke lắm bạn ạ...</p>
+                    </div>
+                </div>
+                <div class="media p-3">
+                    <img src="{{ url_for('static', filename='images/person_1.jpg') }}" alt="John Doe"
+                         class="mr-3 mt-3 rounded-circle" style="width:60px;">
+                    <div class="media-body">
+                        <h4>John Doe <small><i>Posted on February 19, 2016</i></small></h4>
+                        <p>Phòng oke lắm bạn ạ...</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+
 {% endblock %}
 
+{% block tail_js %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/home/comment.js') }}"></script>
+{% endblock %}

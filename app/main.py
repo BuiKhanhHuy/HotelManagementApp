@@ -636,8 +636,10 @@ def add_to_book_room_cart():
     price = data.get('price')
     image = data.get('image')
 
+    flag = True
     # them hoac xoa phong o session
     if room_id in room_list:
+        flag = False
         del room_list[room_id]
     else:
         room_list[room_id] = {
@@ -652,7 +654,7 @@ def add_to_book_room_cart():
     session['book_room_list'] = book_room_list
 
     total_room = utils.total_room_in_list(book_room_list)
-    return jsonify({'code': 200, 'total_room': total_room})
+    return jsonify({'code': 200, 'total_room': total_room, 'isAdd': flag})
 
 
 # them phong vao cho dat phong ====Customer====
@@ -957,16 +959,38 @@ def find_rent_payment():
     rents = dao.load_rent_payment(room_number=room_number,
                                   check_in_date=check_in_date,
                                   check_out_date=check_out_date)
+    today = datetime.now()
     rent_list = []
     for r in rents:
         rent_list.append({
             'rent_id': r.id,
             'check_in_date': r.check_in_date.strftime('%d-%m-%Y'),
             'check_out_date': r.check_out_date.strftime('%d-%m-%Y'),
-            'room_number': r.room.room_number
+            'room_number': r.room.room_number,
+            'days': (today - r.check_out_date).days
         })
 
     return jsonify({'code': 200, 'rent_list': rent_list})
+
+
+# them binh luan cho phong
+@app.route('/api/customer/add_comment')
+def add_comment():
+    code = 500
+    error = ''
+
+    data = request.json
+    content = data.get('content')
+    room_id = int(data.get('room_id'))
+
+    if dao.add_comment(room_id=room_id, content=content, user_id=current_user.id):
+        code = 200
+        error = 'Thêm bình luận thành công'
+    else:
+        error = 'Thêm bình luận không thành công!'
+
+    return jsonify({'code': code, 'error': error, 'comments': {'content': content, 'comment': 'a'},
+                    'user': {'user_id': current_user.id, 'username': current_user.username}})
 
 
 # =====================ket thuc api==========================
