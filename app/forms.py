@@ -1,6 +1,6 @@
 import cloudinary
 from flask import request, redirect, url_for, render_template
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, login_required
 from app import dao, app, utils
 from app.models import UserRole
 from cloudinary import uploader
@@ -83,13 +83,15 @@ def customer_register():
 
 # dang xuat nguoi dung
 @app.route('/user-log-out')
+@login_required
 def customer_logout():
     logout_user()
-    return redirect(url_for('customer_login'))
+    return redirect(url_for('index'))
 
 
 # dang xuat admin and emp
 @app.route("/logout")
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('login_admin'))

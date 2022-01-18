@@ -13,7 +13,7 @@
     {% endblock %}
 
     {% block title %}
-        <title>Sogo Hotel by Colorlib.com</title>
+        <title>Trang chủ</title>
     {% endblock %}
 
     {% block head_css %}
@@ -56,7 +56,7 @@
     {% endblock %}
 </head>
 
-<body onload="setUpDateTime()">
+<body>
 {% block page_body %}
     {% block header %}
         {% include "home/layout/header.html" %}
@@ -93,7 +93,7 @@
             <div class="container">
                 <div class="row check-availabilty col-md-10 mx-auto" id="next">
                     <div class="block-32" data-aos="fade-up" data-aos-offset="-200">
-                        <form method="post" action="/rooms">
+                        <form method="get" action="/rooms">
                             <div class="row">
                                 <div class="col-md-10 col-lg-9 mb-3 mb-md-0 col-lg-5">
                                     <div class="row">

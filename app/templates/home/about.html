@@ -4,6 +4,10 @@
     Về chúng tôi
 {% endblock %}
 
+{% block title %}
+    <title>Sogo hotel | Về chúng tôi</title>
+{% endblock %}
+
 {% block date_time %}
 {% endblock %}
 
@@ -13,16 +17,18 @@
             <div class="row align-items-center">
                 <div class="col-md-12 col-lg-7 ml-auto order-lg-2 position-relative mb-5" data-aos="fade-up">
                     <figure class="img-absolute">
-                        <img src="images/food-1.jpg" alt="Free Website Template by Templateux" class="img-fluid">
+                        <img src="{{ url_for('static', filename='images/food-1.jpg') }}" alt="Image" class="img-fluid">
                     </figure>
-                    <img src="images/img_1.jpg" alt="Image" class="img-fluid rounded">
+                    <img src="{{ url_for('static', filename='images/img_1.jpg') }}" alt="Image"
+                         class="img-fluid rounded">
                 </div>
                 <div class="col-md-12 col-lg-4 order-lg-1" data-aos="fade-up">
                     <h2 class="heading">Chào mừng!</h2>
                     <p class="mb-4">Khách sạn tọa lạc tại một vị trí tuyệt đẹp ở quận 1 thuộc thành phố Hồ Chí Minh
                         Sogo Hotel Saigon nằm gần các điểm tham quan nổi tiếng gần chỗ nghỉ bao gồm Chợ ẩm thực đường
                         phố Bến Thành, Dinh Thống Nhất và trung tâm thương mại Takashimaya Việt Nam. Khách sạn
-                        có 29 phòng ngủ được trang bị các tiện nghi như truy cập wifi miễn phí, máy lạnh, ban công riêng,
+                        có 29 phòng ngủ được trang bị các tiện nghi như truy cập wifi miễn phí, máy lạnh, ban công
+                        riêng,
                         truyền hình vệ tinh, máy phà trà và cà phê,</p>
                     <p><a href="#" class="btn btn-warning text-white py-2 mr-3">Xem thêm</a> <span
                             class="mr-3 font-family-serif"><em>hoặc</em></span> <a
@@ -135,50 +141,24 @@
             <div class="row justify-content-center text-center mb-5">
                 <div class="col-md-7">
                     <h2 class="heading" data-aos="fade-up">Hình ảnh</h2>
-                    <p data-aos="fade-up" data-aos-delay="100">Far far away, behind the word mountains, far from the
-                        countries Vokalia and Consonantia, there live the blind texts. Separated they live in
-                        Bookmarksgrove
-                        right at the coast of the Semantics, a large language ocean.</p>
+                    <p data-aos="fade-up" data-aos-delay="100">Tất cả phòng đều có tầm nhìn tuyệt đẹp hướng ra quang
+                        cảnh thành phố, nội thất đương đại, đầy đủ tiện nghi cùng các thiết bị công nghệ tiên tiến phục
+                        vụ nhu cầu nghỉ ngơi và công tác, giúp quý khách tận hưởng thời gian của riêng mình.</p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="home-slider major-caousel owl-carousel mb-5" data-aos="fade-up" data-aos-delay="200">
-                        <div class="slider-item">
-                            <a href="images/slider-1.jpg" data-fancybox="images"
-                               data-caption="Caption for this image"><img
-                                    src="images/slider-1.jpg" alt="Image placeholder" class="img-fluid"></a>
-                        </div>
-                        <div class="slider-item">
-                            <a href="images/slider-2.jpg" data-fancybox="images"
-                               data-caption="Caption for this image"><img
-                                    src="images/slider-2.jpg" alt="Image placeholder" class="img-fluid"></a>
-                        </div>
-                        <div class="slider-item">
-                            <a href="images/slider-3.jpg" data-fancybox="images"
-                               data-caption="Caption for this image"><img
-                                    src="images/slider-3.jpg" alt="Image placeholder" class="img-fluid"></a>
-                        </div>
-                        <div class="slider-item">
-                            <a href="images/slider-4.jpg" data-fancybox="images"
-                               data-caption="Caption for this image"><img
-                                    src="images/slider-4.jpg" alt="Image placeholder" class="img-fluid"></a>
-                        </div>
-                        <div class="slider-item">
-                            <a href="images/slider-5.jpg" data-fancybox="images"
-                               data-caption="Caption for this image"><img
-                                    src="images/slider-5.jpg" alt="Image placeholder" class="img-fluid"></a>
-                        </div>
-                        <div class="slider-item">
-                            <a href="images/slider-6.jpg" data-fancybox="images"
-                               data-caption="Caption for this image"><img
-                                    src="images/slider-6.jpg" alt="Image placeholder" class="img-fluid"></a>
-                        </div>
-                        <div class="slider-item">
-                            <a href="images/slider-7.jpg" data-fancybox="images"
-                               data-caption="Caption for this image"><img
-                                    src="images/slider-7.jpg" alt="Image placeholder" class="img-fluid"></a>
-                        </div>
+                        {% if images and images.__ne__({}) %}
+                            {% for image in images %}
+                                <div class="slider-item">
+                                    <a href="{{ images.get(image) }}" data-fancybox="images"
+                                       data-caption="Caption for this image"><img
+                                            src="{{ images.get(image) }}"
+                                            alt="Image placeholder" class="img-fluid"></a>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
                     </div>
                     <!-- END slider -->
                 </div>
@@ -201,9 +181,9 @@
                 <div class="col-md-8">
                     <div class="timeline-item" date-is='2019' data-aos="fade">
                         <h3>Nhiều chi nhánh hơn trên toàn thế giới</h3>
-                         <p>Hiện nay chuỗi khách sạn Sogo đã có chi nhánh ở Việt Nam từ Bắc vào Nam và dự kiến là sẽ mở
-                        một vài chi nhánh nữa tại các nước trong khu vực Đông Nam Á như: Trung Quốc, Lào, Thái.</p>
-                        <p>357 Phạm Ngũ Lão, Phường Phạm Ngũ Lão, Quận 1, Thành phố Hồ Chí Minh, Việt Nam.</p>
+                        <p>Hiện nay chuỗi khách sạn Sogo đã có chi nhánh ở Việt Nam từ Bắc vào Nam và dự kiến là sẽ mở
+                            một vài chi nhánh nữa tại các nước trong khu vực Đông Nam Á như: Trung Quốc, Lào, Thái.</p>
+                        <p>101 Cô Giang, Phường Cô Giang, Quận 1, TP. HCM, Việt Nam.</p>
                         <p>15, Ngô Quyền, Hoàn Kiếm, Hà Nội.</p>
                         <p>8 Đỗ Đức Dục,
                     </div>
@@ -211,7 +191,7 @@
                     <div class="timeline-item" date-is='2011' data-aos="fade">
                         <h3>Tập đoàn chuỗi khách sạn Sogo</h3>
                         <p>
-                               Khách sạn Sogo tự hào là một trong những khách sạn 5 sao có chất lượng dịch vụ cao cấp nhất
+                            Khách sạn Sogo tự hào là một trong những khách sạn 5 sao có chất lượng dịch vụ cao cấp nhất
                             khu vực Đông Nam
                             Á kể từ khi hoạt động vào tháng 10 năm 2013.
                             Khẳng định được chất lượng dịch vụ cao cấp và những đóng góp quan trọng cho ngành du lịch
@@ -222,7 +202,7 @@
                     <div class="timeline-item" date-is='2008' data-aos="fade">
                         <h3>Ngày thành lập</h3>
                         <p>
-                           Khách sạn được thành lập từ tháng 10 năm 2013.
+                            Khách sạn được thành lập từ tháng 10 năm 2008.
                         </p>
                     </div>
                 </div>

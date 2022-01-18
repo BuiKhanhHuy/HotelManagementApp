@@ -4,9 +4,11 @@
     {{ super() }}
 {% endblock %}
 
+
 {% block title %}
-    <title>Thông tin tài khoản</title>
+    <title>Sogo hotel | Tài khoản</title>
 {% endblock %}
+
 
 {% block head_css %}
     {{ super() }}
@@ -19,40 +21,35 @@
 {% block head_tail %}
 {% endblock %}
 
-
-
 {% block page_body %}
 
     <div class="limiter">
-        <div class="container-login100"
+        <div class="container-login100 p-20"
              style="background-image: url({{ url_for('static', filename='images/bg.jpg') }});">
             {% if current_user.is_authenticated %}
-                <div class="wrap-login100 p-t-30 p-b-50">
-                <span class="login100-form-title p-b-41">
-					Thông tin tài khoản
-				</span>
-                <div class="profile__card wrap-login100 p-t-30 p-b-50" style="background-color:whitesmoke;">
-                    <div class="card">
-                        {% if current_user.avatar %}
-                            <img src="{{ current_user.avatar }}" alt="{{ current_user.username }}" style="width:100%">
-                        {% else %}
-                            <img src="{{ url_for('static', filename='images/person_5.jpg') }}"
-                                 alt="{{ current_user.username }}" style="width:100%">
-                        {% endif %}
-                        <h1 style="padding: 20px 0px;">{{ current_user.username }}</h1>
-                        <p class="email">Email:{{ current_user.email }} </p>
-                        <p>Ngày tham gia: {{ current_user.joined_date }}</p>
+                <div class="card profile__card wrap-login100"
+                     style="background-color:whitesmoke;padding: 20px;">
+                    <h2 style="padding-bottom: 5px;color: #6c757d;">Thông tin tài khoản</h2>
+                    {% if current_user.avatar %}
+                        <img src="{{ current_user.avatar }}" alt="{{ current_user.username }}"
+                             style="width:100%">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/avatar-default.png') }}"
+                             alt="{{ current_user.username }}" style="width:100%">
+                    {% endif %}
+                    <div class="card-body">
+                        <h3 style="color: #c87000" class="font-weight-bold">{{ current_user.username }}</h3>
+                        <p class="text-left">Email: <span>{{ current_user.email }}</span></p>
+                        <p class="text-left"><span class="font-normal">Ngày tham gia: </span>
+                            <span>{{ current_user.joined_date.strftime('%d-%m-%Y') }}</span></p>
                         <p><a class="button" href="{{ url_for('customer_logout') }}">Đăng xuất</a></p>
                         <p><a class="button" href="{{ url_for('index') }}">Trang chủ</a></p>
                     </div>
                 </div>
             {% endif %}
-            </div>
         </div>
-        <div id="dropDownSelect1"></div>
     </div>
 {% endblock %}
-
 
 {% block tail_js %}
     {{ super() }}

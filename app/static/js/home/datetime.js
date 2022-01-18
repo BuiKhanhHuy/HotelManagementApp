@@ -1,30 +1,24 @@
 // thiết lập thời gian cố định
-function setUpDateTime() {
-    var check_in = document.getElementById("check-in-date")
-    var check_out = document.getElementById("check-out-date")
-    let current_day = new Date(Date.now());
+var check_in = document.getElementById("check-in-date")
+var check_out = document.getElementById("check-out-date")
+let current_day = new Date(Date.now());
 
+current_day.setHours(14, 0, 0, 0)
+current_day.setDate(current_day.getDate() + 1);
 
-    current_day.setUTCHours(14, 0, 0, 0)
-    current_day.setDate(current_day.getDate() + 1);
+check_in.min = current_day.toISOString().substring(0, 10)
+check_out.min = current_day.toISOString().substring(0, 10)
 
-    check_in.min = current_day.toISOString().substring(0, 10)
-    check_out.min = current_day.toISOString().substring(0, 10)
-
-    // // Ngay check in la ngay mai
-    // if (check_in.value === '') {
-    //     current_day.setUTCHours(14, 0, 0, 0)
-    //     current_day.setDate(current_day.getDate() + 1);
-    //     check_in.value = current_day.toISOString().substring(0, 10);
-    // }
-    // // Ngay check out la sau ngay mai
-    // if (check_out.value === '') {
-    //     current_day.setUTCHours(12, 0, 0, 0)
-    //     current_day.setDate(current_day.getDate() + 1);
-    //     check_out.value = current_day.toISOString().substring(0, 10);
-    // }
+// Ngay check in la ngay mai
+if (check_in.value === '') {
+    check_in.value = current_day.toISOString().substring(0, 10)
 }
-
+// Ngay check out la sau ngay mai
+if (check_out.value === '') {
+    current_day.setHours(12, 0, 0, 0)
+    current_day.setDate(current_day.getDate() + 1);
+    check_out.value = current_day.toISOString().substring(0, 10);
+}
 
 // kiem tra gia tri check-in check-out da nhap chua
 function checkCheckInOut() {
@@ -80,8 +74,7 @@ function checkCheckOutDate() {
     if (checkInDate.value === '') {
         printError('Bạn vui lòng chọn ngày nhận phòng !')
         checkOutDate.value = ''
-    } else
-        if (!checkDate(valueCheckInDate, valueCheckOutDate)) {
+    } else if (!checkDate(valueCheckInDate, valueCheckOutDate)) {
         printError('Ngày trả phòng phải lớn hơn ngày nhận phòng !')
         checkOutDate.value = ''
     }
@@ -92,7 +85,7 @@ function printError(err) {
     let error = document.getElementById('error')
 
     error.innerText = err
-    setTimeout(function (){
+    setTimeout(function () {
         error.innerText = ''
     }, 1500);
 }

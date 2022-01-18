@@ -1,5 +1,9 @@
 {% extends "home/layout/base.html" %}
 
+{% block title %}
+     <title>Sogo hotel | chi tiết phòng</title>
+{% endblock %}
+
 {% block heading %}
     Chi tiết phòng
 {% endblock %}
@@ -40,7 +44,7 @@
                 </div>
                 <br>
             </div>
-            <h3>Mô tả sản phẩm</h3>
+            <h3>Mô tả phòng</h3>
             <hr>
             <div>
                {% if room %} {{ room.description }} {% else %} Không có thông tin miêu tả! {% endif %}

@@ -1,67 +1,73 @@
 import math
-import datetime
+from datetime import timedelta
 from flask import jsonify, session, flash, abort
-from flask_login import login_required
+from flask_login import fresh_login_required
 from app import login
 from app.admin import *
 from app.forms import *
 
 login.login_view = 'login_admin'
+login.refresh_view = 'customer_login'
 
 
 # ============CUSTOMER=============
+
 
 # customer index
 @app.route("/")
 @app.route("/home")
 def index():
+    images = dao.get_kinds_image()
     kinds = utils.load_kinds()
-    return render_template("home/index.html", kinds=kinds)
+    return render_template("home/index.html", kinds=kinds,
+                           images=images)
 
 
 # load phong customer
-@app.route("/rooms", methods=['post', 'get'])
+@app.route("/rooms", methods=['get'])
 def get_rooms():
-    error = ''
     kind_of_room_id = int(request.args.get('kind_of_room_id', 0))
     page = int(request.args.get('page', 1))
 
-    if request.method.__eq__('POST'):
+    flag = False
+    if request.args.get('check_in_date').__eq__('') \
+            or request.args.get('check_out_date').__eq__(''):
         if 'cus_book_room_list' not in session:
             session['cus_book_room_list'] = {}
         cus_book_room_list = session['cus_book_room_list']
-
-        check_in_date = request.form.get('check_in_date')
-        if check_in_date.__eq__(''):
-            error = 'Ngày trả phòng là bắt buộc.'
-            return redirect(url_for('index'))
-        check_in_date = datetime.strptime(check_in_date, "%Y-%m-%d")
-        check_in_date = check_in_date.replace(hour=14, minute=0, second=0, microsecond=0)
-
-        check_out_date = request.form.get('check_out_date')
-        if check_out_date.__eq__(''):
-            error = 'Ngày trả phòng là bắt buộc.'
-            return redirect(url_for('index'))
-        check_out_date = datetime.strptime(check_out_date, "%Y-%m-%d")
-        check_out_date = check_out_date.replace(hour=12, minute=0, second=0, microsecond=0)
-
+        if 'check_in_date' not in cus_book_room_list or \
+                'check_out_date' not in cus_book_room_list:
+            flag = True
+            today = datetime.now()
+            check_in_date = (today + timedelta(days=1)).replace(hour=14, minute=0, second=0, microsecond=0)
+            check_out_date = (today + timedelta(days=2)).replace(hour=12, minute=0, second=0, microsecond=0)
+        else:
+            check_in_date = cus_book_room_list['check_in_date']
+            check_out_date = cus_book_room_list['check_out_date']
+    else:
+        flag = True
+        check_in_date = request.args.get('check_in_date')
+        check_in_date = datetime.strptime(check_in_date, "%Y-%m-%d").replace(hour=14, minute=0, second=0,
+                                                                             microsecond=0)
+        check_out_date = request.args.get('check_out_date')
+        check_out_date = datetime.strptime(check_out_date, "%Y-%m-%d").replace(hour=12, minute=0, second=0,
+                                                                               microsecond=0)
+    if flag:
+        if 'cus_book_room_list' not in session:
+            session['cus_book_room_list'] = {}
+        cus_book_room_list = session['cus_book_room_list']
         cus_book_room_list['check_in_date'] = check_in_date
         cus_book_room_list['check_out_date'] = check_out_date
-
         session['cus_book_room_list'] = cus_book_room_list
 
-    if 'cus_book_room_list' not in session or session.get('cus_book_room_list').__eq__({}):
-        error = 'Bạn hãy chọn ngày nhận phòng và trả phòng'
-        return redirect(url_for('index'))
-    else:
-        cus_book_room_list = session['cus_book_room_list']
-        rooms = utils.load_rooms_of_customer(kind_of_room_id=kind_of_room_id,
-                                             check_in_date=cus_book_room_list['check_in_date'],
-                                             check_out_date=cus_book_room_list['check_out_date'],
-                                             page=page)
-        return render_template('home/rooms.html', rooms=rooms[0],
-                               C_Pages=math.ceil(rooms[1] / app.config['CUSTOMER_PAGE_SIZE']),
-                               kind_of_room_id=kind_of_room_id)
+    cus_book_room_list = session['cus_book_room_list']
+    rooms = utils.load_rooms_of_customer(kind_of_room_id=kind_of_room_id,
+                                         check_in_date=cus_book_room_list['check_in_date'],
+                                         check_out_date=cus_book_room_list['check_out_date'],
+                                         page=page)
+    return render_template('home/rooms.html', rooms=rooms[0],
+                           C_Pages=math.ceil(rooms[1] / app.config['CUSTOMER_PAGE_SIZE']),
+                           kind_of_room_id=kind_of_room_id)
 
 
 # loai phong customer
@@ -81,6 +87,8 @@ def room_detail(room_id):
 # bieu mau dat phong
 @app.route("/reservations", methods=['get', 'post'])
 def reservations():
+    if current_user.is_authenticated.__ne__(True):
+        return redirect(url_for('customer_login'))
     success = False
 
     # dat phong
@@ -116,28 +124,27 @@ def reservations():
                            success=success)
 
 
-# lien he
-@app.route("/contact")
-def contact():
-    return render_template("home/contact.html")
-
-
 # about us
 @app.route("/about-us")
 def about_us():
-    return render_template("home/about.html")
+    images = dao.get_kinds_image()
+    return render_template("home/about.html",
+                           images=images)
 
 
 # tai khoan nguoi dung
 @app.route("/account")
 def load_profile_customer():
+    if current_user.is_authenticated.__ne__(True):
+        return redirect(url_for('customer_login'))
     return render_template('home/account.html')
 
 
 # load trang gio hang customer
 @app.route("/cart-booking-detail", methods=['get', 'post'])
-@login_required
 def load_cart():
+    if current_user.is_authenticated.__ne__(True):
+        return redirect(url_for('customer_login'))
     # phuong thuc post chuyen sang dat phong
     if 'cus_book_room_list' in session and session['cus_book_room_list']:
         if 'rooms' in session['cus_book_room_list'] \
@@ -157,7 +164,7 @@ def load_cart():
                                    check_in_date=check_in_date.strftime("%d-%m-%Y"),
                                    check_out_date=check_out_date.strftime("%d-%m-%Y"))
 
-    return  render_template('home/customer_order.html')
+    return render_template('home/customer_order.html')
 
 
 # load nguoi dung
@@ -613,7 +620,7 @@ def get_customer():
 def delete_cus_cart_booking(room_id):
     cus_book_room_list = session['cus_book_room_list']
     room_list = cus_book_room_list.get('rooms')
-    print(room_id)
+
     if 'cus_book_room_list' in session:
         cus_book_room_list = session['cus_book_room_list']
         if 'rooms' in cus_book_room_list:
@@ -788,7 +795,6 @@ def add_to_rent_directly_cart():
         }
     rent_directly_list['rooms'] = room_list
     session['rent_directly_list'] = rent_directly_list
-    print(session['rent_directly_list'])
 
     total_room = utils.total_room_in_list(rent_directly_list)
     return jsonify({'code': 200, 'total_room': total_room})

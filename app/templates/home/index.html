@@ -1,5 +1,9 @@
 {% extends "home/layout/base.html" %}
 
+{% block title %}
+    <title>Sogo hotel | Trang chủ</title>
+{% endblock %}
+
 {% block heading %}
     Trang chủ
 {% endblock %}
@@ -18,14 +22,16 @@
                 <div class="col-md-12 col-lg-4 order-lg-1" data-aos="fade-up">
                     <h2 class="heading">Chào mừng!</h2>
                     <p class="mb-4">Khách sạn tọa lạc tại một vị trí tuyệt đẹp ở quận 1 thuộc thành phố Hồ Chí Minh
-                        Sogo Hotel Saigon nằm gần các điểm tham quan nổi tiếng gần chỗ nghỉ bao gồm Chợ ẩm thực đường
+                        Sogo Hotel nằm gần các điểm tham quan nổi tiếng gần chỗ nghỉ bao gồm Chợ ẩm thực đường
                         phố Bến Thành, Dinh Thống Nhất và trung tâm thương mại Takashimaya Việt Nam. Khách sạn
-                        có 29 phòng ngủ được trang bị các tiện nghi như truy cập wifi miễn phí, máy lạnh, ban công riêng,
+                        có 29 phòng ngủ được trang bị các tiện nghi như truy cập wifi miễn phí, máy lạnh, ban công
+                        riêng,
                         truyền hình vệ tinh, máy phà trà và cà phê,</p>
-                    <p><a href="#" class="btn btn-warning text-white py-2 mr-3">Learn More</a> <span
-                            class="mr-3 font-family-serif"><em>or</em></span> <a
-                            href="https://vimeo.com/channels/staffpicks/93951774" data-fancybox
-                            class="text-uppercase letter-spacing-1 text-warning">See video</a></p>
+                    <p><a href="{{ url_for('about_us') }}" class="btn btn-warning text-white py-2 mr-3">Xem thêm</a>
+                        <span
+                                class="mr-3 font-family-serif"><em>hoặc</em></span> <a
+                                href="https://vimeo.com/channels/staffpicks/93951774" data-fancybox
+                                class="text-uppercase letter-spacing-1 text-warning">Xem video</a></p>
                 </div>
 
             </div>
@@ -39,50 +45,24 @@
             <div class="row justify-content-center text-center mb-5">
                 <div class="col-md-7">
                     <h2 class="heading" data-aos="fade-up">Hình ảnh</h2>
-                    <p data-aos="fade-up" data-aos-delay="100">Far far away, behind the word mountains, far from the
-                        countries Vokalia and Consonantia, there live the blind texts. Separated they live in
-                        Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
+                    <p data-aos="fade-up" data-aos-delay="100">Tất cả phòng đều có tầm nhìn tuyệt đẹp hướng ra quang
+                        cảnh thành phố, nội thất đương đại, đầy đủ tiện nghi cùng các thiết bị công nghệ tiên tiến phục
+                        vụ nhu cầu nghỉ ngơi và công tác, giúp quý khách tận hưởng thời gian của riêng mình.</p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="home-slider major-caousel owl-carousel mb-5" data-aos="fade-up" data-aos-delay="200">
+                    {% if images and images.__ne__({}) %}
+                        {% for image in images %}
                         <div class="slider-item">
-                            <a href="images/slider-1.jpg" data-fancybox="images"
+                            <a href="{{ images.get(image) }}" data-fancybox="images"
                                data-caption="Caption for this image"><img
-                                    src="{{ url_for('static', filename='images/slider-1.jpg') }}"
+                                    src="{{ images.get(image) }}"
                                     alt="Image placeholder" class="img-fluid"></a>
                         </div>
-                        <div class="slider-item">
-                            <a href="images/slider-2.jpg" data-fancybox="images"
-                               data-caption="Caption for this image"><img
-                                    src="{{ url_for('static', filename='images/slider-2.jpg') }}" class="img-fluid"></a>
-                        </div>
-                        <div class="slider-item">
-                            <a href="images/slider-3.jpg" data-fancybox="images"
-                               data-caption="Caption for this image"><img
-                                    src="{{ url_for('static', filename='images/slider-3.jpg') }}" class="img-fluid"></a>
-                        </div>
-                        <div class="slider-item">
-                            <a href="images/slider-4.jpg" data-fancybox="images"
-                               data-caption="Caption for this image"><img
-                                    src="{{ url_for('static', filename='images/slider-4.jpg') }}" class="img-fluid"></a>
-                        </div>
-                        <div class="slider-item">
-                            <a href="images/slider-5.jpg" data-fancybox="images"
-                               data-caption="Caption for this image"><img
-                                    src="{{ url_for('static', filename='images/slider-5.jpg') }}" class="img-fluid"></a>
-                        </div>
-                        <div class="slider-item">
-                            <a href="images/slider-6.jpg" data-fancybox="images"
-                               data-caption="Caption for this image"><img
-                                    src="{{ url_for('static', filename='images/slider-6.jpg') }}" class="img-fluid"></a>
-                        </div>
-                        <div class="slider-item">
-                            <a href="images/slider-7.jpg" data-fancybox="images"
-                               data-caption="Caption for this image"><img
-                                    src="{{ url_for('static', filename='images/slider-7.jpg') }}" class="img-fluid"></a>
-                        </div>
+                        {% endfor %}
+                    {% endif %}
                     </div>
                     <!-- END slider -->
                 </div>
@@ -104,88 +84,38 @@
             </div>
             <div class="row">
                 <div class="js-carousel-2 owl-carousel mb-5" data-aos="fade-up" data-aos-delay="200">
-
                     <div class="testimonial text-center slider-item">
                         <div class="author-image mb-3">
-                            <img src="{{ url_for('static', filename='images/person_1.jpg') }}" alt="Image placeholder"
+                            <img src="{{ url_for('static', filename='images/person-01.jpg') }}" alt="Image placeholder"
                                  class="rounded-circle mx-auto">
                         </div>
                         <blockquote>
 
-                            <p>&ldquo;A small river named Duden flows by their place and supplies it with the necessary
-                                regelialia. It is a paradisematic country, in which roasted parts of sentences fly into
-                                your mouth.&rdquo;</p>
+                            <p>&ldquo;1951052128&rdquo;</p>
                         </blockquote>
-                        <p><em>&mdash; Jean Smith</em></p>
+                        <p><em>&mdash; Nguyễn Thị Kim Ngân</em></p>
                     </div>
 
                     <div class="testimonial text-center slider-item">
                         <div class="author-image mb-3">
-                            <img src="{{ url_for('static', filename='images/person_2.jpg') }}" alt="Image placeholder"
+                            <img src="{{ url_for('static', filename='images/person-02.jpg') }}" alt="Image placeholder"
                                  class="rounded-circle mx-auto">
                         </div>
                         <blockquote>
-                            <p>&ldquo;Even the all-powerful Pointing has no control about the blind texts it is an
-                                almost unorthographic life One day however a small line of blind text by the name of
-                                Lorem Ipsum decided to leave for the far World of Grammar.&rdquo;</p>
+                            <p>&ldquo;1951050027&rdquo;</p>
                         </blockquote>
-                        <p><em>&mdash; John Doe</em></p>
+                        <p><em>&mdash; Bùi Khánh Huy</em></p>
                     </div>
 
                     <div class="testimonial text-center slider-item">
                         <div class="author-image mb-3">
-                            <img src="{{ url_for('static', filename='images/person_3.jpg') }}" alt="Image placeholder"
+                            <img src="{{ url_for('static', filename='images/person-03.jpg') }}" alt="Image placeholder"
                                  class="rounded-circle mx-auto">
                         </div>
                         <blockquote>
-
-                            <p>&ldquo;When she reached the first hills of the Italic Mountains, she had a last view back
-                                on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the
-                                subline of her own road, the Line Lane.&rdquo;</p>
+                            <p>&ldquo;1951052083&rdquo;</p>
                         </blockquote>
-                        <p><em>&mdash; John Doe</em></p>
-                    </div>
-
-
-                    <div class="testimonial text-center slider-item">
-                        <div class="author-image mb-3">
-                            <img src="{{ url_for('static', filename='images/person_1.jpg') }}" alt="Image placeholder"
-                                 class="rounded-circle mx-auto">
-                        </div>
-                        <blockquote>
-
-                            <p>&ldquo;A small river named Duden flows by their place and supplies it with the necessary
-                                regelialia. It is a paradisematic country, in which roasted parts of sentences fly into
-                                your mouth.&rdquo;</p>
-                        </blockquote>
-                        <p><em>&mdash; Jean Smith</em></p>
-                    </div>
-
-                    <div class="testimonial text-center slider-item">
-                        <div class="author-image mb-3">
-                            <img src="{{ url_for('static', filename='images/person_2.jpg') }}" alt="Image placeholder"
-                                 class="rounded-circle mx-auto">
-                        </div>
-                        <blockquote>
-                            <p>&ldquo;Even the all-powerful Pointing has no control about the blind texts it is an
-                                almost unorthographic life One day however a small line of blind text by the name of
-                                Lorem Ipsum decided to leave for the far World of Grammar.&rdquo;</p>
-                        </blockquote>
-                        <p><em>&mdash; John Doe</em></p>
-                    </div>
-
-                    <div class="testimonial text-center slider-item">
-                        <div class="author-image mb-3">
-                            <img src="{{ url_for('static', filename='images/person_3.jpg') }}" alt="Image placeholder"
-                                 class="rounded-circle mx-auto">
-                        </div>
-                        <blockquote>
-
-                            <p>&ldquo;When she reached the first hills of the Italic Mountains, she had a last view back
-                                on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the
-                                subline of her own road, the Line Lane.&rdquo;</p>
-                        </blockquote>
-                        <p><em>&mdash; John Doe</em></p>
+                        <p><em>&mdash; Võ Minh Hùng</em></p>
                     </div>
 
                 </div>

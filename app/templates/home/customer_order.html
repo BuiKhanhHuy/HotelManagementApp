@@ -1,5 +1,9 @@
 {% extends "home/layout/base.html" %}
 
+{% block title %}
+    <title>Sogo hotel | Đặt phòng</title>
+{% endblock %}
+
 {% block heading %}
     Giỏ hàng
 {% endblock %}
@@ -8,57 +12,60 @@
 {% endblock %}
 
 {% block content %}
-<section class="section blog-post-entry bg-light">
-    <div class="container">
-        <h1 class="text-center" style="text-transform:uppercase;">Danh sách các phòng đã chọn</h1>
-        <br><br>
-        {% if 'cus_book_room_list' in session and session['cus_book_room_list']%}
-        <div class="row">
-            <div class="col-4">Ngày nhận phòng: {{check_in_date}}</div>
-            <div class="col-4">Ngày trả phòng: {{check_out_date}} </div>
+    <section class="section blog-post-entry bg-light">
+        <div class="container">
+            <h1 class="text-center" style="text-transform:uppercase;">Danh sách phòng đặt</h1>
             <br><br>
+            {% if 'cus_book_room_list' in session and session['cus_book_room_list'] %}
+                <div class="row">
+                    <div class="col-4">Ngày nhận phòng: {{ check_in_date }}</div>
+                    <div class="col-4">Ngày trả phòng: {{ check_out_date }} </div>
+                    <br><br>
+                </div>
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col">STT</th>
+                        <th scope="col">Tên phòng</th>
+                        <th scope="col">Thể loại phòng</th>
+                        <th scope="col">Giá phòng</th>
+                        <th scope="col" style="width:72px"></th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for room in rooms %}
+                        <tr id="room{{ room.get('room_id') }}">
+                            <th scope="row">{{ room.get('room_id') }}</th>
+                            <td>{{ room.get('room_number') }}</td>
+                            <td>{{ room.get('kind_of_room_name') }}</td>
+                            <td>{{ "{:,.0f} VND".format(room.get('price')) }}</td>
+                            <td>
+                                <button class="btn-danger btn btn-sm"
+                                        onclick="del_cus_cart_booking({{ room.get('room_id') }})">xóa
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+                <div class="alert">
+                    <br>
+                    <h5>Tổng số phòng trong danh sách: <span id="total">{{ cus_cart_stats }}</span></h5>
+                    <br>
+                    {% if cus_cart_stats.__gt__(0) %}
+                        <a href="{{ url_for('reservations') }}">
+                            <button class="text-center btn-warning text-white btn" style="">Đặt phòng</button>
+                        </a>
+                    {% endif %}
+                </div>
+
+            {% else %}
+                <h3 class="text-center text-danger">Không có phòng nào được chọn !</h3>
+            {% endif %}
+
         </div>
-
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th scope="col">STT</th>
-                    <th scope="col">Tên phòng</th>
-                    <th scope="col">Thể loại phòng</th>
-                    <th scope="col">Giá phòng</th>
-                    <th scope="col" style="width:72px"></th>
-                </tr>
-            </thead>
-
-            <tbody>
-            {% for room in rooms %}
-                <tr id="room{{room.get('room_id')}}">
-                  <th scope="row">{{room.get('room_id')}}</th>
-                    <td>{{room.get('room_number')}}</td>
-                    <td>{{room.get('kind_of_room_name')}}</td>
-                    <td>{{ "{:,.0f} VND".format(room.get('price')) }}</td>
-                    <td>
-                        <button class="btn-danger btn btn-sm" onclick="del_cus_cart_booking({{room.get('room_id')}})">xóa</button>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-
-        </table>
-        <div class="alert">
-            <br>
-            <h5>Tổng số phòng trong danh sách: <span id="total">{{cus_cart_stats}}</span></h5>
-            <br>
-            <a href="{{url_for('reservations')}}">
-                <button class="text-center btn-warning text-white btn" style="">Đặt phòng</button>
-            </a>
-
-        </div>
-
-        {% else %}
-        <h3 class="text-center text-danger">Không có phòng nào được chọn !</h3>
-        {% endif %}
-
-    </div>
-</section>
+    </section>
 {% endblock %}

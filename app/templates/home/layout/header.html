@@ -15,17 +15,20 @@
                         </a>
                     </div>
                     <p class="rounded-circle" style="margin-left:auto;padding:10px 10px 0 0;">
-                        {% if current_user.avatar %}
-                            <img class="rounded-circle my-auto" src="{{ current_user.avatar }}"
-                                 alt="{{ current_user.username }}" style="width:30px; height:30px;">
-                        {% else %}
-                            <img class="rounded-circle my-auto"
-                                 src="{{ url_for('static', filename='images/person_5.jpg') }}"
-                                 alt="{{ current_user.username }}" style="width:30px; height:30px;">
-                        {% endif %}
+                        <a href="{{ url_for('load_profile_customer') }}">
+                            {% if current_user.avatar %}
+                                <img class="rounded-circle my-auto" src="{{ current_user.avatar }}"
+                                     alt="avt-{{ current_user.username }}" style="width:30px; height:30px;">
+                            {% else %}
+                                <img class="rounded-circle my-auto img-fluid"
+                                     src="{{ url_for('static', filename='images/avatar-default.png') }}"
+                                     alt="avt-{{ current_user.username }}" style="width:30px; height:30px;">
+                            {% endif %}
+                        </a>
                     </p>
-                    <div style="text-align:right; padding: 10px" class="pl-0 text-warning">
-                        {{ current_user.username }}</div>
+                    <div style="text-align:right; padding: 10px" class="pl-0">
+                        <a class="text-warning" href="{{ url_for('load_profile_customer') }}">{{ current_user.username }}</a>
+                    </div>
                 {% endif %}
             </div>
 

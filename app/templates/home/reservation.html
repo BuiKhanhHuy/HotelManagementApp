@@ -1,5 +1,9 @@
 {% extends "home/layout/base.html" %}
 
+{% block title %}
+    <title>Sogo hotel | Xác nhận đặt phòng</title>
+{% endblock %}
+
 {% block heading %}
     Đặt phòng
 {% endblock %}
@@ -81,7 +85,9 @@
                                 <div class="col-md-12 form-group">
                                     <label class="text-black font-weight-bold">Địa chỉ
                                         <span class="text-danger">*</span></label>
-                                    <input required type="text" name="address" class="form-control ">
+                                    <input required type="text"
+                                           placeholder="141 Nguyễn Huệ, Quận 1, Thành phố Hồ Chí Minh"
+                                           name="address" class="form-control ">
                                 </div>
                             </div>
                             <div class="row">

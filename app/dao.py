@@ -1,4 +1,6 @@
 import bdb
+# import datetime
+from datetime import timedelta
 import hashlib
 from app import app
 from app.models import *
@@ -12,10 +14,12 @@ import pycountry
 def get_kinds_image():
     kinds = KindOfRoom.query.all()
     dic = {}
-    for k in kinds:
-        for x in k.images:
-            if x.rank == 1:
-                dic[k.id] = x.link
+    if kinds:
+        for k in kinds:
+            if k.images:
+                for x in k.images:
+                    if x.rank and x.rank.__eq__(1):
+                        dic[k.id] = x.link
     return dic
 
 
@@ -378,4 +382,4 @@ def add_comment(room_id, content, user_id):
 
 
 if __name__ == '__main__':
-    add_comment(1, 'hihihih', 3)
+    print(get_kinds_image())
