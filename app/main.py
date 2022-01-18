@@ -65,8 +65,7 @@ def get_rooms():
                                          check_in_date=cus_book_room_list['check_in_date'],
                                          check_out_date=cus_book_room_list['check_out_date'],
                                          page=page)
-    return render_template('home/rooms.html', rooms=rooms[0],
-                           C_Pages=math.ceil(rooms[1] / app.config['CUSTOMER_PAGE_SIZE']),
+    return render_template('home/rooms.html', rooms=rooms,
                            kind_of_room_id=kind_of_room_id)
 
 

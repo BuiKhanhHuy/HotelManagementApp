@@ -1,7 +1,7 @@
+import hashlib
+from app import app
 from app import dao
 from app.models import *
-from app import app
-import hashlib
 
 
 # ============CUSTOMER================
@@ -31,6 +31,8 @@ def get_customer_user_by_id(user_id):
 
 # load phong tat ca phong
 def load_rooms_of_customer(kind_of_room_id=None, check_in_date=None, check_out_date=None, page=1):
+    # phan trang
+    page_size = app.config['CUSTOMER_PAGE_SIZE']
     rooms = Room.query.filter(Room.active.__eq__(True))
 
     # filter theo dieu kien
@@ -52,13 +54,9 @@ def load_rooms_of_customer(kind_of_room_id=None, check_in_date=None, check_out_d
                                                        check_out_date <= BookRoom.check_out_date),
                                                   and_(check_in_date <= BookRoom.check_in_date,
                                                        check_out_date >= BookRoom.check_out_date)))))
-    count = rooms.count()
 
-    # phan trang
-    page_size = app.config['CUSTOMER_PAGE_SIZE']
-    start = (page - 1) * page_size
-    end = start + page_size
-    return rooms.slice(start, end).all(), count
+    rooms = rooms.paginate(per_page=page_size, page=page)
+    return rooms
 
 
 # load loai phong
