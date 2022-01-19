@@ -6,6 +6,7 @@ from app import app
 from app.models import *
 from sqlalchemy import func, extract
 import pycountry
+import copy
 
 
 # =========CUSTOMER==========
@@ -33,7 +34,7 @@ def load_countries():
 # load rooms
 def load_rooms(check_in_date=None, check_out_date=None,
                id_kind_of_room=None, price=None,
-               max_people=None, room_number=None):
+               max_people=None, room_number=None, page=1):
     rooms = Room.query.filter(Room.active.__eq__(True))
 
     if check_in_date and check_out_date:
@@ -60,7 +61,10 @@ def load_rooms(check_in_date=None, check_out_date=None,
     if room_number:
         rooms = rooms.filter(Room.room_number.startswith(room_number))
 
-    return rooms.all()
+    page_size = app.config['EMPLOYEE_FIND_PAGE_SIZE']
+    rooms = rooms.paginate(per_page=page_size, page=page)
+
+    return rooms
 
 
 # load kind of room
@@ -371,15 +375,20 @@ def add_comment(room_id, content, user_id):
                                       BookRoom.user_id.__eq__(user_id)).first()
     if book_room:
         comment = Comment(room_id=room_id, content=content, user_id=user_id)
-        today = datetime.now()
         db.session.add(comment)
         try:
             db.session.commit()
         except:
             return None
         else:
-            return today
+            return Comment.query[-1]
+
+
+# lay danh sach binh luan
+def get_comment(room_id, page=1):
+    comment_size = app.config['COMMENT_SIZE']
+    return Comment.query.filter(Comment.room_id.__eq__(room_id)).paginate(per_page=comment_size, page=page)
 
 
 if __name__ == '__main__':
-    print(get_kinds_image())
+    pass

@@ -65,6 +65,8 @@ def customer_register():
         email = request.form.get('email')
         avatar_path = None
         try:
+            if utils.check_user_exist(username=username, email=email):
+                raise Exception('Tên đăng nhập hoặc email đã tồn tại!')
             if password.strip().__eq__(confirm.strip()):
                 avatar = request.files.get('avatar')
                 if avatar:
@@ -76,7 +78,7 @@ def customer_register():
                                         avatar=avatar_path)
                 return redirect(url_for('customer_login'))
         except Exception as ex:
-            err_mgs = "Lỗi:" + str(ex) + "!!"
+            err_mgs = str(ex)
 
     return render_template('home/register.html', err_mgs=err_mgs)
 

@@ -1,7 +1,7 @@
 {% extends "home/layout/base.html" %}
 
 {% block title %}
-     <title>Sogo hotel | chi tiết phòng</title>
+    <title>Sogo hotel | chi tiết phòng</title>
 {% endblock %}
 
 {% block heading %}
@@ -20,10 +20,10 @@
             <div class="">
                 <div class="row">
                     {% if room %}
-                    <div class="col-md-6 mb-3 mb-lg-0 col-lg-7">
-                        <img class="w-100" src="{{ room.image }}"
-                             data-aos="fade-up">
-                    </div>
+                        <div class="col-md-6 mb-3 mb-lg-0 col-lg-7">
+                            <img class="w-100" src="{{ room.image }}"
+                                 data-aos="fade-up">
+                        </div>
                         <div class="col-md-6 mb-3 mb-md-0 col-lg-5" data-aos="fade-up">
                             <span class="title font-weight-normal">{{ room.kind_of_room.kind_of_room_name }}</span>
                             <div class="description font-weight-normal p-1" style="color:green">Số
@@ -32,8 +32,29 @@
                             <div class="people p-1">Số lượng người tối đa: {{ room.maximum_number }}</div>
                             <h3 class="price p-1"> {{ "{0:,.0f}".format(room.price) }} VNĐ/ 1 NGÀY</h3>
                             <br><br>
-                            <div class="button-add">
-                                <a href="#"><i class=" fas fa-cart-plus"></i> Thêm vào danh sách</a>
+                            <div id="room-detail-{{ room.id }}">
+                                {% if room_list %}
+                                    {% if "{0}".format(room.id) in room_list %}
+                                        <div class="button-add bg-secondary"
+                                             onclick="add_to_book_room({{ room.id }},'{{ room.room_number }}','{{ room.kind_of_room.kind_of_room_name }}',{{ room.price }})">
+                                            <a class="text-white" href="javascript: void(0)"><i
+                                                    class=" fas fa-cart-plus"></i> Hủy khỏi giỏ
+                                                hàng</a>
+                                        </div>
+                                    {% else %}
+                                        <div class="button-add"
+                                             onclick="add_to_book_room({{ room.id }},'{{ room.room_number }}','{{ room.kind_of_room.kind_of_room_name }}',{{ room.price }})">
+                                            <a href="javascript: void(0)"><i class=" fas fa-cart-plus"></i> Thêm vào giỏ
+                                                hàng</a>
+                                        </div>
+                                    {% endif %}
+                                {% else %}
+                                    <div class="button-add"
+                                         onclick="add_to_book_room({{ room.id }},'{{ room.room_number }}','{{ room.kind_of_room.kind_of_room_name }}',{{ room.price }})">
+                                        <a href="javascript: void(0)"><i class=" fas fa-cart-plus"></i> Thêm vào giỏ
+                                            hàng</a>
+                                    </div>
+                                {% endif %}
                             </div>
                             <div class="button-done">
                                 <a href="{{ url_for('reservations') }}"><i class=" fas fa-clipboard-check"></i> Đặt
@@ -47,7 +68,7 @@
             <h3>Mô tả phòng</h3>
             <hr>
             <div>
-               {% if room %} {{ room.description }} {% else %} Không có thông tin miêu tả! {% endif %}
+                {% if room %} {{ room.description }} {% else %} Không có thông tin miêu tả! {% endif %}
             </div>
         </div>
     </section>
@@ -55,39 +76,56 @@
     <section class="section pb-4">
         <div class="container">
             <h2>Bình luận</h2>
-            <div class="form-group">
+            {% if current_user.is_authenticated %}
+                <div class="form-group">
                 <textarea maxlength="255" class="form-control" id="comment-{{ room.id }}"
-                          placeholder="Đánh giá của bạn..." rows="3"></textarea>
-            </div>
-            <div class="pb-4">
-                <button type="button" class="btn btn-warning text-white" onclick="addComment({{ room.id}})">Thêm đánh giá</button>
-            </div>
-            <div class="p-2">
-                <div class="media p-3">
-                    <img src="{{ url_for('static', filename='images/person_1.jpg') }}" alt="John Doe"
-                         class="mr-3 mt-3 rounded-circle" style="width:60px;">
-                    <div class="media-body">
-                        <h4>John Doe <small><i>Posted on February 19, 2016</i></small></h4>
-                        <p>Phòng oke lắm bạn ạ...</p>
-                    </div>
+                          rows="3">Phòng ở tuyệt vời...</textarea>
                 </div>
-                <div class="media p-3">
-                    <img src="{{ url_for('static', filename='images/person_1.jpg') }}" alt="John Doe"
-                         class="mr-3 mt-3 rounded-circle" style="width:60px;">
-                    <div class="media-body">
-                        <h4>John Doe <small><i>Posted on February 19, 2016</i></small></h4>
-                        <p>Phòng oke lắm bạn ạ...</p>
-                    </div>
+                <div class="pb-4">
+                    <button type="button" class="btn btn-warning text-white" onclick="addComment({{ room.id }})">Thêm
+                        đánh
+                        giá
+                    </button>
                 </div>
-                <div class="media p-3">
-                    <img src="{{ url_for('static', filename='images/person_1.jpg') }}" alt="John Doe"
-                         class="mr-3 mt-3 rounded-circle" style="width:60px;">
-                    <div class="media-body">
-                        <h4>John Doe <small><i>Posted on February 19, 2016</i></small></h4>
-                        <p>Phòng oke lắm bạn ạ...</p>
-                    </div>
-                </div>
+            {% else %}
+                <p>Đăng nhập để bình luận!</p>
+            {% endif %}
+            <div class="p-2" id="comment">
+                {% if  comments.items %}
+                    {% for comment in comments.items %}
+                        <div class="media p-3">
+                            <img src="{{ comment.user.avatar }}" alt="John Doe"
+                                 class="mr-3 mt-3 rounded-circle" style="width:60px;">
+                            <div class="media-body">
+                                <h4>{{ comment.user.username }}<small
+                                        class="pl-1"><i>{{ comment.created_date }}</i></small></h4>
+                                <p>{{ comment.content }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
             </div>
+            <div class="custom-pagination">
+                <ul class="list-unstyled">
+                    {% for page in comments.iter_pages(left_edge=2, left_current=2, right_current=3, right_edge=2) %}
+                        {% if page %}
+                            {% if page != comments.page %}
+                                <li><a class="text-warning" onclick="moveComment({{ room.id }}, {{ page }})"
+                                       href="javascript:void(0)">{{ page }}</a>
+                                </li>
+
+                            {% else %}
+                                <li><a class="text-white bg-warning"
+                                       href="javascript:void(0)"
+                                       onclick="moveComment({{ room.id }}, {{ page }})">{{ page }}</a>
+                            {% endif %}
+                        {% else %}
+                            <span class=ellipsis>…</span>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+
         </div>
     </section>
 

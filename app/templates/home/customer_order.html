@@ -42,7 +42,7 @@
                             <td>{{ room.get('kind_of_room_name') }}</td>
                             <td>{{ "{:,.0f} VND".format(room.get('price')) }}</td>
                             <td>
-                                <button class="btn-danger btn btn-sm"
+                                <button class="btn-danger btn btn-sm" id="btn-order"
                                         onclick="del_cus_cart_booking({{ room.get('room_id') }})">xóa
                                 </button>
                             </td>
@@ -56,7 +56,7 @@
                     <h5>Tổng số phòng trong danh sách: <span id="total">{{ cus_cart_stats }}</span></h5>
                     <br>
                     {% if cus_cart_stats.__gt__(0) %}
-                        <a href="{{ url_for('reservations') }}">
+                        <a href="{{ url_for('reservations') }}" id="order">
                             <button class="text-center btn-warning text-white btn" style="">Đặt phòng</button>
                         </a>
                     {% endif %}

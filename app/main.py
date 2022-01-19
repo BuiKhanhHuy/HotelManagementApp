@@ -66,7 +66,8 @@ def get_rooms():
                                          check_out_date=cus_book_room_list['check_out_date'],
                                          page=page)
     return render_template('home/rooms.html', rooms=rooms,
-                           kind_of_room_id=kind_of_room_id)
+                           kind_of_room_id=kind_of_room_id,
+                           room_list=session.get('cus_book_room_list').get('rooms'))
 
 
 # loai phong customer
@@ -80,7 +81,10 @@ def room_type():
 @app.route("/room-detail/<int:room_id>")
 def room_detail(room_id):
     room = utils.load_room_detail(room_id)
-    return render_template('home/room_detail.html', room=room)
+    comments = dao.get_comment(room_id=room_id)
+    return render_template('home/room_detail.html', room=room,
+                           room_list=session.get('cus_book_room_list').get('rooms'),
+                           comments=comments)
 
 
 # bieu mau dat phong
@@ -306,6 +310,10 @@ def rent():
 @app.route("/employee/rent/rent-directly")
 @login_required
 def rent_directly():
+    if int(request.args.get('cancel', 0)).__eq__(1):
+        if 'rent_directly_list' in session:
+            del session['rent_directly_list']
+            flash('Hủy thuê phòng thành công!', 'success')
     kind_of_rooms = dao.load_kind_of_room()
     rooms = dao.load_rooms()
     all_price_options = utils.all_price_options()
@@ -464,8 +472,12 @@ def rent_result(result_number):
 @app.route("/employee/rent/rent-advance")
 @login_required
 def rent_advance():
-    book_rooms = dao.load_book_room()
+    if int(request.args.get('cancel', 0)).__eq__(1):
+        if 'rent_advance_list' in session:
+            del session['rent_advance_list']
+            flash('Hủy thuê phòng thành công!', 'success')
 
+    book_rooms = dao.load_book_room()
     # lay ngay hom nay
     today = datetime.now()
     today = today.replace(hour=14, minute=0, second=0, microsecond=0)
@@ -484,6 +496,9 @@ def rent_advance():
 @app.route("/employee/payment")
 @login_required
 def payment():
+    if int(request.args.get('cancel', 0)).__eq__(1):
+        flash('Hủy thanh toán thành công', 'success')
+
     rents = dao.load_rent_payment()
     today = datetime.now()
     return render_template('employee/payment.html', rents=rents, today=today)
@@ -555,16 +570,17 @@ def find_room():
     price = data.get('price')
     max_people = data.get('max_people')
     room_number = data.get('room_number')
+    page = data.get('page', 1)
 
     # filter phong
     rooms = dao.load_rooms(check_in_date=check_in_date,
                            check_out_date=check_out_date,
                            id_kind_of_room=id_kind_of_room,
                            price=price, max_people=max_people,
-                           room_number=room_number)
+                           room_number=room_number, page=page)
 
     room_list = []
-    for room in rooms:
+    for room in rooms.items:
         room_list.append({
             'id': room.id,
             'image': room.image,
@@ -574,8 +590,11 @@ def find_room():
             'price': room.price,
             'description': room.description
         })
+    iter_pages = []
+    for iter_page in rooms.iter_pages(left_edge=2, left_current=2, right_current=3, right_edge=2):
+        iter_pages.append(iter_page)
 
-    return jsonify({'code': 200, 'rooms': room_list})
+    return jsonify({'code': 200, 'rooms': room_list, 'iter_pages': iter_pages})
 
 
 # lay thong tin CMND duoc tim kiem tu client
@@ -691,7 +710,8 @@ def add_to_book_room_cart():
     session['book_room_list'] = book_room_list
 
     total_room = utils.total_room_in_list(book_room_list)
-    return jsonify({'code': 200, 'total_room': total_room, 'isAdd': flag})
+    return jsonify(
+        {'code': 200, 'total_room': total_room, 'isAdd': flag, 'rooms': session.get('book_room_list').get('rooms')})
 
 
 # them phong vao cho dat phong ====Customer====
@@ -731,7 +751,8 @@ def add_to_book_room_cart_of_customer():
     session['cus_book_room_list'] = cus_book_room_list
 
     total_room = utils.total_room_in_list(cus_book_room_list)
-    return jsonify({'code': 200, 'total_room': total_room})
+    return jsonify({'code': 200, 'total_room': total_room,
+                    'room_list': session.get('cus_book_room_list').get('rooms')})
 
 
 # xoa phong trong trang chi tiet dat phong
@@ -780,7 +801,9 @@ def add_to_rent_directly_cart():
     maximum_number = data.get('maximum_number')
 
     # them hoac xoa phong o session
+    flag = True
     if room_id in room_list:
+        flag = False
         del room_list[room_id]
     else:
         room_list[room_id] = {
@@ -796,7 +819,7 @@ def add_to_rent_directly_cart():
     session['rent_directly_list'] = rent_directly_list
 
     total_room = utils.total_room_in_list(rent_directly_list)
-    return jsonify({'code': 200, 'total_room': total_room})
+    return jsonify({'code': 200, 'total_room': total_room, 'isAdd': flag})
 
 
 # xoa phong trong trang chi tiet dat phong
@@ -1010,73 +1033,98 @@ def find_rent_payment():
 
 
 # them binh luan cho phong
-@app.route('/api/customer/add_comment')
+@app.route('/api/customer/add_comment', methods=['post'])
 def add_comment():
     code = 500
-    error = ''
+    success = True
+    error = None
 
     data = request.json
     content = data.get('content')
     room_id = int(data.get('room_id'))
 
-    if dao.add_comment(room_id=room_id, content=content, user_id=current_user.id):
+    comment = dao.add_comment(room_id=room_id, content=content, user_id=current_user.id)
+    if comment:
         code = 200
-        error = 'Thêm bình luận thành công'
+        return jsonify({'code': code, 'success': success, 'error': error,
+                        'comments': {'content': comment.content, 'comment_id': comment.id,
+                                     'created_date': comment.created_date},
+                        'user': {'user_id': current_user.id, 'username': current_user.username,
+                                 'avatar': current_user.avatar}})
     else:
-        error = 'Thêm bình luận không thành công!'
-
-    return jsonify({'code': code, 'error': error, 'comments': {'content': content, 'comment': 'a'},
-                    'user': {'user_id': current_user.id, 'username': current_user.username}})
-
-
-# =====================ket thuc api==========================
+        code = 200
+        success = False
+        error = 'Bạn không thể thêm bình luận vì bạn chưa từng sử dụng dịch vụ đặt phòng của khách sạn!'
+        return jsonify({'code': code, 'success': success, 'error': error})
 
 
-# loi 404
-@app.errorhandler(404)
-def page_not_found(error):
-    return render_template('404.html')
+# lay binh luan
+@app.route('/api/customer/load_comments', methods=['post'])
+def load_comments():
+    data = request.json
 
+    room_id = int(data.get('room_id'))
+    page = int(data.get('page'))
 
-# loi 405
-@app.errorhandler(405)
-def page_not_found(error):
-    return render_template('405.html')
+    comments = dao.get_comment(room_id=room_id, page=page)
 
+    comment_list = []
+    for comment in comments.items:
+        comment_list.append({
+            'id': comment.id,
+            'content': comment.content,
+            'created_date': comment.created_date,
+            'user_name': comment.user.username,
+            'avatar': comment.user.avatar
+        })
+    iter_pages = []
+    for iter_page in comments.iter_pages(left_edge=2, left_current=2, right_current=3, right_edge=2):
+        iter_pages.append(iter_page)
 
-# loi 401
-@app.errorhandler(401)
-def unauthorized(error):
-    return render_template('401.html')
+    return jsonify({'code': 200, 'comment_list': comment_list, 'iter_pages': iter_pages})
 
+    # =====================ket thuc api==========================
 
-# loi 500
-@app.errorhandler(500)
-def internal_server_error(error):
-    return render_template('500.html')
+    # loi 404
+    @app.errorhandler(404)
+    def page_not_found(error):
+        return render_template('404.html')
 
+    # loi 405
+    @app.errorhandler(405)
+    def page_not_found(error):
+        return render_template('405.html')
 
-@login.user_loader
-def load_user(user_id):
-    return dao.load_user(user_id)
+    # loi 401
+    @app.errorhandler(401)
+    def unauthorized(error):
+        return render_template('401.html')
 
+    # loi 500
+    @app.errorhandler(500)
+    def internal_server_error(error):
+        return render_template('500.html')
 
-@app.context_processor
-def common_response():
-    return {
-        'total_room_booking': utils.total_room_in_list(session.get('book_room_list')),
-        'total_room_rent_directly': utils.total_room_in_list(session.get('rent_directly_list')),
-        'total_rent_waiting': dao.total_rent_waiting(active=True),
-        'total_book_room_waiting': dao.total_book_room_waiting(active=True, done=False),
-        'total_book_room_cancel': dao.total_book_room_waiting(active=False, done=False),
-        'total_rent_due': dao.total_rent_waiting(active=True, today=datetime.now()),
-        'kind_of_rooms': dao.load_kind_of_room(),
-        'cus_cart_stats': utils.total_room_in_list(session.get('cus_book_room_list')),
-        'cus_check_in_date': session.get('cus_book_room_list').get('check_in_date') if session.get(
-            'cus_book_room_list') else None,
-        'cus_check_out_date': session.get('cus_book_room_list').get('check_out_date') if session.get(
-            'cus_book_room_list') else None
-    }
+    @login.user_loader
+    def load_user(user_id):
+        return dao.load_user(user_id)
+
+    @app.context_processor
+    def common_response():
+        return {
+            'total_room_booking': utils.total_room_in_list(session.get('book_room_list')),
+            'total_room_rent_directly': utils.total_room_in_list(session.get('rent_directly_list')),
+            'total_rent_waiting': dao.total_rent_waiting(active=True),
+            'total_book_room_waiting': dao.total_book_room_waiting(active=True, done=False),
+            'total_book_room_cancel': dao.total_book_room_waiting(active=False, done=False),
+            'total_rent_due': dao.total_rent_waiting(active=True, today=datetime.now()),
+            'kind_of_rooms': dao.load_kind_of_room(),
+            'cus_cart_stats': utils.total_room_in_list(session.get('cus_book_room_list')),
+            'cus_check_in_date': session.get('cus_book_room_list').get('check_in_date') if session.get(
+                'cus_book_room_list') else None,
+            'cus_check_out_date': session.get('cus_book_room_list').get('check_out_date') if session.get(
+                'cus_book_room_list') else None
+        }
 
 
 if __name__ == "__main__":

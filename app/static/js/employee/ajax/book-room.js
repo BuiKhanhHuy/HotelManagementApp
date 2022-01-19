@@ -15,17 +15,18 @@ function getRoomHTML(room) {
                 <td class="text-dark col-md-3 align-middle">${room['description']}</td>
                 <td class="text-dark col-md-2 text-center align-middle">
                     <button value="${room['id']}" class="btn btn-info text-white btn-choose-book-room btn-choose-room shadow-none" 
-                    id="id-btn-choose-room-${room.id}" 
+                    id="id-btn-choose-room-${room['id']}" 
                     onclick="btnButtonAddBookRoomClick(${room['id']}, '${room['room_number']}', 
                     '${room['kind_of_room_name']}', ${room['price']}, '${room['image']}')">Chọn phòng</button>
                 </td>
             </tr>`
 }
 
+
 // click chon them phong dat
-function btnButtonAddBookRoomClick(roomId, roomNumber, kindOfRoomName, price, image) {
+function btnButtonAddBookRoomClick(roomId, roomNumber, kindOfRoomName, price, image, room) {
     // hieu ung
-    clickButtonChooseRoom(roomId)
+    clickButtonChooseRoom(roomId, room)
     // gui du lieu len server
     addToBookRoomCart(roomId, roomNumber, kindOfRoomName, price, image)
 }
@@ -46,7 +47,7 @@ function addToBookRoomCart(roomId, roomNumber, kindOfRoomName, price, image) {
         }
     }).then(res => res.json()).then(data => {
         if (data.code === 200) {
-            if(data['isAdd'] === true)
+            if (data['isAdd'] === true)
                 notification(1, `Đã thêm thành công phòng ${roomNumber}.`)
             else
                 notification(1, `Đã hủy thành công phòng ${roomNumber}.`)

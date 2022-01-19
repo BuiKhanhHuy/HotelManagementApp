@@ -5,6 +5,18 @@ from app.models import *
 
 
 # ============CUSTOMER================
+def check_user_exist(username=None, email=None):
+    user = User.query
+    count = 0
+    if username:
+        if user.filter(User.username.__eq__(username.strip())).first():
+            return True
+
+    if email:
+        if user.filter(User.email.__eq__(email.strip())).first():
+            return True
+    return False
+
 
 # Tạo user người dùng
 def add_customer_user(username, email, password, **kwargs):

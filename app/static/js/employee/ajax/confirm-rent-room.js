@@ -29,3 +29,14 @@ function disabledDelRoomButton() {
     for (let i = 0; i < btnDelRoom.length; i++)
         btnDelRoom[i].disabled = true;
 }
+
+// refresh session rent directly
+function cleanRentDirectlyInSession(){
+     fetch('/api/employee/rent-directly/clean-book-room', {
+        method: 'delete',
+    }).then(res => res.json()).then(data => {
+        if (data.code === 200) {
+            location.reload()
+        }
+    }).catch(error => error => console.log(error))
+}

@@ -19,7 +19,7 @@ function clickButtonChooseRoom(roomId) {
 // thay doi hieu ung nut
 function customButtonChooseRoom(roomId, dicValueButton) {
     let btnChooseRoom = document.getElementById(`id-btn-choose-room-${roomId}`)
-
+    console.log(dicValueButton)
     if (dicValueButton[roomId] === 1) {
         btnChooseRoom.innerText = "Hủy chọn";
         btnChooseRoom.setAttribute("style", "background-color: #8f8a8a; border-color: #8f8a8a;");
@@ -30,7 +30,6 @@ function customButtonChooseRoom(roomId, dicValueButton) {
 
 }
 
-// =======BUTTON LUC DAT PHONG VA THUE PHONG TRUC TIEP========
 
 
 // ===========LOC THONG TIN PHONG CAN DAT, CAN THUE===========
@@ -60,8 +59,7 @@ function checkCheckInDate(type) {
     let today = new Date(Date.now())
     // today.setHours(14, 0, 0)
     // neu la thue phong truc tiep thì tinh nguyen ngay hom nay
-    if(type === 2)
-    {
+    if (type === 2) {
         today = new Date(Date.now())
         today.setHours(13, 0, 0)
     }
@@ -151,7 +149,7 @@ for (let i = 0; i < filters.length; i++) {
 }
 
 // ham tim phong
-function findRoom() {
+function findRoom(page) {
     let filterCheckInDate = document.getElementById('check-in-date')
     let filterCheckOutDate = document.getElementById('check-out-date')
     let filterKindOfRoom = document.getElementById('filter-kind-of-room')
@@ -172,11 +170,11 @@ function findRoom() {
     let maxPeople = parseInt(filterMaxPeople.value)
     let roomNumber = filterRoomNumber.value
 
-    loadRoom(checkInDate, checkOutDate, idKindOfRoom, price, maxPeople, roomNumber)
+    loadRoom(checkInDate, checkOutDate, idKindOfRoom, price, maxPeople, roomNumber, page)
 }
 
 // ham load phong
-function loadRoom(checkInDate, checkOutDate, idKindOfRoom, price, maxPeople, roomNumber) {
+function loadRoom(checkInDate, checkOutDate, idKindOfRoom, price, maxPeople, roomNumber, page = 1) {
     fetch('/api/employee/find-room', {
         method: 'post',
         body: JSON.stringify({
@@ -185,7 +183,8 @@ function loadRoom(checkInDate, checkOutDate, idKindOfRoom, price, maxPeople, roo
             'id_kind_of_room': idKindOfRoom,
             'price': price,
             'max_people': maxPeople,
-            'room_number': roomNumber
+            'room_number': roomNumber,
+            'page': page
         }),
         headers: {
             'Content-Type': 'application/json'
@@ -199,8 +198,9 @@ function loadRoom(checkInDate, checkOutDate, idKindOfRoom, price, maxPeople, roo
 
             for (let i = 0; i < length; i++)
                 content += getRoomHTML(data['rooms'][i])
-
             room.innerHTML = content
+
+            getHTMLPagination(data['iter_pages'])
 
             for (let i = 0; i < length; i++)
                 customButtonChooseRoom(data['rooms'][i]['id'], dicValueButton)
@@ -218,4 +218,17 @@ function disableButtonChooseRoom(flag) {
     }
 }
 
+// lay html pagination
+function getHTMLPagination(iter_pages) {
+    let iterPages = document.getElementById('pagination')
+    let lis = ''
+
+    for (let i = 0; i < iter_pages.length; i++) {
+        if (iter_pages[i] == null)
+            lis += `<li class="page-item"><a class="page-link"  href="javascript: void(0)">...</a></li>`
+        else
+            lis += `<li class="page-item"><a class="page-link"  href="javascript: void(0)" onclick="findRoom(${iter_pages[i]})">${iter_pages[i]}</a></li>`
+    }
+    iterPages.innerHTML = lis
+}
 

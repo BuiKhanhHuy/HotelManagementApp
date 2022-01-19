@@ -16,6 +16,8 @@ app.config['FLASK_ADMIN_SWATCH'] = 'Simplex'
 app.config['FLASK_ADMIN_FLUID_LAYOUT'] = True
 
 app.config['CUSTOMER_PAGE_SIZE'] = 6
+app.config['EMPLOYEE_FIND_PAGE_SIZE'] = 5
+app.config['COMMENT_SIZE'] = 5
 
 cloudinary.config(
     cloud_name='dl6artkyb',

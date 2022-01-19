@@ -1,6 +1,8 @@
 {% extends "home/login.html" %}
 
 {% block title %}
+    <link rel="shortcut icon" type="image/png"
+          href="{{ url_for('static', filename='plugins/employee/images/logo-icon.png') }}"/>
     <title>Sogo hotel | đăng ký</title>
 {% endblock %}
 
@@ -29,38 +31,37 @@
 					ĐĂNG KÝ
 				</span>
                 <form class="login100-form validate-form p-b-33 p-t-5" method="post" enctype="multipart/form-data">
-
-                    <div class="wrap-input100 validate-input" data-validate="Enter username">
+                    <div class="wrap-input100 validate-input col-lg-12" data-validate="Enter username">
                         <input class="input100" type="text" name="username" placeholder="Tên người dùng">
                         <span class="focus-input100" data-placeholder="&#xe82a;"></span>
                     </div>
-                     <div class="wrap-input100 validate-input" data-validate="Enter email">
+                    <div class="wrap-input100 validate-input" data-validate="Enter email">
                         <input class="input100" type="email" name="email" placeholder="Email">
                         <span class="focus-input100" data-placeholder="&#xe82f;"></span>
                     </div>
                     <div class="wrap-input100 validate-input" data-validate="Enter avatar">
-
-                        <input class="input100" type="file" id="avatar" name="avatar">
+                        <input class="input100 form-control-sm" style="border-color:rebeccapurple" type="file"
+                               id="avatar" name="avatar">
                         <span class="focus-input100" data-placeholder="&#xe827;"></span>
                     </div>
-
                     <div class="wrap-input100 validate-input" data-validate="Enter password">
                         <input class="input100" type="password" name="password" placeholder="Mật khẩu">
                         <span class="focus-input100" data-placeholder="&#xe80f;"></span>
                     </div>
 
-                     <div class="wrap-input100 validate-input" data-validate="Enter confirm password">
+                    <div class="wrap-input100 validate-input" data-validate="Enter confirm password">
                         <input class="input100" type="password" name="confirm" placeholder="Xác nhận mật khẩu">
                         <span class="focus-input100" data-placeholder="&#xe80f;"></span>
                     </div>
                     <br><br>
-                    {% if err_mgs%}
-                    <div class="alert alert-danger">
-                        <h3 class="text-center">{{err_mgs}}</h3>
-                    </div>
+                    {% if err_mgs %}
+                        <div class="alert alert-danger">
+                            <p class="text-center" style="color: red; padding-bottom: 10px;">{{ err_mgs }}</p>
+                            <p class="text-center"><a href="{{ url_for('customer_login') }}">Đăng nhập</a></p>
+                        </div>
                     {% endif %}
                     <br>
-                    <div class="container-login100-form-btn m-t-32">
+                    <div class="container-login100-form-btn">
                         <button class="login100-form-btn">
                             Đăng ký
                         </button>

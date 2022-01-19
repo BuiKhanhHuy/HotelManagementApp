@@ -158,8 +158,7 @@ function addCustomerToRent(addCustomerNumber, name, gender, customerTypeId, iden
             let contentText = ''
 
             // do du lieu khach hang ra HTML
-            for(let customer in data['customers'])
-            {
+            for (let customer in data['customers']) {
                 contentText += getHtmlCustomerOnTable(data['customers'][customer])
             }
             contentCustomerInRoom.innerHTML = contentText
@@ -181,7 +180,7 @@ function getHtmlCustomerOnTable(customer) {
     else
         txtGender = 'Nữ'
 
-    if(customer.customer_type_id === 1)
+    if (customer.customer_type_id === 1)
         txtCustomerType = 'Nội địa'
     else
         txtCustomerType = 'Nước ngoài'

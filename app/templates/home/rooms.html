@@ -13,80 +13,65 @@
         <div class="container">
 
             <div class="row">
-                {#                {% for room in rooms %}#}
-                {#                    <div class="col-lg-4 col-md-6 col-sm-6 col-12 post mb-5" data-aos="fade-up" data-aos-delay="100">#}
-                {#                        <div class="media media-custom d-block mb-4 h-100">#}
-                {#                            <a href="{{ url_for('room_detail',room_id=room.id) }}" class="mb-4 d-block">#}
-                {#                                <img src="{{ room.image }}" alt="Image placeholder" class="img-fluid">#}
-                {#                            </a>#}
-                {#                            <div class="media-body">#}
-                {#                                <div class="row">#}
-                {#                                    <div class="col-6">#}
-                {#                                        <h2 class="mt-0 mb-3"><a href="{{ url_for('room_detail', room_id=room.id) }}">Phòng {{ room.room_number }}</a>#}
-                {#                                        </h2>#}
-                {#                                    </div>#}
-                {#                                    <div class="col-6">#}
-                {#                                        <span class="meta-post"><span#}
-                {#                                                class="badge badge-success p-1">{{ room.kind_of_room.kind_of_room_name }}</span> </span>#}
-                {#                                    </div>#}
-                {#                                </div>#}
-                {#                                <p>{{ "{:,.0f}".format(room.price) }} VNĐ/ 1 NGÀY</p>#}
-                {#                                <div>#}
-                {#                                    <div class="p-1">#}
-                {#                                        <a href="{{ url_for('room_detail', room_id=room.id) }}"#}
-                {#                                           class="btn btn-dark btn-block text-center w-75 text-white mx-auto">#}
-                {#                                            Xem chi tiết phòng#}
-                {#                                        </a>#}
-                {#                                    </div>#}
-                {#                                    <div class="p-1">#}
-                {#                                        <button class="btn btn-warning btn-block text-center w-75 text-white mx-auto"#}
-                {#                                                onclick="add_to_book_room({{ room.id }},'{{ room.room_number }}','{{ room.kind_of_room.kind_of_room_name }}',{{ room.price }})">#}
-                {#                                            Thêm vào giỏ hàng#}
-                {#                                        </button>#}
-                {#                                    </div>#}
-                {#                                </div>#}
-                {#                            </div>#}
-                {#                        </div>#}
-                {#                    </div>#}
-                {#                {% endfor %}#}
-
-
-                {% for room in rooms.items %}
-                    <div class="col-lg-4 col-md-6 col-sm-6 col-12 post mb-5" data-aos="fade-up" data-aos-delay="100">
-                        <div class="media media-custom d-block mb-4 h-100">
-                            <a href="{{ url_for('room_detail',room_id=room.id) }}" class="mb-4 d-block">
-                                <img src="{{ room.image }}" alt="Image placeholder" class="img-fluid">
-                            </a>
-                            <div class="media-body">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <h2 class="mt-0 mb-3"><a href="{{ url_for('room_detail', room_id=room.id) }}">Phòng {{ room.room_number }}</a>
-                                        </h2>
-                                    </div>
-                                    <div class="col-6">
+                {% if  rooms.items %}
+                    {% for room in rooms.items %}
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-12 post mb-5" data-aos="fade-up"
+                             data-aos-delay="100">
+                            <div class="media media-custom d-block mb-4 h-100">
+                                <a href="{{ url_for('room_detail',room_id=room.id) }}" class="mb-4 d-block">
+                                    <img src="{{ room.image }}" alt="Image placeholder" class="img-fluid">
+                                </a>
+                                <div class="media-body">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h2 class="mt-0 mb-3"><a
+                                                    href="{{ url_for('room_detail', room_id=room.id) }}">Phòng {{ room.room_number }}</a>
+                                            </h2>
+                                        </div>
+                                        <div class="col-6">
                                         <span class="meta-post"><span
                                                 class="badge badge-success p-1">{{ room.kind_of_room.kind_of_room_name }}</span> </span>
+                                        </div>
                                     </div>
-                                </div>
-                                <p>{{ "{:,.0f}".format(room.price) }} VNĐ/ 1 NGÀY</p>
-                                <div>
-                                    <div class="p-1">
-                                        <a href="{{ url_for('room_detail', room_id=room.id) }}"
-                                           class="btn btn-dark btn-block text-center w-75 text-white mx-auto">
-                                            Xem chi tiết phòng
-                                        </a>
-                                    </div>
-                                    <div class="p-1">
-                                        <button class="btn btn-warning btn-block text-center w-75 text-white mx-auto"
-                                                onclick="add_to_book_room({{ room.id }},'{{ room.room_number }}','{{ room.kind_of_room.kind_of_room_name }}',{{ room.price }})">
-                                            Thêm vào giỏ hàng
-                                        </button>
+                                    <p>{{ "{:,.0f}".format(room.price) }} VNĐ/ 1 NGÀY</p>
+                                    <div>
+                                        <div class="p-1">
+                                            <a href="{{ url_for('room_detail', room_id=room.id) }}"
+                                               class="btn btn-primary btn-block text-center w-75 text-white mx-auto">
+                                                Xem chi tiết phòng
+                                            </a>
+                                        </div>
+                                        <div class="p-1" id="room-{{ room.id }}">
+                                            {% if room_list %}
+                                                {% if "{0}".format(room.id) in room_list %}
+                                                    <button class="btn btn-secondary btn-block text-center w-75 text-white mx-auto"
+                                                            onclick="add_to_book_room({{ room.id }},'{{ room.room_number }}','{{ room.kind_of_room.kind_of_room_name }}',{{ room.price }})">
+                                                        Hủy chọn
+                                                    </button>
+                                                {% else %}
+                                                    <button class="btn btn-warning btn-block text-center w-75 text-white mx-auto"
+                                                            onclick="add_to_book_room({{ room.id }},'{{ room.room_number }}','{{ room.kind_of_room.kind_of_room_name }}',{{ room.price }})">
+                                                        Thêm vào giỏ hàng
+                                                    </button>
+                                                {% endif %}
+                                            {% else %}
+                                                <button class="btn btn-warning btn-block text-center w-75 text-white mx-auto"
+                                                        onclick="add_to_book_room({{ room.id }},'{{ room.room_number }}','{{ room.kind_of_room.kind_of_room_name }}',{{ room.price }})">
+                                                    Thêm vào giỏ hàng
+                                                </button>
+                                            {% endif %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    {% endfor %}
+                {% else %}
+                    <div>
+                        <h3 class="text-danger">Hết phòng trống!</h3>
+                        <h4>Bạn vui lòng chọn ngày hoặc loại phòng khác.</h4>
                     </div>
-                {% endfor %}
+                {% endif %}
             </div>
             <div class="row" data-aos="fade">
 
@@ -101,7 +86,7 @@
                                         </li>
 
                                     {% else %}
-                                        <li><a class="text-warning bg-secondary"
+                                        <li><a class="text-white bg-warning"
                                                href="{{ url_for('get_rooms', kind_of_room_id=kind_of_room_id, page=page) }}">{{ page }}</a>
                                     {% endif %}
                                 {% else %}

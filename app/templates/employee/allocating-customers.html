@@ -237,9 +237,17 @@
                         </div>
 
                         <div class="p-4 text-center">
-                            <a href="">
-                                <button type="button" class="btn btn-secondary text-white mr-1">Hủy thuê phòng</button>
-                            </a>
+                            {% if allocating_customer_number.__eq__(1) %}
+                                <a href="{{ url_for('rent_directly', cancel=1) }}">
+                                    <button type="button" class="btn btn-secondary text-white mr-1">Hủy thuê phòng
+                                    </button>
+                                </a>
+                            {% else %}
+                                <a href="{{ url_for('rent_advance', cancel=1)}}">
+                                    <button type="button" class="btn btn-secondary text-white mr-1">Hủy thuê phòng
+                                    </button>
+                                </a>
+                            {% endif %}
                             <a href="{{ url_for('rent_result', result_number=allocating_customer_number) }}">
                                 <button type="button" class="btn btn-info text-white ml-1">Xác nhận thuê phòng</button>
                             </a>

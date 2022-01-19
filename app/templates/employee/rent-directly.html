@@ -147,7 +147,7 @@
                         </tr>
                         </thead>
                         <tbody id="content-room">
-                        {% for room in rooms %}
+                        {% for room in rooms.items %}
                             <tr>
                                 <td class="text-dark col-md-1 text-middle align-middle">
                                     <img src="{{ room.image }}" class="img-fluid">
@@ -175,6 +175,23 @@
                         {% endfor %}
                         </tbody>
                     </table>
+                    <!-- Center-aligned -->
+                    <ul class="pagination pagination-md justify-content-center" id="pagination">
+                        {% for page in rooms.iter_pages(left_edge=2, left_current=2, right_current=3, right_edge=2) %}
+                            {% if page %}
+                                {% if page != rooms.page %}
+                                    <li class="page-item"><a class="page-link" href="javascript: void(0)"
+                                                             onclick="findRoom({{ page }})">{{ page }}</a></li>
+                                {% else %}
+                                    <li class="page-item"><a class="page-link" href="javascript: void(0)"
+                                                             onclick="findRoom({{ page }})">{{ page }}</a></li>
+                                {% endif %}
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="#">…</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                    <!-- Center-aligned -->
                 </div>
             </div>
             <!-- End Container fluid  -->
