@@ -32,11 +32,16 @@ function getHTMLComment(comment, user) {
     return `<div class="media p-3"> <img src="${user['avatar']}" alt="avt"
                      class="mr-3 mt-3 rounded-circle" style="width:60px;">
                     <div class="media-body">
-                        <h4>${user['username']} <small><i>${comment['created_date']}</i></small></h4>
+                        <h4>${user['username']}
+                        <small>
+                            <i>${moment(comment['created_date']).locale('vi').fromNow()}</i>
+                        </small>
+                        </h4>
                         <p>${comment['content']}</p>
                     </div>
                 </div>`
 }
+
 
 // chuyen trang binh luan
 function getHTMLCommentAll(commentList) {
@@ -46,7 +51,7 @@ function getHTMLCommentAll(commentList) {
                  class="mr-3 mt-3 rounded-circle" style="width:60px;">
             <div class="media-body">
                 <h4>${commentList['user_name']}<small
-                        class="pl-1"><i>${commentList['created_date']}</i></small></h4>
+                        class="pl-1"><i>${moment(commentList['created_date']).locale('viz').fromNow()}</i></small></h4>
                 <p>${commentList['content']}</p>
             </div>
         </div>

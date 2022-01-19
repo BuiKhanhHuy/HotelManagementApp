@@ -98,7 +98,7 @@
                                  class="mr-3 mt-3 rounded-circle" style="width:60px;">
                             <div class="media-body">
                                 <h4>{{ comment.user.username }}<small
-                                        class="pl-1"><i>{{ comment.created_date }}</i></small></h4>
+                                        class="pl-1"><i class="moment-date">{{ comment.created_date }}</i></small></h4>
                                 <p>{{ comment.content }}</p>
                             </div>
                         </div>
@@ -128,7 +128,13 @@
 
         </div>
     </section>
-
+    <script>
+        window.onload = function(){
+            let d = document.getElementsByClassName("moment-date")
+            for ( let i = 0; i < d.length ; i++)
+                d[i].innerText = moment(d[i].innerText).locale('vi').fromNow()
+        }
+    </script>
 {% endblock %}
 
 {% block tail_js %}

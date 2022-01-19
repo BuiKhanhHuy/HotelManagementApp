@@ -1,7 +1,6 @@
 import math
 from datetime import timedelta
 from flask import jsonify, session, flash, abort
-from flask_login import fresh_login_required
 from app import login
 from app.admin import *
 from app.forms import *
@@ -1083,48 +1082,48 @@ def load_comments():
 
     return jsonify({'code': 200, 'comment_list': comment_list, 'iter_pages': iter_pages})
 
-    # =====================ket thuc api==========================
+# =====================ket thuc api==========================
 
-    # loi 404
-    @app.errorhandler(404)
-    def page_not_found(error):
-        return render_template('404.html')
+# loi 404
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html')
 
-    # loi 405
-    @app.errorhandler(405)
-    def page_not_found(error):
-        return render_template('405.html')
+# loi 405
+@app.errorhandler(405)
+def page_not_found(error):
+    return render_template('405.html')
 
-    # loi 401
-    @app.errorhandler(401)
-    def unauthorized(error):
-        return render_template('401.html')
+# loi 401
+@app.errorhandler(401)
+def unauthorized(error):
+    return render_template('401.html')
 
-    # loi 500
-    @app.errorhandler(500)
-    def internal_server_error(error):
-        return render_template('500.html')
+# loi 500
+@app.errorhandler(500)
+def internal_server_error(error):
+    return render_template('500.html')
 
-    @login.user_loader
-    def load_user(user_id):
-        return dao.load_user(user_id)
+@login.user_loader
+def load_user(user_id):
+    return dao.load_user(user_id)
 
-    @app.context_processor
-    def common_response():
-        return {
-            'total_room_booking': utils.total_room_in_list(session.get('book_room_list')),
-            'total_room_rent_directly': utils.total_room_in_list(session.get('rent_directly_list')),
-            'total_rent_waiting': dao.total_rent_waiting(active=True),
-            'total_book_room_waiting': dao.total_book_room_waiting(active=True, done=False),
-            'total_book_room_cancel': dao.total_book_room_waiting(active=False, done=False),
-            'total_rent_due': dao.total_rent_waiting(active=True, today=datetime.now()),
-            'kind_of_rooms': dao.load_kind_of_room(),
-            'cus_cart_stats': utils.total_room_in_list(session.get('cus_book_room_list')),
-            'cus_check_in_date': session.get('cus_book_room_list').get('check_in_date') if session.get(
-                'cus_book_room_list') else None,
-            'cus_check_out_date': session.get('cus_book_room_list').get('check_out_date') if session.get(
-                'cus_book_room_list') else None
-        }
+@app.context_processor
+def common_response():
+    return {
+        'total_room_booking': utils.total_room_in_list(session.get('book_room_list')),
+        'total_room_rent_directly': utils.total_room_in_list(session.get('rent_directly_list')),
+        'total_rent_waiting': dao.total_rent_waiting(active=True),
+        'total_book_room_waiting': dao.total_book_room_waiting(active=True, done=False),
+        'total_book_room_cancel': dao.total_book_room_waiting(active=False, done=False),
+        'total_rent_due': dao.total_rent_waiting(active=True, today=datetime.now()),
+        'kind_of_rooms': dao.load_kind_of_room(),
+        'cus_cart_stats': utils.total_room_in_list(session.get('cus_book_room_list')),
+        'cus_check_in_date': session.get('cus_book_room_list').get('check_in_date') if session.get(
+            'cus_book_room_list') else None,
+        'cus_check_out_date': session.get('cus_book_room_list').get('check_out_date') if session.get(
+            'cus_book_room_list') else None
+    }
 
 
 if __name__ == "__main__":
